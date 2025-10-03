@@ -1,0 +1,20 @@
+{
+  "name": "grafana-dashboard-screenshot-service",
+  "version": "1.0.0",
+  "description": "Custom dashboard screenshot service for Grafana",
+  "main": "dashboard-screenshot-service.js",
+  "scripts": {
+    "start": "node dashboard-screenshot-service.js",
+    "dev": "nodemon dashboard-screenshot-service.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "puppeteer": "^21.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
