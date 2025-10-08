@@ -1,0 +1,9 @@
+./decoder.go
+./encoder.go
+./lexer.go
+./main.go
+./parser.go
+./scanner.go
+./string.go
+./structure.go
+./types.go

@@ -1,0 +1,4 @@
+./main.go
+./range_tables.go
+./reader.go
+./writer.go

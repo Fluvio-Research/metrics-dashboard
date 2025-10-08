@@ -35,3 +35,7 @@ export interface DatetimeAttribute {
   name: string;
   format: string;
 }
+
+export interface DynamoDBVariableQuery {
+  query: string;
+}

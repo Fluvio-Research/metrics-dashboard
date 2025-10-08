@@ -1,0 +1,29 @@
+# Configuration file for PostgreSQL WRD datasource
+apiVersion: 1
+
+datasources:
+  # PostgreSQL WRD Database
+  - name: PostgreSQL-WRD
+    type: postgres
+    access: proxy
+    orgId: 1
+    uid: postgres_wrd
+    url: localhost:5432
+    user: muhammadimran
+    database: WRD
+    # Set as default datasource (change to true if you want this as default)
+    isDefault: false
+    jsonData:
+      # PostgreSQL specific settings
+      sslmode: 'disable'  # Use 'require' for production with SSL
+      maxOpenConns: 100
+      maxIdleConns: 2
+      connMaxLifetime: 14400  # 4 hours in seconds
+      postgresVersion: 1400  # PostgreSQL 14.x
+      timescaledb: false
+    secureJsonData:
+      # You need to set your password here
+      # IMPORTANT: Replace 'your_password_here' with your actual PostgreSQL password
+      password: 'your_password_here'
+    version: 1
+    editable: true

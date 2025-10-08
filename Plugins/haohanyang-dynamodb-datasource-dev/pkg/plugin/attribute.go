@@ -4,10 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 )
 
@@ -116,22 +118,60 @@ func (c *Attribute) Size() int {
 	return c.Value.Len()
 }
 
+// convertToStringField converts the current field to a string field, preserving existing values
+func (c *Attribute) convertToStringField() *data.Field {
+	stringValues := make([]*string, c.Value.Len())
+
+	for i := 0; i < c.Value.Len(); i++ {
+		cv, ok := c.Value.ConcreteAt(i)
+		if ok && cv != nil {
+			switch c.Type() {
+			case data.FieldTypeNullableInt64:
+				stringValues[i] = aws.String(strconv.FormatInt(cv.(int64), 10))
+			case data.FieldTypeNullableFloat64:
+				stringValues[i] = aws.String(strconv.FormatFloat(cv.(float64), 'f', -1, 64))
+			case data.FieldTypeNullableTime:
+				stringValues[i] = aws.String(cv.(time.Time).Format(time.RFC3339))
+			case data.FieldTypeNullableBool:
+				stringValues[i] = aws.String(strconv.FormatBool(cv.(bool)))
+			case data.FieldTypeNullableJSON:
+				rm := cv.(json.RawMessage)
+				stringValues[i] = aws.String(string(rm))
+			default:
+				// Already a string or other type
+				stringValues[i] = aws.String(fmt.Sprintf("%v", cv))
+			}
+		}
+		// nil values remain nil
+	}
+
+	return data.NewField(c.Name, nil, stringValues)
+}
+
 func (c *Attribute) Append(value *dynamodb.AttributeValue) error {
 	if value.S != nil {
 		if c.TsFormat != "" && c.TsFormat != UnixTimestampMiniseconds && c.TsFormat != UnixTimestampSeconds {
 			if c.Type() != data.FieldTypeNullableTime {
-				return fmt.Errorf("field %s should have type %s, but got %s", c.Name, c.Type().ItemTypeString(), "S")
+				// Type mismatch: convert to string and log warning
+				backend.Logger.Warn("Type mismatch for datetime field, converting to string", "field", c.Name, "expected", "time", "got", "string")
+				c.Value = c.convertToStringField()
+			} else {
+				t, err := time.Parse(c.TsFormat, *value.S)
+				if err != nil {
+					return err
+				}
+				c.Value.Append(&t)
+				return nil
 			}
-			t, err := time.Parse(c.TsFormat, *value.S)
-			if err != nil {
-				return err
-			}
-			c.Value.Append(&t)
+		}
 
+		// Handle string values
+		if c.Type() == data.FieldTypeNullableString {
+			c.Value.Append(value.S)
 		} else {
-			if c.Type() != data.FieldTypeNullableString {
-				return fmt.Errorf("field %s should have type %s, but got %s", c.Name, c.Type().ItemTypeString(), "S")
-			}
+			// Type mismatch: convert existing field to string type
+			backend.Logger.Warn("Type mismatch, converting field to string", "field", c.Name, "expected", c.Type().ItemTypeString(), "got", "string")
+			c.Value = c.convertToStringField()
 			c.Value.Append(value.S)
 		}
 
@@ -143,28 +183,42 @@ func (c *Attribute) Append(value *dynamodb.AttributeValue) error {
 			// int64
 			if c.TsFormat == UnixTimestampSeconds {
 				if c.Type() != data.FieldTypeNullableTime {
-					return fmt.Errorf("field %s should have type %s, but got %s", c.Name, c.Type().ItemTypeString(), "N")
+					// Type mismatch: convert to string and log warning
+					backend.Logger.Warn("Type mismatch for timestamp field, converting to string", "field", c.Name, "expected", c.Type().ItemTypeString(), "got", "number")
+					c.Value = c.convertToStringField()
+					c.Value.Append(aws.String(strconv.FormatInt(*i, 10)))
+				} else {
+					t := time.Unix(*i, 0)
+					c.Value.Append(&t)
 				}
-				t := time.Unix(*i, 0)
-				c.Value.Append(&t)
 			} else if c.TsFormat == UnixTimestampMiniseconds {
 				if c.Type() != data.FieldTypeNullableTime {
-					return fmt.Errorf("field %s should have type %s, but got %s", c.Name, c.Type().ItemTypeString(), "N")
+					// Type mismatch: convert to string and log warning
+					backend.Logger.Warn("Type mismatch for timestamp field, converting to string", "field", c.Name, "expected", c.Type().ItemTypeString(), "got", "number")
+					c.Value = c.convertToStringField()
+					c.Value.Append(aws.String(strconv.FormatInt(*i, 10)))
+				} else {
+					seconds := *i / 1000
+					nanoseconds := (*i % 1000) * 1000000
+					t := time.Unix(seconds, nanoseconds)
+					c.Value.Append(&t)
 				}
-
-				seconds := *i / 1000
-				nanoseconds := (*i % 1000) * 1000000
-				t := time.Unix(seconds, nanoseconds)
-				c.Value.Append(&t)
 			} else if c.TsFormat != "" {
 				return errors.New("invalid datetime format")
 			} else {
+				// Handle numeric values with type flexibility
 				if c.Type() == data.FieldTypeNullableInt64 {
 					c.Value.Append(i)
 				} else if c.Type() == data.FieldTypeNullableFloat64 {
 					c.Value.Append(aws.Float64(float64(*i)))
+				} else if c.Type() == data.FieldTypeNullableString {
+					// Convert number to string
+					c.Value.Append(aws.String(strconv.FormatInt(*i, 10)))
 				} else {
-					return fmt.Errorf("field %s should have type %s, but got %s", c.Name, c.Type().ItemTypeString(), "N")
+					// Type mismatch: convert to string
+					backend.Logger.Warn("Type mismatch, converting field to string", "field", c.Name, "expected", c.Type().ItemTypeString(), "got", "number")
+					c.Value = c.convertToStringField()
+					c.Value.Append(aws.String(strconv.FormatInt(*i, 10)))
 				}
 			}
 
@@ -173,7 +227,6 @@ func (c *Attribute) Append(value *dynamodb.AttributeValue) error {
 			if c.Type() == data.FieldTypeNullableFloat64 {
 				c.Value.Append(f)
 			} else if c.Type() == data.FieldTypeNullableInt64 {
-
 				// Convert all previous *int64 values to *float64
 				float64Values := make([]*float64, c.Value.Len()+1)
 				for i := 0; i < c.Value.Len(); i++ {
@@ -182,64 +235,110 @@ func (c *Attribute) Append(value *dynamodb.AttributeValue) error {
 						float64Values[i] = aws.Float64(float64(cv.(int64)))
 					}
 				}
-
 				float64Values[c.Value.Len()] = f
 				c.Value = data.NewField(c.Name, nil, float64Values)
+			} else if c.Type() == data.FieldTypeNullableString {
+				// Convert float to string
+				c.Value.Append(aws.String(strconv.FormatFloat(*f, 'f', -1, 64)))
 			} else {
-				return fmt.Errorf("field %s should have type %s, but got %s", c.Name, c.Type().ItemTypeString(), "N")
+				// Type mismatch: convert to string
+				backend.Logger.Warn("Type mismatch, converting field to string", "field", c.Name, "expected", c.Type().ItemTypeString(), "got", "float")
+				c.Value = c.convertToStringField()
+				c.Value.Append(aws.String(strconv.FormatFloat(*f, 'f', -1, 64)))
 			}
 		}
 	} else if value.B != nil {
 		if c.Type() != data.FieldTypeNullableString {
-			return fmt.Errorf("field %s should have type %s, but got %s", c.Name, c.Type().ItemTypeString(), "B")
+			backend.Logger.Warn("Type mismatch, converting field to string", "field", c.Name, "expected", c.Type().ItemTypeString(), "got", "binary")
+			c.Value = c.convertToStringField()
 		}
-		c.Value.Append(aws.String("[B]"))
+		if value.B != nil {
+			c.Value.Append(aws.String("[B]"))
+		} else {
+			c.Value.Append(nil)
+		}
 	} else if value.BOOL != nil {
-		if c.Type() != data.FieldTypeNullableBool {
-			return fmt.Errorf("field %s should have type %s, but got %s", c.Name, c.Type().ItemTypeString(), "BOOL")
+		if c.Type() == data.FieldTypeNullableBool {
+			c.Value.Append(value.BOOL)
+		} else {
+			backend.Logger.Warn("Type mismatch, converting field to string", "field", c.Name, "expected", c.Type().ItemTypeString(), "got", "bool")
+			c.Value = c.convertToStringField()
+			c.Value.Append(aws.String(strconv.FormatBool(*value.BOOL)))
 		}
-		c.Value.Append(value.BOOL)
 	} else if value.NULL != nil {
 		c.Value.Append(nil)
 	} else if value.M != nil {
-		if c.Type() != data.FieldTypeNullableJSON {
-			return fmt.Errorf("field %s should have type %s, but got %s", c.Name, c.Type().ItemTypeString(), "M")
-		}
 		v, err := mapToJson(value)
 		if err != nil {
-			return err
+			// If JSON conversion fails, convert to string representation
+			backend.Logger.Warn("JSON conversion failed for map, converting to string", "field", c.Name, "error", err.Error())
+			c.Value = c.convertToStringField()
+			c.Value.Append(aws.String("[M]"))
+			return nil
 		}
-		c.Value.Append(v)
+		if c.Type() == data.FieldTypeNullableJSON {
+			c.Value.Append(v)
+		} else {
+			backend.Logger.Warn("Type mismatch, converting field to string", "field", c.Name, "expected", c.Type().ItemTypeString(), "got", "map")
+			c.Value = c.convertToStringField()
+			s := string(*v)
+			c.Value.Append(aws.String(s))
+		}
 	} else if value.L != nil {
-		if c.Type() != data.FieldTypeNullableJSON {
-			return fmt.Errorf("field %s should have type %s, but got %s", c.Name, c.Type().ItemTypeString(), "L")
-		}
 		v, err := listToJson(value)
 		if err != nil {
-			return err
+			// If JSON conversion fails, convert to string representation
+			backend.Logger.Warn("JSON conversion failed for list, converting to string", "field", c.Name, "error", err.Error())
+			c.Value = c.convertToStringField()
+			c.Value.Append(aws.String("[L]"))
+			return nil
 		}
-		c.Value.Append(v)
+		if c.Type() == data.FieldTypeNullableJSON {
+			c.Value.Append(v)
+		} else {
+			backend.Logger.Warn("Type mismatch, converting field to string", "field", c.Name, "expected", c.Type().ItemTypeString(), "got", "list")
+			c.Value = c.convertToStringField()
+			s := string(*v)
+			c.Value.Append(aws.String(s))
+		}
 	} else if value.SS != nil {
-		if c.Type() != data.FieldTypeNullableJSON {
-			return fmt.Errorf("field %s should have type %s, but got %s", c.Name, c.Type().ItemTypeString(), "SS")
-		}
 		v, err := stringSetToJson(value)
 		if err != nil {
-			return err
+			// If JSON conversion fails, convert to string representation
+			backend.Logger.Warn("JSON conversion failed for string set, converting to string", "field", c.Name, "error", err.Error())
+			c.Value = c.convertToStringField()
+			c.Value.Append(aws.String("[SS]"))
+			return nil
 		}
-		c.Value.Append(v)
+		if c.Type() == data.FieldTypeNullableJSON {
+			c.Value.Append(v)
+		} else {
+			backend.Logger.Warn("Type mismatch, converting field to string", "field", c.Name, "expected", c.Type().ItemTypeString(), "got", "string_set")
+			c.Value = c.convertToStringField()
+			s := string(*v)
+			c.Value.Append(aws.String(s))
+		}
 	} else if value.NS != nil {
-		if c.Type() != data.FieldTypeNullableJSON {
-			return fmt.Errorf("field %s should have type %s, but got %s", c.Name, c.Type().ItemTypeString(), "NS")
-		}
 		v, err := numberSetToJson(value)
 		if err != nil {
-			return err
+			// If JSON conversion fails, convert to string representation
+			backend.Logger.Warn("JSON conversion failed for number set, converting to string", "field", c.Name, "error", err.Error())
+			c.Value = c.convertToStringField()
+			c.Value.Append(aws.String("[NS]"))
+			return nil
 		}
-		c.Value.Append(v)
+		if c.Type() == data.FieldTypeNullableJSON {
+			c.Value.Append(v)
+		} else {
+			backend.Logger.Warn("Type mismatch, converting field to string", "field", c.Name, "expected", c.Type().ItemTypeString(), "got", "number_set")
+			c.Value = c.convertToStringField()
+			s := string(*v)
+			c.Value.Append(aws.String(s))
+		}
 	} else if value.BS != nil {
 		if c.Type() != data.FieldTypeNullableString {
-			return fmt.Errorf("field %s should have type %s, but got %s", c.Name, c.Type().ItemTypeString(), "BS")
+			backend.Logger.Warn("Type mismatch, converting field to string", "field", c.Name, "expected", c.Type().ItemTypeString(), "got", "binary_set")
+			c.Value = c.convertToStringField()
 		}
 		c.Value.Append(aws.String("[BS]"))
 	}

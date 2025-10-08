@@ -1,0 +1,4 @@
+./main.go
+./reader.go
+./types.go
+./writer.go

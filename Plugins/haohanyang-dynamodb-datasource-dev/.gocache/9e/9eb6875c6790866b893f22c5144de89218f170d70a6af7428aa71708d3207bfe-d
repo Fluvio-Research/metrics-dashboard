@@ -1,0 +1,11 @@
+./cache.go
+./conversion.go
+./path_lexer.go
+./path_parser.go
+./path_scanner.go
+./path_structure.go
+./query.go
+./query_lexer.go
+./query_parser.go
+./query_scanner.go
+./query_structure.go

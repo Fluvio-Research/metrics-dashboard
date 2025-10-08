@@ -1,0 +1,5 @@
+./main.go
+./range_tables.go
+./string.go
+./transform.go
+./types.go
