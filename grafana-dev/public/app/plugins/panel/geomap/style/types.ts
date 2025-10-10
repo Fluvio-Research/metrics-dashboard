@@ -30,6 +30,7 @@ export interface StyleConfig {
   size?: ScaleDimensionConfig;
   symbol?: ResourceDimensionConfig;
   symbolAlign?: SymbolAlign;
+  pinTipColor?: string;
 
   // Can show markers and text together!
   text?: TextDimensionConfig;
@@ -80,6 +81,7 @@ export const defaultStyleConfig = Object.freeze({
     horizontal: HorizontalAlign.Center,
     vertical: VerticalAlign.Center,
   },
+  pinTipColor: '#202124',
   textConfig: {
     fontSize: 12,
     textAlign: TextAlignment.Center,
@@ -122,6 +124,7 @@ export interface StyleConfigValues {
   symbolAlign?: SymbolAlign;
   rotation?: number;
   text?: string;
+  pinTipColor?: string;
 
   // Pass though (not value dependant)
   textConfig?: TextStyleConfig;

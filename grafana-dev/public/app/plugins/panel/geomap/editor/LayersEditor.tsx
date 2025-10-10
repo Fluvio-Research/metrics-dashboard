@@ -70,7 +70,7 @@ export const LayersEditor = (props: LayersEditorProps) => {
 
       <LayerDragDropList
         layers={layers}
-        showActions={() => layers.length > 2} // 2 because base layer is not counted!
+        showActions={() => layers.length > 1} // allow single data layer to be moved/removed
         getLayerInfo={getLayerInfo}
         onDragEnd={onDragEnd}
         onSelect={onSelect}

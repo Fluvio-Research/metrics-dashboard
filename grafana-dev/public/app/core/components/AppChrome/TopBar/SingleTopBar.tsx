@@ -32,6 +32,7 @@ import { SignInLink } from './SignInLink';
 import { SingleTopBarActions } from './SingleTopBarActions';
 import { TopNavBarMenu } from './TopNavBarMenu';
 import { TopSearchBarCommandPaletteTrigger } from './TopSearchBarCommandPaletteTrigger';
+import { ThemeToggleButton } from './ThemeToggleButton';
 import { getChromeHeaderLevelHeight } from './useChromeHeaderHeight';
 
 interface Props {
@@ -59,7 +60,9 @@ export const SingleTopBar = memo(function SingleTopBar({
   const state = chrome.useState();
   const menuDockedAndOpen = !state.chromeless && state.megaMenuDocked && state.megaMenuOpen;
   const theme = useTheme2();
-  const isNonAdminUser = !(contextSrv.user.isGrafanaAdmin || contextSrv.hasRole('Admin'));
+  const isSuperAdmin = Boolean((contextSrv.user as any).isSuperAdmin ?? contextSrv.user.isGrafanaAdmin);
+  const isOrgAdmin = contextSrv.hasRole('Admin');
+  const isNonAdminUser = !isOrgAdmin && !isSuperAdmin;
   const useMapsLayout = isNonAdminUser;
   const styles = useStyles2(getStyles, menuDockedAndOpen, theme.isDark);
   const { query: kbar } = useKBar();
@@ -139,6 +142,9 @@ export const SingleTopBar = memo(function SingleTopBar({
                   <QuickAdd />
                 </div>
               )}
+              <div className={styles.mapsIconShell}>
+                <ThemeToggleButton />
+              </div>
               {config.featureToggles.extensionSidebar && !isSmallScreen && (
                 <div className={styles.mapsIconShell}>
                   <ExtensionToolbarItem />
@@ -201,6 +207,7 @@ export const SingleTopBar = memo(function SingleTopBar({
             </Dropdown>
           )}
           <NavToolbarSeparator />
+          <ThemeToggleButton />
           {config.featureToggles.extensionSidebar && !isSmallScreen && <ExtensionToolbarItem />}
           {!showToolbarLevel && actions}
           {!contextSrv.user.isSignedIn && <SignInLink />}
@@ -239,10 +246,31 @@ const getStyles = (
       display: 'flex',
       gap: theme.spacing(2),
       alignItems: 'center',
-      padding: theme.spacing(0, 1),
-      paddingLeft: menuDockedAndOpen ? theme.spacing(3.5) : theme.spacing(0.75),
+      padding: theme.spacing(0, 2),
+      paddingLeft: menuDockedAndOpen ? theme.spacing(3.5) : theme.spacing(1.5),
+      background: theme.isDark 
+        ? 'linear-gradient(180deg, rgba(22, 27, 34, 0.95) 0%, rgba(17, 21, 27, 0.98) 100%)'
+        : 'linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.95) 100%)',
       borderBottom: `1px solid ${theme.colors.border.weak}`,
+      boxShadow: theme.isDark
+        ? '0 2px 8px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15)'
+        : '0 1px 4px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04)',
+      backdropFilter: 'blur(12px)',
       justifyContent: 'space-between',
+      position: 'sticky',
+      top: 0,
+      zIndex: theme.zIndex.navbarFixed,
+      
+      // Add subtle top accent
+      '&::before': {
+        content: '""',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: '2px',
+        background: theme.colors.gradients.brandVertical,
+      },
     }),
     leftSection: css({
       display: 'flex',
@@ -277,15 +305,15 @@ const getStyles = (
       },
     }),
     mapsLayout: css({
-      minHeight: 64,
+      minHeight: 56,
       width: '100%',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      gap: theme.spacing(2),
-      flexWrap: 'wrap',
-      padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
-      paddingLeft: menuDockedAndOpen ? theme.spacing(4) : theme.spacing(2),
+      gap: theme.spacing(1.5),
+      flexWrap: 'nowrap',
+      padding: `${theme.spacing(0.75)} ${theme.spacing(1.5)}`,
+      paddingLeft: menuDockedAndOpen ? theme.spacing(3) : theme.spacing(1.5),
       backgroundColor: mapsSurface,
       borderBottom: `1px solid ${mapsBorder}`,
       boxShadow: mapsShadow,
@@ -293,6 +321,28 @@ const getStyles = (
       position: 'sticky',
       top: 0,
       zIndex: theme.zIndex.navbarFixed,
+      
+      // Mobile optimizations - stacked layout
+      [theme.breakpoints.down('md')]: {
+        minHeight: 'auto',
+        padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`,
+        paddingLeft: theme.spacing(1.5),
+        gap: theme.spacing(1),
+        flexDirection: 'column',
+        alignItems: 'stretch',
+        boxShadow: isDarkMode
+          ? '0 4px 12px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2)'
+          : '0 2px 8px rgba(15, 23, 42, 0.12), 0 1px 2px rgba(15, 23, 42, 0.06)',
+        backdropFilter: 'blur(20px)',
+      },
+      
+      // Small mobile screens
+      [theme.breakpoints.down('sm')]: {
+        padding: `${theme.spacing(0.75)} ${theme.spacing(1)}`,
+        paddingLeft: theme.spacing(1),
+        gap: theme.spacing(0.75),
+      },
+      
       [theme.transitions.handleMotion('no-preference')]: {
         transitionProperty: 'box-shadow, background-color',
         transitionDuration: '200ms',
@@ -334,6 +384,17 @@ const getStyles = (
       gap: theme.spacing(1.5),
       minWidth: 'fit-content',
       color: mapsText,
+      flex: '0 0 auto',
+      
+      // Mobile optimizations - top row
+      [theme.breakpoints.down('md')]: {
+        gap: theme.spacing(1),
+        flex: '1 1 auto',
+        minWidth: 0,
+        width: '100%',
+        justifyContent: 'space-between',
+      },
+      
       [theme.transitions.handleMotion('no-preference')]: {
         transitionProperty: 'transform',
         transitionDuration: '200ms',
@@ -362,6 +423,18 @@ const getStyles = (
       },
       '& svg': {
         fontSize: '18px',
+      },
+      
+      // Mobile menu button enhancement
+      [theme.breakpoints.down('md')]: {
+        padding: theme.spacing(0.625),
+        border: `1.5px solid ${theme.colors.primary.border}`,
+        backgroundColor: isDarkMode ? 'rgba(77, 172, 255, 0.08)' : 'rgba(77, 172, 255, 0.06)',
+        
+        '&:hover': {
+          backgroundColor: isDarkMode ? 'rgba(77, 172, 255, 0.12)' : 'rgba(77, 172, 255, 0.1)',
+          borderColor: theme.colors.primary.main,
+        },
       },
     }),
     mapsLogo: css({
@@ -479,102 +552,139 @@ const getStyles = (
            color: isDarkMode ? 'rgba(96, 165, 250, 0.8)' : 'rgba(59, 130, 246, 0.8)',
          },
        },
-      [theme.breakpoints.down('lg')]: {
+      
+      // Hide breadcrumbs on mobile for cleaner layout
+      [theme.breakpoints.down('md')]: {
         display: 'none',
       },
     }),
     mapsSearchSection: css({
-      flex: '1 1 360px',
-      minWidth: 280,
+      flex: '1 1 280px',
+      minWidth: 0,
+      maxWidth: 480,
       display: 'flex',
       justifyContent: 'center',
+      
+      // Mobile optimizations - second row, full width
       [theme.breakpoints.down('md')]: {
-        order: 3,
+        flex: '1 1 auto',
         width: '100%',
+        maxWidth: 'none',
+        order: 2, // Move to second row
       },
     }),
     mapsSearchButton: css({
       position: 'relative',
       flex: 1,
-      maxWidth: 680,
+      maxWidth: 560,
       width: '100%',
       display: 'flex',
       alignItems: 'center',
-      gap: theme.spacing(1.5),
-      padding: theme.spacing(1.1, 1.75),
-      borderRadius: theme.shape.radius.pill,
-      border: `1px solid ${mapsBorder}`,
-      background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0))',
-      backgroundColor: mapsSurface,
-      boxShadow: mapsShadow,
-      backdropFilter: 'blur(16px)',
-      color: mapsText,
+      gap: theme.spacing(1.25),
+      padding: theme.spacing(0.875, 1.5),
+      borderRadius: 12,
+      border: `1.5px solid ${theme.isDark ? 'rgba(77, 172, 255, 0.2)' : 'rgba(77, 172, 255, 0.15)'}`,
+      background: theme.isDark
+        ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.9) 100%)'
+        : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.98) 100%)',
+      boxShadow: theme.isDark
+        ? '0 4px 12px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
+        : '0 2px 8px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
+      backdropFilter: 'blur(20px)',
+      color: theme.colors.text.primary,
       cursor: 'pointer',
       textAlign: 'left',
-      [theme.transitions.handleMotion('no-preference')]: {
-        transitionProperty: 'box-shadow, border-color, transform, color',
-        transitionDuration: '160ms',
-        transitionTimingFunction: theme.transitions.easing.easeInOut,
-      },
+      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+      
       '&:hover': {
-        borderColor: isDarkMode ? 'rgba(148, 163, 184, 0.45)' : theme.colors.primary.border,
-        boxShadow: isDarkMode
-          ? '0 24px 48px rgba(7, 12, 23, 0.72)'
-          : '0 28px 48px rgba(15, 23, 42, 0.22)',
-        transform: 'translateY(-1px)',
+        borderColor: theme.colors.primary.main,
+        background: theme.isDark
+          ? 'linear-gradient(135deg, rgba(51, 65, 85, 0.9) 0%, rgba(30, 41, 59, 0.95) 100%)'
+          : 'linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(241, 245, 249, 1) 100%)',
+        boxShadow: theme.isDark
+          ? '0 8px 24px rgba(77, 172, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08)'
+          : '0 4px 16px rgba(77, 172, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 1)',
+        transform: 'translateY(-1px) scale(1.01)',
       },
+      
       '&:focus': {
         outline: 'none',
       },
+      
       '&:focus-visible': {
-        boxShadow: `0 0 0 3px ${isDarkMode ? 'rgba(59, 130, 246, 0.4)' : 'rgba(37, 99, 235, 0.28)'}`,
+        borderColor: theme.colors.primary.main,
+        boxShadow: `0 0 0 3px ${theme.isDark ? 'rgba(77, 172, 255, 0.3)' : 'rgba(77, 172, 255, 0.2)'}`,
       },
+      
       '& svg': {
-        color: mapsSeparatorColor,
+        color: theme.colors.primary.main,
         fontSize: 18,
+        opacity: 0.8,
+      },
+      
+      // Mobile - full width search
+      [theme.breakpoints.down('md')]: {
+        maxWidth: 'none',
+        width: '100%',
+        padding: theme.spacing(0.875, 1.5),
       },
     }),
     mapsSearchPlaceholder: css({
       flex: 1,
-      color: mapsText,
-      fontSize: '0.95rem',
-      fontWeight: theme.typography.fontWeightMedium,
-      letterSpacing: 0.15,
+      color: theme.colors.text.secondary,
+      fontSize: theme.typography.body.fontSize,
+      fontWeight: theme.typography.fontWeightRegular,
+      letterSpacing: 0.2,
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
+      opacity: 0.85,
+      transition: 'all 0.2s ease-in-out',
     }),
     mapsSearchShortcut: css({
       display: 'flex',
       alignItems: 'center',
-      gap: theme.spacing(0.5),
-      borderRadius: theme.shape.radius.pill,
-      padding: theme.spacing(0.3, 0.9),
-      fontSize: '0.75rem',
+      gap: theme.spacing(0.25),
+      borderRadius: 6,
+      padding: theme.spacing(0.375, 0.75),
+      fontSize: '11px',
+      fontWeight: theme.typography.fontWeightMedium,
       textTransform: 'uppercase',
-      letterSpacing: 1.5,
-      color: mapsSeparatorColor,
-      backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.55)' : 'rgba(241, 245, 249, 0.85)',
-      border: `1px solid ${isDarkMode ? 'rgba(148, 163, 184, 0.28)' : 'rgba(148, 163, 184, 0.55)'}`,
-      boxShadow: `0 4px 12px ${isDarkMode ? 'rgba(15, 23, 42, 0.45)' : 'rgba(148, 163, 184, 0.35)'}`,
+      letterSpacing: 1,
+      color: theme.colors.text.secondary,
+      backgroundColor: theme.isDark ? 'rgba(30, 41, 59, 0.8)' : 'rgba(241, 245, 249, 1)',
+      border: `1px solid ${theme.isDark ? 'rgba(77, 172, 255, 0.25)' : 'rgba(148, 163, 184, 0.3)'}`,
+      boxShadow: theme.isDark
+        ? '0 2px 6px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
+        : '0 1px 3px rgba(15, 23, 42, 0.1), inset 0 1px 0 rgba(255, 255, 255, 1)',
+      transition: 'all 0.2s ease-in-out',
+      
+      'button:hover &': {
+        backgroundColor: theme.isDark ? 'rgba(51, 65, 85, 0.9)' : 'rgba(226, 232, 240, 1)',
+        borderColor: theme.colors.primary.border,
+        transform: 'scale(1.05)',
+      },
     }),
     mapsCompactSearch: css({
       borderRadius: theme.shape.radius.pill,
-      border: `1px solid ${mapsBorder}`,
-      backgroundColor: mapsSurface,
-      color: mapsText,
+      border: `1.5px solid ${theme.colors.primary.border}`,
+      backgroundColor: isDarkMode ? 'rgba(77, 172, 255, 0.08)' : 'rgba(77, 172, 255, 0.06)',
+      color: theme.colors.primary.text,
+      padding: theme.spacing(0.75, 1),
       [theme.transitions.handleMotion('no-preference')]: {
-        transitionProperty: 'background-color, border-color, transform',
-        transitionDuration: '150ms',
+        transitionProperty: 'background-color, border-color, transform, box-shadow',
+        transitionDuration: '200ms',
         transitionTimingFunction: theme.transitions.easing.easeInOut,
       },
       '&:hover': {
-        backgroundColor: isDarkMode ? 'rgba(148, 163, 184, 0.16)' : 'rgba(15, 23, 42, 0.08)',
-        borderColor: isDarkMode ? 'rgba(148, 163, 184, 0.4)' : 'rgba(15, 23, 42, 0.18)',
-        transform: 'translateY(-1px)',
+        backgroundColor: isDarkMode ? 'rgba(77, 172, 255, 0.12)' : 'rgba(77, 172, 255, 0.1)',
+        borderColor: theme.colors.primary.main,
+        transform: 'scale(1.05)',
+        boxShadow: `0 4px 12px ${isDarkMode ? 'rgba(77, 172, 255, 0.25)' : 'rgba(77, 172, 255, 0.2)'}`,
       },
       '& svg': {
-        color: mapsText,
+        color: theme.colors.primary.main,
+        fontSize: '20px',
       },
     }),
 
@@ -583,8 +693,16 @@ const getStyles = (
       alignItems: 'center',
       justifyContent: 'flex-end',
       gap: theme.spacing(1),
-      flex: '1 1 240px',
-      minWidth: 220,
+      flex: '0 0 auto',
+      minWidth: 'fit-content',
+      
+      // Mobile optimizations - stay on first row
+      [theme.breakpoints.down('md')]: {
+        gap: theme.spacing(0.75),
+        flex: '0 0 auto',
+        order: 1, // Keep on first row
+      },
+      
       [theme.transitions.handleMotion('no-preference')]: {
         transitionProperty: 'transform',
         transitionDuration: '200ms',

@@ -42,7 +42,9 @@ function getHeaderLevelsGivenState(
   scopesEnabled: boolean | undefined = false,
   isLargeScreen: boolean
 ) {
-  const isNonAdminUser = !(contextSrv.user.isGrafanaAdmin || contextSrv.hasRole('Admin'));
+  const isSuperAdmin = Boolean((contextSrv.user as any).isSuperAdmin ?? contextSrv.user.isGrafanaAdmin);
+  const isOrgAdmin = contextSrv.hasRole('Admin');
+  const isNonAdminUser = !isOrgAdmin && !isSuperAdmin;
 
   // No levels when chromeless or kiosk mode
   if (chromeState.kioskMode || chromeState.chromeless) {
@@ -100,7 +102,9 @@ export function useChromeHeaderHeight() {
  * Can replace with constant once unifiedNavbars feature toggle is removed
  **/
 export function getChromeHeaderLevelHeight() {
-  const isNonAdminUser = !(contextSrv.user.isGrafanaAdmin || contextSrv.hasRole('Admin'));
+  const isSuperAdmin = Boolean((contextSrv.user as any).isSuperAdmin ?? contextSrv.user.isGrafanaAdmin);
+  const isOrgAdmin = contextSrv.hasRole('Admin');
+  const isNonAdminUser = !isOrgAdmin && !isSuperAdmin;
   if (isNonAdminUser) {
     return 64;
   }

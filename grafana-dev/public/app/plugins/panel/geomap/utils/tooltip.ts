@@ -22,6 +22,10 @@ export const setTooltipListeners = (panel: GeomapPanel) => {
     debounce((evt) => pointerMoveListener(evt, panel), 200)
   );
   panel.map?.getViewport().addEventListener('mouseout', (evt: MouseEvent) => {
+    const related = evt.relatedTarget as HTMLElement | null;
+    if (related && related.closest('[data-geomap-tooltip="true"]')) {
+      return;
+    }
     panel.props.eventBus.publish(new DataHoverClearEvent());
   });
 };

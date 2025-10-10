@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import { colorManipulator } from '@grafana/data';
 import { useTheme2 } from '@grafana/ui';
@@ -76,7 +76,49 @@ const LoginBackground: FC<BrandComponentProps> = ({ className, children }) => {
 };
 
 const MenuLogo: FC<BrandComponentProps> = ({ className }) => {
-  return <img className={className} src={LOGO_CONFIG.mainLogo} alt={LOGO_CONFIG.appTitle} />;
+  const [isAnimating, setIsAnimating] = useState(true);
+  const theme = useTheme2();
+  
+  useEffect(() => {
+    // Animation plays only once on mount
+    const timer = setTimeout(() => {
+      setIsAnimating(false);
+    }, 1000); // Animation duration
+    
+    return () => clearTimeout(timer);
+  }, []);
+  
+  const animationStyles = css({
+    animation: isAnimating ? 'logoIntro 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards' : 'none',
+    transformOrigin: 'center center',
+    
+    '@keyframes logoIntro': {
+      '0%': {
+        transform: 'scale(0.5)',
+        opacity: 0,
+      },
+      '50%': {
+        transform: 'scale(1.3)',
+        opacity: 0.8,
+        filter: theme.isDark 
+          ? 'drop-shadow(0 0 12px rgba(77, 172, 255, 0.6))' 
+          : 'drop-shadow(0 0 8px rgba(77, 172, 255, 0.4))',
+      },
+      '100%': {
+        transform: 'scale(1)',
+        opacity: 1,
+        filter: 'drop-shadow(0 0 0 transparent)',
+      },
+    },
+  });
+  
+  return (
+    <img 
+      className={cx(className, animationStyles)} 
+      src={LOGO_CONFIG.mainLogo} 
+      alt={LOGO_CONFIG.appTitle} 
+    />
+  );
 };
 
 const LoginBoxBackground = () => {

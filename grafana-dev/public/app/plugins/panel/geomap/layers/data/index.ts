@@ -7,12 +7,14 @@ import { markersLayer } from './markersLayer';
 import { networkLayer } from './networkLayer';
 import { photosLayer } from './photosLayer';
 import { routeLayer } from './routeLayer';
+import { advancedToolPitLayer } from './advancedToolpitLayer';
 
 /**
  * Registry for layer handlers
  */
 export const dataLayers = [
   markersLayer,
+  advancedToolPitLayer,
   heatmapLayer,
   lastPointTracker,
   geojsonLayer,

@@ -23,7 +23,12 @@ export const GeomapTooltip = ({ ttip, onClose, isOpen }: Props) => {
       {ttip && ttip.layers && (
         <Portal>
           <VizTooltipContainer position={{ x: ttip.pageX, y: ttip.pageY }} offset={{ x: 10, y: 10 }} allowPointerEvents>
-            <section ref={ref} {...overlayProps} {...dialogProps}>
+            <section
+              ref={ref}
+              data-geomap-tooltip="true"
+              {...overlayProps}
+              {...dialogProps}
+            >
               <ComplexDataHoverView layers={ttip.layers} isOpen={isOpen} onClose={onClose} />
             </section>
           </VizTooltipContainer>

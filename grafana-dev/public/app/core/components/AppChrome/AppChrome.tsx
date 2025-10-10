@@ -48,7 +48,9 @@ export function AppChrome({ children }: Props) {
 
   const headerLevels = useChromeHeaderLevels();
   const headerHeight = headerLevels * getChromeHeaderLevelHeight();
-  const isNonAdminUser = !(contextSrv.user.isGrafanaAdmin || contextSrv.hasRole('Admin'));
+  const isSuperAdmin = Boolean((contextSrv.user as any).isSuperAdmin ?? contextSrv.user.isGrafanaAdmin);
+  const isOrgAdmin = contextSrv.hasRole('Admin');
+  const isNonAdminUser = !isOrgAdmin && !isSuperAdmin;
   const styles = useStyles2(getStyles, headerHeight, isNonAdminUser);
   const contentSizeStyles = useStyles2(getContentSizeStyles, extensionSidebarWidth);
   const dragStyles = useStyles2(getDragStyles);
@@ -168,22 +170,21 @@ export function AppChrome({ children }: Props) {
  * When having docked mega menu we automatically undock it on smaller screens
  */
 function useResponsiveDockedMegaMenu(chrome: AppChromeService) {
-  const dockedMenuLocalStorageState = store.getBool(DOCKED_LOCAL_STORAGE_KEY, true);
+  const dockedMenuLocalStorageState = store.getBool(DOCKED_LOCAL_STORAGE_KEY, false); // Default to false to prevent auto-lock
   const isLargeScreen = useMediaQueryMinWidth('xl');
 
   useEffect(() => {
-    // if undocked we do not need to do anything
-    if (!dockedMenuLocalStorageState) {
+    // Only auto-dock if explicitly set by user and on large screen
+    // Don't auto-undock on small screens - let user control it
+    if (!dockedMenuLocalStorageState || !isLargeScreen) {
       return;
     }
 
     const state = chrome.state.getValue();
-    if (isLargeScreen && !state.megaMenuDocked) {
+    // Only auto-dock if user previously chose to dock and we're on large screen
+    if (isLargeScreen && !state.megaMenuDocked && dockedMenuLocalStorageState) {
       chrome.setMegaMenuDocked(true, false);
       chrome.setMegaMenuOpen(true);
-    } else if (!isLargeScreen && state.megaMenuDocked) {
-      chrome.setMegaMenuDocked(false, false);
-      chrome.setMegaMenuOpen(false);
     }
   }, [isLargeScreen, chrome, dockedMenuLocalStorageState]);
 }

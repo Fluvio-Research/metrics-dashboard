@@ -47,6 +47,7 @@ export async function getStyleConfigState(cfg?: StyleConfig): Promise<StyleConfi
       size: cfg.size?.fixed ?? defaultStyleConfig.size.fixed,
       rotation: cfg.rotation?.fixed ?? defaultStyleConfig.rotation.fixed, // add ability follow path later
       symbolAlign: cfg.symbolAlign ?? defaultStyleConfig.symbolAlign,
+      pinTipColor: cfg.pinTipColor ?? defaultStyleConfig.pinTipColor,
     },
     maker,
   };

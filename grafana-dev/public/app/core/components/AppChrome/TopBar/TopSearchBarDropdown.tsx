@@ -60,7 +60,9 @@ export const TopSearchBarDropdown = React.memo(() => {
 
   const isLargeScreen = useMediaQueryMinWidth('lg');
   const theme = useTheme2();
-  const isNonAdminUser = !(contextSrv.user.isGrafanaAdmin || contextSrv.hasRole('Admin'));
+  const isSuperAdmin = Boolean((contextSrv.user as any).isSuperAdmin ?? contextSrv.user.isGrafanaAdmin);
+  const isOrgAdmin = contextSrv.hasRole('Admin');
+  const isNonAdminUser = !isOrgAdmin && !isSuperAdmin;
   const useMapsLayout = isNonAdminUser;
   const isFluvioTheme = false; // Set to false for now, can be configured later
   const componentStyles = useStyles2(getStyles, theme.isDark, useMapsLayout, isFluvioTheme);

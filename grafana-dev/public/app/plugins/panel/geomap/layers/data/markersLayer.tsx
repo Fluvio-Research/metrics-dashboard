@@ -16,6 +16,7 @@ import {
   EventBus,
   PanelOptionsEditorBuilder,
 } from '@grafana/data';
+import { ResourceDimensionMode } from '@grafana/schema';
 import { t } from '@grafana/i18n';
 import { FrameVectorSource } from 'app/features/geo/utils/frameVectorSource';
 import { getLocationMatchers } from 'app/features/geo/utils/location';
@@ -32,11 +33,15 @@ import { getStyleDimension } from '../../utils/utils';
 export interface MarkersConfig {
   style: StyleConfig;
   showLegend?: boolean;
+  markerShape?: 'standard' | 'pin';
+  pinTipColor?: string;
 }
 
 const defaultOptions: MarkersConfig = {
   style: defaultStyleConfig,
   showLegend: true,
+  markerShape: 'standard',
+  pinTipColor: '#202124',
 };
 
 export const MARKERS_LAYER_ID = 'markers';
@@ -76,7 +81,27 @@ export const markersLayer: MapLayerRegistryItem<MarkersConfig> = {
       ...options?.config,
     };
 
+    const usePin = config.markerShape === 'pin';
+    if (usePin) {
+      config.style = {
+        ...config.style,
+        symbol: {
+          ...(config.style.symbol ?? { mode: ResourceDimensionMode.Fixed }),
+          fixed: 'google-pin',
+        },
+        pinTipColor: config.pinTipColor ?? config.style.pinTipColor,
+      };
+    } else if (config.pinTipColor) {
+      config.style = {
+        ...config.style,
+        pinTipColor: config.pinTipColor,
+      };
+    }
+
     const style = await getStyleConfigState(config.style);
+    if (usePin) {
+      style.base.pinTipColor = config.pinTipColor ?? style.base.pinTipColor ?? '#202124';
+    }
     const symbol = config.style.symbol?.fixed;
     const webGLStyle = await getWebGLStyle(symbol, config.style.opacity);
     const hasText = styleUsesText(config.style);
@@ -85,7 +110,7 @@ export const markersLayer: MapLayerRegistryItem<MarkersConfig> = {
     const symbolLayer = new WebGLPointsLayer({ source, style: webGLStyle });
     const vectorLayer = new VectorImage({ source, declutter: true });
     // Initialize hasVector with just text check, will be updated when features are available
-    let hasVector = hasText;
+    let hasVector = hasText || usePin;
 
     const layers = new LayerGroup({
       layers: hasVector ? (symbol ? [symbolLayer, vectorLayer] : [vectorLayer]) : [symbolLayer],
@@ -144,6 +169,7 @@ export const markersLayer: MapLayerRegistryItem<MarkersConfig> = {
             const idx: number = feature.get('rowIndex');
             const dims = style.dims;
             const values = { ...style.base };
+            values.pinTipColor = config.pinTipColor ?? style.base.pinTipColor;
 
             if (dims?.color) {
               values.color = dims.color.get(idx);
@@ -199,14 +225,17 @@ export const markersLayer: MapLayerRegistryItem<MarkersConfig> = {
             }
 
             // Set style to be used by VectorLayer (text only)
-            if (hasText) {
+            if (usePin) {
+              const markerStyle = style.maker(values);
+              feature.setStyle(markerStyle);
+            } else if (hasText) {
               const textStyle = textMarker(values);
               feature.setStyle(textStyle);
             }
           });
 
           // Update hasVector state after processing all features
-          hasVector = hasText || hasLineString;
+          hasVector = hasText || hasLineString || usePin;
 
           // Update layer visibility based on current hasVector state
           const layersArray = layers.getLayers();
@@ -233,6 +262,25 @@ export const markersLayer: MapLayerRegistryItem<MarkersConfig> = {
               displayRotation: true,
             },
             defaultValue: defaultOptions.style,
+          })
+          .addRadio({
+            path: 'config.markerShape',
+            name: t('geomap.markers-layer.marker-shape', 'Marker style'),
+            defaultValue: defaultOptions.markerShape,
+            settings: {
+              options: [
+                { label: t('geomap.markers-layer.marker-shape.standard', 'Standard'), value: 'standard' },
+                { label: t('geomap.markers-layer.marker-shape.pin', 'Google pin'), value: 'pin' },
+              ],
+            },
+          })
+          .addColorPicker({
+            path: 'config.pinTipColor',
+            name: t('geomap.markers-layer.pin-tip-color', 'Pin tip color'),
+            description: t('geomap.markers-layer.pin-tip-color-desc', 'Tip color when using the Google-style marker'),
+            defaultValue: defaultOptions.pinTipColor,
+            showIf: (cfg) => cfg.markerShape === 'pin',
+            settings: [{ enableNamedColors: true }],
           })
           .addBooleanSwitch({
             path: 'config.showLegend',

@@ -23,13 +23,12 @@ export function useDashboardList(options: UseDashboardListOptions = {}) {
       setError(null);
       
       try {
-        const params = {
+        // Use the correct API endpoint for dashboard search
+        const result = await getBackendSrv().get('/api/search', {
           type: 'dash-db',
           limit: limit,
           sort: 'name_sort',
-        };
-        
-        const result = await getBackendSrv().search(params);
+        });
         setDashboards(result || []);
       } catch (err) {
         console.error('Failed to fetch dashboards:', err);

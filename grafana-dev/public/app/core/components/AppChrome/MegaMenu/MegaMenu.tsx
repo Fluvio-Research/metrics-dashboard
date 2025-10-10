@@ -42,13 +42,15 @@ export const MegaMenu = memo(
     const [patchPreferences] = usePatchUserPreferencesMutation();
     const pinnedItems = usePinnedItems();
     
-    // Check if user is admin (server admin or org admin)
-    const isAdmin = contextSrv.user.isGrafanaAdmin || contextSrv.hasRole('Admin');
+    // Distinguish between org admins and super admins (server admins)
+    const isSuperAdmin = Boolean((contextSrv.user as any).isSuperAdmin ?? contextSrv.user.isGrafanaAdmin);
+    const isOrgAdmin = contextSrv.hasRole('Admin');
+    const isRestrictedUser = !isOrgAdmin && !isSuperAdmin;
     
     // Fetch dashboards for non-admin users
     const { dashboards } = useDashboardList({ 
       limit: 8, // Show 8 dashboards in a 2x4 grid
-      enabled: !isAdmin 
+      enabled: isRestrictedUser // Only fetch for users without elevated admin permissions
     });
 
     // Process navigation items based on user role
@@ -59,8 +61,8 @@ export const MegaMenu = memo(
           return false;
         }
         
-        // For non-admin users
-        if (!isAdmin) {
+        // For non-admin users (neither org admin nor super admin)
+        if (isRestrictedUser) {
           // Remove bookmarks and starred items
           if (item.id === 'bookmarks' || item.id === 'starred') {
             return false;
@@ -163,8 +165,8 @@ export const MegaMenu = memo(
                 ))}
               </ul>
               
-              {/* Dashboard Cards Section for non-admin users - moved to bottom */}
-              {!isAdmin && dashboards.length > 0 && (
+              {/* Dashboard Cards Section for non-admin users */}
+              {isRestrictedUser && dashboards.length > 0 && (
                 <DashboardCardsSection 
                   dashboards={dashboards} 
                   onClose={state.megaMenuDocked ? undefined : onClose}
@@ -187,6 +189,7 @@ export const MegaMenu = memo(
 MegaMenu.displayName = 'MegaMenu';
 
 const getStyles = (theme: GrafanaTheme2) => {
+  const isDarkTheme = theme.colors.mode === 'dark';
   
   return {
     content: css({
@@ -196,18 +199,20 @@ const getStyles = (theme: GrafanaTheme2) => {
       flexGrow: 1,
       position: 'relative',
       height: '100%',
-      ...(false && {
-        backgroundColor: '#1B4D72 !important',
-        '& *': {
-          color: '#FFFFFF !important',
-        },
-        '& a': {
-          color: '#FFFFFF !important',
-        },
-        '& span': {
-          color: '#FFFFFF !important',
-        },
-      }),
+      backgroundColor: isDarkTheme ? theme.colors.background.primary : theme.colors.background.canvas,
+      borderRight: `1px solid ${theme.colors.border.weak}`,
+      
+      // Modern sidebar styling
+      '&::before': {
+        content: '""',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: '4px',
+        background: theme.colors.gradients.brandVertical,
+        zIndex: 1,
+      },
     }),
     mobileHeader: css({
       display: 'flex',
@@ -224,56 +229,67 @@ const getStyles = (theme: GrafanaTheme2) => {
       display: 'flex',
       flexDirection: 'column',
       listStyleType: 'none',
-      padding: theme.spacing(1, 1, 2, 1),
+      padding: theme.spacing(1.5, 1, 2, 1),
+      paddingTop: theme.spacing(2), // Account for the top accent bar
       [theme.breakpoints.up('md')]: {
         width: MENU_WIDTH,
       },
-      ...(false && {
-        '& li': {
-          borderRadius: '8px',
-          margin: theme.spacing(0.25, 0),
-          transition: 'all 0.2s ease-in-out',
-          '&:hover': {
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-            transform: 'translateX(2px)',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-          },
+      
+      // Modern sidebar item styling with subtle professional animations
+      '& li': {
+        borderRadius: theme.shape.radius.default,
+        margin: theme.spacing(0.25, 0),
+        transition: 'all 0.2s ease-in-out',
+        position: 'relative',
+        borderLeft: '2px solid transparent',
+        
+        '&:hover': {
+          backgroundColor: isDarkTheme 
+            ? 'rgba(77, 172, 255, 0.06)' 
+            : 'rgba(77, 172, 255, 0.04)',
+          transform: 'translateX(2px)',
+          borderLeft: `2px solid ${theme.colors.primary.main}`,
+          boxShadow: `0 2px 8px ${isDarkTheme ? 'rgba(0, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0.08)'}`,
         },
-        '& a': {
-          borderRadius: '8px',
-          padding: theme.spacing(1),
-          transition: 'all 0.2s ease-in-out',
+        
+        '&:active': {
+          transform: 'translateX(1px)',
+          transition: 'all 0.1s ease-out',
         },
-        '& button': {
-          backgroundColor: 'transparent !important',
-          borderColor: 'rgba(255, 255, 255, 0.2) !important',
-          color: '#FFFFFF !important',
-          '&:hover': {
-            backgroundColor: 'rgba(255, 255, 255, 0.1) !important',
-            borderColor: 'rgba(255, 255, 255, 0.3) !important',
-          },
+      },
+      
+      '& a': {
+        borderRadius: theme.shape.radius.default,
+        padding: theme.spacing(0.75, 1),
+        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: theme.spacing(1),
+        textDecoration: 'none',
+        color: theme.colors.text.primary,
+        fontWeight: theme.typography.fontWeightMedium,
+        
+        '&:hover': {
+          color: theme.colors.primary.main,
         },
-      }),
+      },
+      
+      // Subtle icon styling
+      '& .icon': {
+        opacity: 0.7,
+        transition: 'all 0.2s ease-in-out',
+      },
+      
+      '& li:hover .icon': {
+        opacity: 1,
+        color: theme.colors.primary.main,
+        transform: 'scale(1.1)',
+      },
     }),
     inviteNewMemberButton: css({
       display: 'flex',
       padding: theme.spacing(1.5, 1, 1.5, 1),
       borderTop: `1px solid ${theme.colors.border.weak}`,
-      ...(false && {
-        '& button': {
-          backgroundColor: 'rgba(255, 255, 255, 0.15) !important',
-          borderColor: 'rgba(255, 255, 255, 0.3) !important',
-          color: '#FFFFFF !important',
-          fontWeight: 500,
-          borderRadius: '8px',
-          transition: 'all 0.2s ease-in-out',
-          '&:hover': {
-            backgroundColor: 'rgba(255, 255, 255, 0.25) !important',
-            transform: 'translateY(-1px)',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-          },
-        },
-      }),
     }),
     scrollableContent: css({
       flex: 1,

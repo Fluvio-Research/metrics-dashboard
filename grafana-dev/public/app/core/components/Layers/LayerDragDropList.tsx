@@ -65,17 +65,17 @@ export const LayerDragDropList = <T extends LayerElement>({
                         className={getRowStyle(isSelected)}
                         ref={provided.innerRef}
                         {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        onMouseDown={() => onSelect(element)}
                         role="button"
                         tabIndex={0}
                       >
-                        <LayerName
-                          name={uid}
-                          onChange={(v) => onNameChange(element, v)}
-                          verifyLayerNameUniqueness={verifyLayerNameUniqueness ?? undefined}
-                        />
-                        <div className={style.textWrapper}>&nbsp; {getLayerInfo(element)}</div>
+                        <div onClick={(e) => e.stopPropagation()} onMouseDown={(e) => e.stopPropagation()}>
+                          <LayerName
+                            name={uid}
+                            onChange={(v) => onNameChange(element, v)}
+                            verifyLayerNameUniqueness={verifyLayerNameUniqueness ?? undefined}
+                          />
+                        </div>
+                        <div className={style.textWrapper} onClick={() => onSelect(element)}>&nbsp; {getLayerInfo(element)}</div>
 
                         {showActions(element) && (
                           <>
@@ -96,16 +96,20 @@ export const LayerDragDropList = <T extends LayerElement>({
                             />
                           </>
                         )}
-                        {layers.length > shouldRenderDragIconLengthThreshold && (
-                          <Icon
-                            aria-label={t(
-                              'layers.layer-drag-drop-list.draggable-aria-label',
-                              'Drag and drop to reorder'
-                            )}
-                            name="draggabledots"
-                            size="lg"
-                            className={style.dragIcon}
-                          />
+                        {layers.length > shouldRenderDragIconLengthThreshold ? (
+                          <div {...provided.dragHandleProps}>
+                            <Icon
+                              aria-label={t(
+                                'layers.layer-drag-drop-list.draggable-aria-label',
+                                'Drag and drop to reorder'
+                              )}
+                              name="draggabledots"
+                              size="lg"
+                              className={style.dragIcon}
+                            />
+                          </div>
+                        ) : (
+                          <div {...provided.dragHandleProps} style={{ flexGrow: 1, cursor: 'grab' }} />
                         )}
                       </div>
                     )}

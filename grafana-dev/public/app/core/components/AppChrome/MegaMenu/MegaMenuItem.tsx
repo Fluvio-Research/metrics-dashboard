@@ -161,12 +161,17 @@ export function MegaMenuItem({ link, activeItem, level = 0, onClick, onPin, isPi
 }
 
 const getStyles = (theme: GrafanaTheme2) => {
+  const isDarkTheme = theme.colors.mode === 'dark';
   
   return {
     icon: css({
       width: theme.spacing(3),
-      ...(false && {
-        filter: 'brightness(0) invert(1)',
+      color: theme.colors.text.secondary,
+      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+      
+      // Add subtle glow effect for dark theme
+      ...(isDarkTheme && {
+        filter: 'drop-shadow(0 0 2px rgba(77, 172, 255, 0.3))',
       }),
     }),
     img: css({
@@ -179,43 +184,60 @@ const getStyles = (theme: GrafanaTheme2) => {
     listItem: css({
       flex: 1,
       maxWidth: '100%',
-      ...(false && {
-        borderRadius: '8px',
-        margin: theme.spacing(0.25, 0),
-        transition: 'all 0.2s ease-in-out',
-        '&:hover': {
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-          transform: 'translateX(2px)',
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+      position: 'relative',
+      
+      // Modern hover effects
+      '&:hover': {
+        '& .icon': {
+          color: theme.colors.primary.main,
+          transform: 'scale(1.1)',
         },
-      }),
+        
+        '& a, & button': {
+          color: theme.colors.primary.main,
+        },
+      },
+      
+      // Active state indicator
+      '&:has([aria-current="page"])': {
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          left: 0,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          width: '3px',
+          height: '60%',
+          backgroundColor: theme.colors.primary.main,
+          borderRadius: '0 2px 2px 0',
+        },
+        
+        backgroundColor: isDarkTheme 
+          ? 'rgba(77, 172, 255, 0.1)' 
+          : 'rgba(77, 172, 255, 0.05)',
+      },
     }),
     menuItem: css({
       display: 'flex',
       alignItems: 'center',
       gap: theme.spacing(1),
-      height: theme.spacing(4),
+      height: theme.spacing(4.5), // Slightly taller for better touch targets
       paddingLeft: theme.spacing(0.5),
+      paddingRight: theme.spacing(1),
       position: 'relative',
-      ...(false && {
-        borderRadius: '8px',
-        padding: theme.spacing(0.5, 1),
-        transition: 'all 0.2s ease-in-out',
-        color: '#FFFFFF !important',
-        '& *': {
-          color: '#FFFFFF !important',
-        },
-        '& a': {
-          color: '#FFFFFF !important',
-          textDecoration: 'none',
-        },
-        '& span': {
-          color: '#FFFFFF !important',
-        },
-        '&:hover': {
-          backgroundColor: 'rgba(255, 255, 255, 0.1) !important',
-        },
-      }),
+      borderRadius: theme.shape.radius.default,
+      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+      
+      '&:hover': {
+        backgroundColor: isDarkTheme 
+          ? 'rgba(255, 255, 255, 0.05)' 
+          : 'rgba(0, 0, 0, 0.04)',
+        transform: 'translateX(2px)',
+      },
+      
+      '&:active': {
+        transform: 'translateX(1px)',
+      },
     }),
     menuItemWithIcon: css({
       paddingLeft: theme.spacing(0),
@@ -255,14 +277,18 @@ const getStyles = (theme: GrafanaTheme2) => {
     }),
     collapseButton: css({
       margin: 0,
-      ...(false && {
-        backgroundColor: 'transparent !important',
-        borderColor: 'rgba(255, 255, 255, 0.2) !important',
-        color: '#FFFFFF !important',
-        '&:hover': {
-          backgroundColor: 'rgba(255, 255, 255, 0.1) !important',
-        },
-      }),
+      backgroundColor: 'transparent',
+      border: `1px solid ${theme.colors.border.weak}`,
+      color: theme.colors.text.primary,
+      borderRadius: theme.shape.radius.default,
+      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+      
+      '&:hover': {
+        backgroundColor: isDarkTheme 
+          ? 'rgba(255, 255, 255, 0.05)' 
+          : 'rgba(0, 0, 0, 0.04)',
+        borderColor: theme.colors.border.medium,
+      },
     }),
     collapsibleSectionWrapper: css({
       alignItems: 'center',
@@ -277,45 +303,43 @@ const getStyles = (theme: GrafanaTheme2) => {
       gap: theme.spacing(2),
       minWidth: 0,
       paddingLeft: theme.spacing(1),
-      ...(false && {
-        color: '#FFFFFF !important',
-        fontWeight: 500,
-        '& *': {
-          color: '#FFFFFF !important',
-        },
-        '& a': {
-          color: '#FFFFFF !important',
-        },
-        '& span': {
-          color: '#FFFFFF !important',
-        },
-      }),
+      color: theme.colors.text.primary,
+      fontWeight: theme.typography.fontWeightMedium,
+      
+      '& *': {
+        color: 'inherit',
+      },
+      '& a': {
+        color: 'inherit',
+        textDecoration: 'none',
+      },
+      '& span': {
+        color: 'inherit',
+      },
     }),
     labelWrapperWithIcon: css({
       paddingLeft: theme.spacing(0.5),
-      ...(false && {
-        paddingLeft: theme.spacing(1),
-      }),
     }),
     hasActiveChild: css({
       color: theme.colors.text.primary,
-      ...(false && {
-        fontWeight: 600,
-        backgroundColor: 'rgba(255, 255, 255, 0.15)',
-        borderRadius: '6px',
-        padding: theme.spacing(0.5),
-      }),
+      fontWeight: theme.typography.fontWeightBold,
+      backgroundColor: isDarkTheme 
+        ? 'rgba(77, 172, 255, 0.1)' 
+        : 'rgba(77, 172, 255, 0.05)',
+      borderRadius: theme.shape.radius.default,
+      padding: theme.spacing(0.5),
     }),
     children: css({
       display: 'flex',
       listStyleType: 'none',
       flexDirection: 'column',
-      ...(false && {
-        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-        borderRadius: '8px',
-        margin: theme.spacing(0.5, 0),
-        padding: theme.spacing(0.5),
-      }),
+      backgroundColor: isDarkTheme 
+        ? 'rgba(255, 255, 255, 0.02)' 
+        : 'rgba(0, 0, 0, 0.02)',
+      borderRadius: theme.shape.radius.default,
+      margin: theme.spacing(0.5, 0),
+      padding: theme.spacing(0.5),
+      border: `1px solid ${theme.colors.border.weak}`,
     }),
     emptyMessage: css({
       color: theme.colors.text.secondary,

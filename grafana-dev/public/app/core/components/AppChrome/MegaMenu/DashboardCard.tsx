@@ -1,7 +1,6 @@
 import { css } from '@emotion/css';
-import { useState } from 'react';
 import { GrafanaTheme2 } from '@grafana/data';
-import { useStyles2 } from '@grafana/ui';
+import { useStyles2, Icon } from '@grafana/ui';
 import { DashboardSearchItem } from 'app/features/search/types';
 import { locationService } from '@grafana/runtime';
 import kbn from 'app/core/utils/kbn';
@@ -13,23 +12,9 @@ interface DashboardCardProps {
 
 export function DashboardCard({ dashboard, onClick }: DashboardCardProps) {
   const styles = useStyles2(getStyles);
-  const [iframeLoaded, setIframeLoaded] = useState(false);
-  const [iframeError, setIframeError] = useState(false);
 
-  // Generate iframe URL for dashboard preview
-  const getIframeUrl = (uid: string) => {
-    const params = new URLSearchParams({
-      kiosk: 'tv',             // TV mode - cleaner than kiosk=true
-      theme: 'light',          // Use light theme for consistency
-      refresh: '5m',           // Refresh every 5 minutes
-      from: 'now-6h',          // Show more data for better preview
-      to: 'now',
-      // Force specific viewport dimensions to ensure full dashboard is visible
-      width: '1400',
-      height: '1050',
-    });
-    return `/d/${uid}?${params.toString()}`;
-  };
+  // Always use page icon for modern, consistent design
+  const getDashboardIcon = () => 'dashboard' as const;
 
   const handleClick = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -54,49 +39,39 @@ export function DashboardCard({ dashboard, onClick }: DashboardCardProps) {
     }
   };
 
-  const handleIframeLoad = () => {
-    setIframeLoaded(true);
-  };
 
-  const handleIframeError = () => {
-    setIframeError(true);
-  };
-
-  // Render dashboard iframe preview
-  const renderDashboardPreview = () => {
-    if (!dashboard.uid) {
-      return (
-        <div className={styles.previewDefault}>
-          <div className={styles.previewIcon}>📊</div>
-          <div className={styles.fallbackText}>Dashboard</div>
-        </div>
-      );
-    }
-
-    const iframeUrl = getIframeUrl(dashboard.uid);
-
+  // Render modern list item design
+  const renderDashboardItem = () => {
+    const iconName = getDashboardIcon();
+    
     return (
-      <div className={styles.iframeContainer}>
-        {!iframeError && (
-          <iframe
-            src={iframeUrl}
-            className={styles.dashboardIframe}
-            onLoad={handleIframeLoad}
-            onError={handleIframeError}
-            style={{ opacity: iframeLoaded ? 1 : 0 }}
-            title={`${dashboard.title} preview`}
-            sandbox="allow-scripts allow-same-origin"
-          />
-        )}
+      <div className={styles.listItem}>
+        <div className={`${styles.iconContainer} icon-container`}>
+          <Icon name={iconName} size="lg" className={`${styles.dashboardIcon} dashboard-icon`} />
+        </div>
         
-        {(!iframeLoaded || iframeError) && (
-          <div className={styles.previewDefault}>
-            <div className={styles.previewIcon}>📊</div>
-            <div className={styles.fallbackText}>
-              {iframeError ? 'Preview unavailable' : 'Loading...'}
-            </div>
+        <div className={styles.content}>
+          <div className={styles.title}>
+            {dashboard.title}
           </div>
-        )}
+          
+          {dashboard.tags && dashboard.tags.length > 0 && (
+            <div className={styles.tags}>
+              {dashboard.tags.slice(0, 3).map((tag, index) => (
+                <span key={index} className={`${styles.tag} tag`}>
+                  {tag}
+                </span>
+              ))}
+              {dashboard.tags.length > 3 && (
+                <span className={styles.tagMore}>+{dashboard.tags.length - 3}</span>
+              )}
+            </div>
+          )}
+        </div>
+        
+        <div className={styles.actions}>
+          <Icon name="arrow-right" size="sm" className={`${styles.arrowIcon} arrow-icon`} />
+        </div>
       </div>
     );
   };
@@ -110,25 +85,13 @@ export function DashboardCard({ dashboard, onClick }: DashboardCardProps) {
 
   return (
     <div 
-      className={styles.card} 
+      className={styles.container} 
       onClick={handleClick} 
       onKeyDown={handleKeyDown}
       role="button" 
       tabIndex={0}
-      style={{ cursor: 'pointer' }}
     >
-      <div className={styles.previewContainer}>
-        {renderDashboardPreview()}
-        
-        {/* Overlay for hover effect */}
-        <div className={styles.overlay}>
-          <div className={styles.playIcon}>▶</div>
-        </div>
-      </div>
-      
-      <div className={styles.title}>
-        {dashboard.title}
-      </div>
+      {renderDashboardItem()}
     </div>
   );
 }
@@ -137,222 +100,139 @@ const getStyles = (theme: GrafanaTheme2) => {
   const isDarkTheme = theme.colors.mode === 'dark';
   
   return {
-    card: css({
-      display: 'flex',
-      flexDirection: 'column',
-      margin: theme.spacing(0.5, 0.5, 1, 0.5),
-      borderRadius: '8px',
-      overflow: 'hidden',
+    container: css({
+      width: '100%',
       cursor: 'pointer',
-      transition: 'all 0.2s ease-in-out',
-      backgroundColor: theme.colors.background.secondary,
-      border: `1px solid ${theme.colors.border.weak}`,
-      
-      '&:hover': {
-        transform: 'translateY(-2px)',
-        boxShadow: theme.shadows.z3,
-        borderColor: theme.colors.border.medium,
-      },
       
       '&:focus': {
-        outline: `2px solid ${theme.colors.primary.border}`,
+        outline: `2px solid ${theme.colors.primary.main}`,
         outlineOffset: '2px',
+        borderRadius: theme.shape.radius.default,
       },
+    }),
+    
+    listItem: css({
+      display: 'flex',
+      alignItems: 'center',
+      padding: theme.spacing(0.75, 1),
+      margin: theme.spacing(0.25, 0),
+      borderRadius: theme.shape.radius.default,
+      transition: 'all 0.2s ease-in-out',
+      border: `1px solid transparent`,
+      borderLeft: '2px solid transparent',
       
-      ...(false && {
-        backgroundColor: 'rgba(26, 74, 107, 0.3)',
-        border: '1px solid rgba(255, 255, 255, 0.2)',
-        backdropFilter: 'blur(10px)',
+      '&:hover': {
+        backgroundColor: isDarkTheme 
+          ? 'rgba(77, 172, 255, 0.06)' 
+          : 'rgba(77, 172, 255, 0.04)',
+        borderLeft: `2px solid ${theme.colors.primary.main}`,
+        transform: 'translateX(2px)',
+        boxShadow: `0 2px 8px ${isDarkTheme ? 'rgba(0, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0.08)'}`,
         
-        '&:hover': {
-          backgroundColor: 'rgba(26, 74, 107, 0.5)',
-          borderColor: 'rgba(255, 255, 255, 0.3)',
-          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)',
+        '& .icon-container': {
+          transform: 'scale(1.05)',
+          backgroundColor: isDarkTheme 
+            ? 'rgba(77, 172, 255, 0.15)' 
+            : 'rgba(77, 172, 255, 0.12)',
         },
-      }),
-      
-      ...(isDarkTheme && {
-        backgroundColor: theme.colors.background.primary,
-        borderColor: theme.colors.border.medium,
-      }),
-    }),
-    
-    previewContainer: css({
-      position: 'relative',
-      width: '100%',
-      height: '80px',
-      overflow: 'hidden',
-      backgroundColor: theme.colors.background.canvas,
-      
-      ...(false && {
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-      }),
-      
-      ...(isDarkTheme && {
-        backgroundColor: theme.colors.background.secondary,
-      }),
-    }),
-    
-    iframeContainer: css({
-      position: 'relative',
-      width: '100%',
-      height: '100%',
-      overflow: 'hidden',
-      backgroundColor: theme.colors.background.canvas,
-      
-      // Ensure the scaled iframe fits properly
-      '& iframe': {
-        maxWidth: 'none',
-        maxHeight: 'none',
+        
+        '& .dashboard-icon': {
+          transform: 'scale(1.05)',
+        },
+        
+        '& .arrow-icon': {
+          opacity: 1,
+          transform: 'translateX(2px)',
+          color: theme.colors.primary.main,
+        },
       },
       
-      ...(false && {
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-      }),
-      
-      ...(isDarkTheme && {
-        backgroundColor: theme.colors.background.secondary,
-      }),
+      '&:active': {
+        transform: 'translateX(1px)',
+        transition: 'all 0.1s ease-out',
+      },
     }),
     
-    dashboardIframe: css({
-      width: '1400px', // Larger width to capture full dashboard
-      height: '1050px', // Larger height to capture full dashboard
-      border: 'none',
-      borderRadius: '4px 4px 0 0',
-      transition: 'opacity 0.3s ease-in-out',
-      // Use both transform and zoom for better compatibility
-      transform: 'scale(0.285)', // Scale down to fit: ~400px/1400px ≈ 0.285
-      zoom: '0.285', // Alternative scaling method for better iframe support
-      transformOrigin: 'top left',
-      pointerEvents: 'none', // Prevent interaction with iframe content
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      overflow: 'hidden',
-      // Force iframe to render at full size before scaling
-      minWidth: '1400px',
-      minHeight: '1050px',
+    iconContainer: css({
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: theme.spacing(4),
+      height: theme.spacing(4),
+      marginRight: theme.spacing(1),
+      borderRadius: theme.shape.radius.default,
+      backgroundColor: isDarkTheme 
+        ? 'rgba(77, 172, 255, 0.1)' 
+        : 'rgba(77, 172, 255, 0.08)',
+      border: `1px solid ${isDarkTheme ? 'rgba(77, 172, 255, 0.2)' : 'rgba(77, 172, 255, 0.15)'}`,
+      transition: 'all 0.2s ease-in-out',
     }),
     
-    previewLoading: css({
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
+    dashboardIcon: css({
+      color: theme.colors.primary.main,
+      opacity: 0.85,
+      transition: 'all 0.2s ease-in-out',
+    }),
+    
+    content: css({
+      flex: 1,
+      minWidth: 0,
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: theme.colors.background.canvas,
       gap: theme.spacing(0.5),
-      
-      ...(false && {
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-      }),
-    }),
-    
-    loadingSpinner: css({
-      fontSize: '16px',
-      animation: 'spin 1s linear infinite',
-      '@keyframes spin': {
-        '0%': { transform: 'rotate(0deg)' },
-        '100%': { transform: 'rotate(360deg)' },
-      },
-    }),
-    
-    previewDefault: css({
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: theme.colors.background.canvas,
-      gap: theme.spacing(0.5),
-      
-      ...(false && {
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-      }),
-      
-      ...(isDarkTheme && {
-        backgroundColor: theme.colors.background.secondary,
-      }),
-    }),
-    
-    loadingText: css({
-      fontSize: theme.typography.bodySmall.fontSize,
-      color: theme.colors.text.secondary,
-      textAlign: 'center',
-      
-      ...(false && {
-        color: 'rgba(255, 255, 255, 0.8)',
-      }),
-    }),
-    
-    fallbackText: css({
-      fontSize: theme.typography.bodySmall.fontSize,
-      color: theme.colors.text.secondary,
-      textAlign: 'center',
-      marginTop: theme.spacing(0.5),
-      
-      ...(false && {
-        color: 'rgba(255, 255, 255, 0.8)',
-      }),
-    }),
-    
-    previewIcon: css({
-      fontSize: '24px',
-      opacity: 0.6,
-    }),
-    
-    overlay: css({
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      opacity: 0,
-      transition: 'opacity 0.2s ease-in-out',
-      pointerEvents: 'none', // Allow clicks to pass through
-      
-      '.card:hover &': {
-        opacity: 1,
-      },
-    }),
-    
-    playIcon: css({
-      color: 'white',
-      fontSize: '20px',
-      textShadow: '0 1px 2px rgba(0, 0, 0, 0.8)',
     }),
     
     title: css({
-      padding: theme.spacing(0.75, 0.75, 0.75, 0.75),
       fontSize: theme.typography.bodySmall.fontSize,
       fontWeight: theme.typography.fontWeightMedium,
       color: theme.colors.text.primary,
-      textAlign: 'center',
-      lineHeight: '1.2',
+      lineHeight: 1.4,
       overflow: 'hidden',
       textOverflow: 'ellipsis',
-      display: '-webkit-box',
-      WebkitLineClamp: 2,
-      WebkitBoxOrient: 'vertical',
-      minHeight: '2.4em', // Ensure consistent height for 2 lines
-      
-      ...(false && {
-        color: '#FFFFFF',
-        textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
-      }),
+      whiteSpace: 'nowrap',
+    }),
+    
+    tags: css({
+      display: 'flex',
+      gap: theme.spacing(0.5),
+      flexWrap: 'wrap',
+      alignItems: 'center',
+    }),
+    
+    tag: css({
+      fontSize: '10px',
+      padding: theme.spacing(0.25, 0.5),
+      backgroundColor: isDarkTheme 
+        ? 'rgba(255, 255, 255, 0.08)' 
+        : 'rgba(0, 0, 0, 0.06)',
+      color: theme.colors.text.secondary,
+      borderRadius: theme.shape.radius.default,
+      fontWeight: 500,
+      border: `1px solid ${theme.colors.border.weak}`,
+      transition: 'all 0.2s ease-in-out',
+    }),
+    
+    tagMore: css({
+      fontSize: '11px',
+      padding: theme.spacing(0.25, 0.5),
+      backgroundColor: theme.colors.primary.transparent,
+      color: theme.colors.primary.text,
+      borderRadius: theme.shape.radius.default,
+      fontWeight: 600,
+      border: `1px solid ${theme.colors.primary.border}`,
+    }),
+    
+    actions: css({
+      display: 'flex',
+      alignItems: 'center',
+      marginLeft: theme.spacing(1),
+    }),
+    
+    arrowIcon: css({
+      color: theme.colors.text.secondary,
+      opacity: 0,
+      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+      transform: 'translateX(-2px)',
     }),
   };
 };

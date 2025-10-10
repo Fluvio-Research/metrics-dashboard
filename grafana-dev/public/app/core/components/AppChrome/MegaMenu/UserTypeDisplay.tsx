@@ -50,12 +50,7 @@ const getStyles = (theme: GrafanaTheme2) => {
       borderTop: `1px solid ${theme.colors.border.weak}`,
       backgroundColor: theme.colors.background.secondary,
       marginTop: 'auto',
-      ...(false && {
-        borderTop: '1px solid #1A4A6B',
-        backgroundColor: 'rgba(26, 74, 107, 0.3)',
-        backdropFilter: 'blur(10px)',
-        borderRadius: '8px 8px 0 0',
-      }),
+      
       ...(isDarkTheme && {
         backgroundColor: theme.colors.background.primary,
         borderTop: `1px solid ${theme.colors.border.medium}`,
@@ -75,10 +70,6 @@ const getStyles = (theme: GrafanaTheme2) => {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
-      ...(false && {
-        color: '#FFFFFF',
-        textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)',
-      }),
     }),
     userType: css({
       fontSize: '11px',
@@ -93,11 +84,6 @@ const getStyles = (theme: GrafanaTheme2) => {
       textTransform: 'uppercase',
       letterSpacing: '0.5px',
       border: `1px solid ${theme.colors.border.weak}`,
-      ...(false && {
-        color: 'rgba(255, 255, 255, 0.8)',
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-        border: '1px solid rgba(255, 255, 255, 0.2)',
-      }),
       ...(isDarkTheme && {
         backgroundColor: theme.colors.background.secondary,
         border: `1px solid ${theme.colors.border.medium}`,

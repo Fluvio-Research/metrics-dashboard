@@ -25,12 +25,12 @@ export function DashboardCardsSection({ dashboards, onClose }: DashboardCardsSec
   return (
     <div className={styles.section}>
       <div className={styles.sectionTitle}>
-        Your Dashboards
+        Your Menu
       </div>
-      <div className={styles.cardsGrid}>
+      <div className={styles.dashboardList}>
         {dashboards.map((dashboard) => (
           <DashboardCard
-            key={dashboard.uid }
+            key={dashboard.uid}
             dashboard={dashboard}
             onClick={handleDashboardClick}
           />
@@ -47,40 +47,37 @@ const getStyles = (theme: GrafanaTheme2) => {
       padding: theme.spacing(1, 0.5, 2, 0.5),
       borderBottom: `1px solid ${theme.colors.border.weak}`,
       
-      ...(false && {
-        borderBottomColor: 'rgba(255, 255, 255, 0.2)',
-      }),
     }),
     
     sectionTitle: css({
-      fontSize: theme.typography.h6.fontSize,
+      fontSize: '12px',
       fontWeight: theme.typography.fontWeightBold,
       color: theme.colors.text.primary,
       marginBottom: theme.spacing(1),
-      padding: theme.spacing(0, 0.5),
-      textAlign: 'center',
+      padding: theme.spacing(0, 1),
+      textTransform: 'uppercase',
+      letterSpacing: '0.5px',
       
-      ...(false && {
-        color: '#FFFFFF',
-        textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
-      }),
+      // Add subtle accent
+      position: 'relative',
+      '&::after': {
+        content: '""',
+        position: 'absolute',
+        bottom: '-2px',
+        left: theme.spacing(1),
+        right: theme.spacing(1),
+        height: '2px',
+        backgroundColor: theme.colors.primary.main,
+        borderRadius: '1px',
+        opacity: 0.6,
+      },
     }),
     
-    cardsGrid: css({
-      display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
-      gap: theme.spacing(0.5),
+    dashboardList: css({
+      display: 'flex',
+      flexDirection: 'column',
+      gap: theme.spacing(0.25),
       padding: theme.spacing(0, 0.5),
-      
-      // For very narrow sidebars, stack cards vertically
-      [theme.breakpoints.down('sm')]: {
-        gridTemplateColumns: '1fr',
-      },
-      
-      // For wider sidebars, we could show more columns
-      [theme.breakpoints.up('xl')]: {
-        gridTemplateColumns: '1fr 1fr',
-      },
     }),
   };
 };

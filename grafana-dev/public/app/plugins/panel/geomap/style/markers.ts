@@ -30,7 +30,10 @@ const MarkerShapePath = {
   star: 'img/icons/marker/star.svg',
   cross: 'img/icons/marker/cross.svg',
   x: 'img/icons/marker/x-mark.svg',
+  pin: 'img/icons/marker/pin.svg',
 };
+
+const DEFAULT_PIN_TIP_COLOR = '#202124';
 
 export function getFillColor(cfg: StyleConfigValues) {
   const opacity = cfg.opacity == null ? 0.8 : cfg.opacity;
@@ -250,6 +253,49 @@ const makers: SymbolMaker[] = [
       });
     },
   },
+  {
+    id: 'google-pin',
+    name: 'Google Pin',
+    aliasIds: [MarkerShapePath.pin, 'pin'],
+    make: (cfg: StyleConfigValues) => {
+      const baseRadius = (cfg.size ?? DEFAULT_SIZE) * 1.2;
+      const tipColor = cfg.pinTipColor ?? DEFAULT_PIN_TIP_COLOR;
+      const circleDisplacement = getDisplacement(cfg.symbolAlign ?? defaultStyleConfig.symbolAlign, baseRadius);
+      // Slightly lift the circle so the tip touches the location
+      circleDisplacement[1] -= baseRadius * 0.6;
+
+      const circleStyle = new Style({
+        image: new Circle({
+          radius: baseRadius,
+          fill: getFillColor(cfg),
+          stroke: new Stroke({ color: '#ffffff', width: Math.max(1, baseRadius * 0.25) }),
+          displacement: circleDisplacement,
+        }),
+      });
+
+      const tipStyle = new Style({
+        image: new RegularShape({
+          points: 3,
+          radius: baseRadius,
+          rotation: Math.PI,
+          fill: new Fill({ color: tipColor }),
+          stroke: new Stroke({ color: tinycolor(tipColor).darken(10).toString(), width: Math.max(1, baseRadius * 0.15) }),
+          displacement: [circleDisplacement[0], baseRadius * 0.8],
+        }),
+      });
+
+      const text = textLabel(cfg);
+      const styles = [tipStyle, circleStyle];
+      if (text) {
+        styles.push(
+          new Style({
+            text,
+          })
+        );
+      }
+      return styles;
+    },
+  },
 ];
 
 async function prepareSVG(url: string, size?: number, backgroundOpacity?: number): Promise<string> {
@@ -345,6 +391,10 @@ export const baseCircleStyle = {
 export async function getWebGLStyle(symbol?: string, opacity?: number): Promise<FlatStyle> {
   // Handle circle explicitly (before generic SVG check)
   if (symbol === MarkerShapePath.circle) {
+    return baseCircleStyle;
+  }
+
+  if (symbol === 'google-pin' || symbol === MarkerShapePath.pin || symbol === 'pin') {
     return baseCircleStyle;
   }
 
