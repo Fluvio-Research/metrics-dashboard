@@ -3,6 +3,7 @@ import { Point } from 'ol/geom';
 import { VectorImage } from 'ol/layer';
 import LayerGroup from 'ol/layer/Group';
 import WebGLPointsLayer from 'ol/layer/WebGLPoints';
+import Collection from 'ol/Collection';
 import { ReactNode } from 'react';
 import { ReplaySubject } from 'rxjs';
 import tinycolor from 'tinycolor2';
@@ -164,7 +165,8 @@ export const advancedToolPitLayer: MapLayerRegistryItem<AdvancedToolPitConfig> =
         // Reset vector layer when necessary for text markers
         hasVector = styleUsesText(config.style);
         if (hasVector && !layers.getLayers().getArray().includes(vectorLayer)) {
-          layers.setLayers(hasVector ? (symbol ? [symbolLayer, vectorLayer] : [vectorLayer]) : [symbolLayer]);
+          const newLayers = hasVector ? (symbol ? [symbolLayer, vectorLayer] : [vectorLayer]) : [symbolLayer];
+          layers.setLayers(new Collection(newLayers));
         }
 
         const processedMarkers = new Set<string>();
@@ -212,7 +214,7 @@ export const advancedToolPitLayer: MapLayerRegistryItem<AdvancedToolPitConfig> =
           }
 
           if (hasVector && geometry.getType() === 'Point') {
-            feature.setStyle(textMarker(values, config.style, theme));
+            feature.setStyle(textMarker(values));
           }
 
           const headerInfo = resolveHeader(config.header, frame, data.series, idx);
@@ -335,10 +337,10 @@ export const advancedToolPitLayer: MapLayerRegistryItem<AdvancedToolPitConfig> =
             category: contentCategory,
             settings: {
               options: [
-                { label: t('geomap.advanced-toolpit.field-type.string', 'String'), value: FieldType.string },
-                { label: t('geomap.advanced-toolpit.field-type.number', 'Number'), value: FieldType.number },
-                { label: t('geomap.advanced-toolpit.field-type.time', 'Time'), value: FieldType.time },
-                { label: t('geomap.advanced-toolpit.field-type.boolean', 'Boolean'), value: FieldType.boolean },
+                { label: t('geomap.advanced-toolpit.field-type.string', 'String'), value: [FieldType.string] },
+                { label: t('geomap.advanced-toolpit.field-type.number', 'Number'), value: [FieldType.number] },
+                { label: t('geomap.advanced-toolpit.field-type.time', 'Time'), value: [FieldType.time] },
+                { label: t('geomap.advanced-toolpit.field-type.boolean', 'Boolean'), value: [FieldType.boolean] },
               ],
             },
             defaultValue: defaultOptions.fieldTypes,
