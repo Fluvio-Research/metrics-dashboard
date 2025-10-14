@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="metrics-mask-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1976D2"/>
+      <stop offset="100%" stop-color="#4DD0E1"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" fill="none"/>
+  <path
+    d="M60 12c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48S86.51 12 60 12zm0 8c22.091 0 40 17.909 40 40s-17.909 40-40 40S20 82.091 20 60 37.909 20 60 20zm-22 48l15-21 11 15 13-20 8 11 11-17"
+    fill="none"
+    stroke="url(#metrics-mask-gradient)"
+    stroke-width="10"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>

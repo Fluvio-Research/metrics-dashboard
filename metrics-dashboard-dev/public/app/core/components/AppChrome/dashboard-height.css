@@ -1,0 +1,22 @@
+/* Dashboard Height Control - Applied via FullWidthToggleButton */
+
+/* Target the main dashboard grid container */
+[class*='dashboard-container'],
+[class*='panel-container'],
+.react-grid-layout {
+  min-height: var(--grafana-dashboard-min-height, auto) !important;
+}
+
+/* Ensure dashboard content stretches to fill the available height */
+[data-testid='dashboard-scene-page'],
+[data-testid='data-testid Dashboard container'] {
+  min-height: var(--grafana-dashboard-min-height, auto);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Make sure the scroll container respects the height */
+.scrollbar-view {
+  min-height: var(--grafana-dashboard-min-height, auto);
+}
+

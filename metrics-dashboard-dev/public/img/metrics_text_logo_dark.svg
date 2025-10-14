@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="64" viewBox="0 0 240 64">
+  <defs>
+    <linearGradient id="metrics-logo-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1E88E5"/>
+      <stop offset="100%" stop-color="#4DD0E1"/>
+    </linearGradient>
+  </defs>
+  <rect width="240" height="64" fill="none"/>
+  <g transform="translate(8 8)">
+    <circle cx="24" cy="24" r="24" fill="url(#metrics-logo-gradient)"/>
+    <path d="M12 34l11-16 8 11 9-14 4 5 10-16" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="12" cy="34" r="4" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="23" cy="18" r="4" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="31" cy="29" r="4" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="40" cy="15" r="4" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="44" cy="20" r="4" fill="#FFFFFF" opacity="0.9"/>
+  </g>
+  <text x="72" y="34" font-family="Helvetica, Arial, sans-serif" font-size="24" fill="#FFFFFF" font-weight="600">
+    Metrics Dashboard
+  </text>
+  <text x="72" y="52" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#B0E3FF" font-weight="400">
+    Observability &amp; analytics platform
+  </text>
+</svg>
