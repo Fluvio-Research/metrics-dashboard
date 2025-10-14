@@ -1,6 +1,0 @@
-./default_env.go
-./environment.go
-./flags.go
-./palette.go
-./static.go
-./utils.go

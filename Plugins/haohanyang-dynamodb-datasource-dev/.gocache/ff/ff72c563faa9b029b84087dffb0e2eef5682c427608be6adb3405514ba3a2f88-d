@@ -1,9 +1,0 @@
-./converter.go
-./doc.go
-./dynamic_frame.go
-./frame.go
-./macros.go
-./query.go
-./resample.go
-./scanrow.go
-./sql.go

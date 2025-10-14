@@ -1,0 +1,12 @@
+./completion.go
+./connector.go
+./data-mock.go
+./datasource.go
+./driver-mock.go
+./driver.go
+./errors.go
+./health.go
+./macros.go
+./metrics.go
+./query.go
+./response.go

@@ -1,5 +1,0 @@
-./doc.go
-./os_windows.go
-./provider.go
-./sso_cached_token.go
-./token_provider.go
