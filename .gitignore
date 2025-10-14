@@ -25,5 +25,8 @@ Thumbs.db
 
 # Temporary files
 *.tmp
-*.temp 
+*.temp
 node_modules
+
+# Large plugin files
+*.tar.gz
