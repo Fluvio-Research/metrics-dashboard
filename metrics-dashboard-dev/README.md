@@ -3,9 +3,8 @@
 
 The open-source platform for monitoring and observability
 
-[![License](https://img.shields.io/github/license/metrics-dashboard/metrics-dashboard)](LICENSE)
-[![Drone](https://drone.metrics-dashboard.net/api/badges/metrics-dashboard/metrics-dashboard/status.svg)](https://drone.metrics-dashboard.net/metrics-dashboard/metrics-dashboard)
-[![Go Report Card](https://goreportcard.com/badge/github.com/metrics-dashboard/metrics-dashboard)](https://goreportcard.com/report/github.com/metrics-dashboard/metrics-dashboard)
+[![License](https://img.shields.io/github/license/Fluvio-Research/metrics-dashboard)](LICENSE)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Fluvio-Research/metrics-dashboard)](https://goreportcard.com/report/github.com/Fluvio-Research/metrics-dashboard)
 
 Metrics Dashboard allows you to query, visualize, alert on and understand your metrics no matter where they are stored. Create, explore, and share dashboards with your team and foster a data-driven culture:
 
@@ -18,33 +17,28 @@ Metrics Dashboard allows you to query, visualize, alert on and understand your m
 
 ## Get started
 
-- [Get Metrics Dashboard](https://metrics-dashboard.com/get)
-- [Installation guides](https://metrics-dashboard.com/docs/metrics-dashboard/latest/setup-metrics-dashboard/installation/)
-
-Unsure if Metrics Dashboard is for you? Watch Metrics Dashboard in action on [play.metrics-dashboard.org](https://play.metrics-dashboard.org/)!
+- [Get Metrics Dashboard](https://github.com/Fluvio-Research/metrics-dashboard)
+- [Installation guides](https://github.com/Fluvio-Research/metrics-dashboard#installation)
 
 ## Documentation
 
-The Metrics Dashboard documentation is available at [metrics-dashboard.com/docs](https://metrics-dashboard.com/docs/).
+The Metrics Dashboard documentation is available in the [repository](https://github.com/Fluvio-Research/metrics-dashboard).
 
 ## Contributing
 
 If you're interested in contributing to the Metrics Dashboard project:
 
-- Start by reading the [Contributing guide](https://github.com/metrics-dashboard/metrics-dashboard/blob/HEAD/CONTRIBUTING.md).
-- Learn how to set up your local environment, in our [Developer guide](https://github.com/metrics-dashboard/metrics-dashboard/blob/HEAD/contribute/developer-guide.md).
-- Explore our [beginner-friendly issues](https://github.com/metrics-dashboard/metrics-dashboard/issues?q=is%3Aopen+is%3Aissue+label%3A%22beginner+friendly%22).
-- Look through our [style guide and Storybook](https://developers.metrics-dashboard.com/ui/latest/index.html).
+- Start by reading the [Contributing guide](https://github.com/Fluvio-Research/metrics-dashboard/blob/HEAD/CONTRIBUTING.md).
+- Learn how to set up your local environment, in our [Developer guide](https://github.com/Fluvio-Research/metrics-dashboard/blob/HEAD/contribute/developer-guide.md).
+- Explore our [issues](https://github.com/Fluvio-Research/metrics-dashboard/issues).
 
 ## Get involved
 
-- Follow [@metrics-dashboard on X (formerly Twitter)](https://x.com/metrics-dashboard/).
-- Read and subscribe to the [Metrics Dashboard blog](https://metrics-dashboard.com/blog/).
-- If you have a specific question, check out our [discussion forums](https://community.metrics-dashboard.com/).
-- For general discussions, join us on the [official Slack](https://slack.metrics-dashboard.com) team.
+- Check out our [GitHub repository](https://github.com/Fluvio-Research/metrics-dashboard) for the latest updates.
+- For questions and discussions, use [GitHub Issues](https://github.com/Fluvio-Research/metrics-dashboard/issues).
 
 This project is tested with [BrowserStack](https://www.browserstack.com/).
 
 ## License
 
-Metrics Dashboard is distributed under [AGPL-3.0-only](LICENSE). For Apache-2.0 exceptions, see [LICENSING.md](https://github.com/metrics-dashboard/metrics-dashboard/blob/HEAD/LICENSING.md).
+Metrics Dashboard is distributed under [AGPL-3.0-only](LICENSE). For Apache-2.0 exceptions, see [LICENSING.md](https://github.com/Fluvio-Research/metrics-dashboard/blob/HEAD/LICENSING.md).

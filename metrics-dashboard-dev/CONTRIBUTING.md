@@ -8,26 +8,27 @@ Whether you're a new contributer or a seasoned veteran we hope these resources h
 
 Interact and be heard:
 
-- Forums: Do you have a problem, question, or curiosity? Visit our [forums](https://gra.fan/fromgithubtoforums) for a reservoir of knowledge- submit your own questions and answers!
-- Meetups: Craving in-person connections without the long journeys? [Join your local Metrics Dashboard & Friends meetup group](https://gra.fan/githubtomeetup)!
-- Community Slack: Eager for real-time connections with fellow users? Begin a conversation on [Slack](https://gra.fan/githubtoslack).
-  Learn:
-- YouTube: From getting started to exploring newer projects like Pyroscope and Beyla, the [Metrics Dashboard YouTube channel](https://gra.fan/githubtoyoutube) has what you need to get started!
-- Meetups: Join a [group near you](https://gra.fan/githubtomeetup) to learn from local experts and ask questions in real time.
-  Share your story:
-- Meetups and blogs: We’d love to feature your OSS Metrics Dashboard Labs use case or story at an upcoming Metrics Dashboard & Friends meetup or on the Metrics Dashboard blog! Submit your idea [here](https://gra.fan/githubtocca) and we’ll connect with you on next steps if accepted.
+- Issues: Do you have a problem, question, or curiosity? Visit our [GitHub Issues](https://github.com/Fluvio-Research/metrics-dashboard/issues) to submit questions and get answers!
+- Discussions: Start conversations and connect with the community through [GitHub Discussions](https://github.com/Fluvio-Research/metrics-dashboard/discussions).
+  
+Learn:
+- Documentation: Check out our repository documentation and guides to get started with Metrics Dashboard.
+- Examples: Explore the examples and demos in the repository to learn best practices.
+  
+Share your story:
+- Contributions: We'd love to hear about your use cases and improvements! Submit your ideas through GitHub Issues or Pull Requests.
 
 ## Make technical contributions
 
 We welcome your technical contributions! Here are some examples:
 
-- Contribute to the Metrics Dashboard codebase- check out these [help-wanted issues](<(https://github.com/metrics-dashboard/metrics-dashboard/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22)>)
+- Contribute to the Metrics Dashboard codebase- check out these [help-wanted issues](<(https://github.com/Fluvio-Research/metrics-dashboard/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22)>)
 - Develop community [plugins](https://metrics-dashboard.com/developers/plugin-tools)
-- Report [bugs](https://github.com/metrics-dashboard/metrics-dashboard/issues/new?template=0-bug-report.yaml)
-- [Triage issues](https://github.com/metrics-dashboard/metrics-dashboard/blob/4414b92e93440cc9ed0f281989ee71dc16216a15/contribute/triage-issues.md)
-- Report [security vulnerabilities](https://github.com/metrics-dashboard/metrics-dashboard/security/policy)
-- Submit a [feature request](https://github.com/metrics-dashboard/metrics-dashboard/issues/new?template=1-feature_requests.md)
-- Write [technical documentation](https://github.com/metrics-dashboard/metrics-dashboard/blob/4414b92e93440cc9ed0f281989ee71dc16216a15/contribute/documentation/README.md)
+- Report [bugs](https://github.com/Fluvio-Research/metrics-dashboard/issues/new?template=0-bug-report.yaml)
+- [Triage issues](https://github.com/Fluvio-Research/metrics-dashboard/blob/4414b92e93440cc9ed0f281989ee71dc16216a15/contribute/triage-issues.md)
+- Report [security vulnerabilities](https://github.com/Fluvio-Research/metrics-dashboard/security/policy)
+- Submit a [feature request](https://github.com/Fluvio-Research/metrics-dashboard/issues/new?template=1-feature_requests.md)
+- Write [technical documentation](https://github.com/Fluvio-Research/metrics-dashboard/blob/4414b92e93440cc9ed0f281989ee71dc16216a15/contribute/documentation/README.md)
 
 **Please note:** We do not currently accept contributions for translations. Please do not submit pull requests translating metrics-dashboard.json files - they will be rejected. We do accept contributions to mark up phrases for translation. See [Internationalization](contribute/internationalization.md).
 
@@ -35,8 +36,8 @@ We welcome your technical contributions! Here are some examples:
 
 Unsure where to begin contributing to Metrics Dashboard? Start by browsing issues labeled `beginner friendly` or `help wanted`.
 
-- [Beginner-friendly](https://github.com/metrics-dashboard/metrics-dashboard/issues?q=is%3Aopen+is%3Aissue+label%3A%22beginner+friendly%22) issues are generally straightforward to complete.
-- [Help wanted](https://github.com/metrics-dashboard/metrics-dashboard/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) issues are problems we would like the community to help us with regardless of complexity.
+- [Beginner-friendly](https://github.com/Fluvio-Research/metrics-dashboard/issues?q=is%3Aopen+is%3Aissue+label%3A%22beginner+friendly%22) issues are generally straightforward to complete.
+- [Help wanted](https://github.com/Fluvio-Research/metrics-dashboard/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) issues are problems we would like the community to help us with regardless of complexity.
 
 If you're looking to make a code change, see how to set up your environment for [local development](contribute/developer-guide.md).
 
@@ -48,9 +49,9 @@ Developing a Metrics Dashboard plugin is a fantastic way to share your unique id
 
 ### Report bugs
 
-Before submitting a new issue, try to make sure someone hasn't already reported the problem. Look through the [existing issues](https://github.com/metrics-dashboard/metrics-dashboard/issues) for similar issues.
+Before submitting a new issue, try to make sure someone hasn't already reported the problem. Look through the [existing issues](https://github.com/Fluvio-Research/metrics-dashboard/issues) for similar issues.
 
-Report a bug by submitting a [bug report](https://github.com/metrics-dashboard/metrics-dashboard/issues/new?template=0-bug-report.yaml). Make sure that you provide as much information as possible on how to reproduce the bug.
+Report a bug by submitting a [bug report](https://github.com/Fluvio-Research/metrics-dashboard/issues/new?template=0-bug-report.yaml). Make sure that you provide as much information as possible on how to reproduce the bug.
 
 Follow the issue template and add additional information that will help us replicate the problem.
 
@@ -73,13 +74,13 @@ Read more about the ways you can [Triage issues](/contribute/triage-issues.md).
 
 #### Security issues
 
-If you believe you've found a security vulnerability, please read our [security policy](https://github.com/metrics-dashboard/metrics-dashboard/security/policy) for more details on reporting.
+If you believe you've found a security vulnerability, please read our [security policy](https://github.com/Fluvio-Research/metrics-dashboard/security/policy) for more details on reporting.
 
 ### Suggest enhancements
 
-If you have an idea of how to improve Metrics Dashboard, submit a [feature request](https://github.com/metrics-dashboard/metrics-dashboard/issues/new?template=1-feature_requests.md).
+If you have an idea of how to improve Metrics Dashboard, submit a [feature request](https://github.com/Fluvio-Research/metrics-dashboard/issues/new?template=1-feature_requests.md).
 
-We want to make Metrics Dashboard accessible to even more people. Submit an [accessibility issue](https://github.com/metrics-dashboard/metrics-dashboard/issues/new?template=2-accessibility.md) to help us understand what we can improve.
+We want to make Metrics Dashboard accessible to even more people. Submit an [accessibility issue](https://github.com/Fluvio-Research/metrics-dashboard/issues/new?template=2-accessibility.md) to help us understand what we can improve.
 
 ### Write documentation
 
