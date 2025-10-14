@@ -6,6 +6,8 @@ grafana-storage/
 
 # Runtime data
 data/
+*/data/
+**/data/
 
 # Environment files
 .env
@@ -34,4 +36,3 @@ node_modules
 # Large plugin files
 *.tar.gz
 
-./data/
