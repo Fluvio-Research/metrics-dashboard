@@ -6,6 +6,10 @@ export interface DynamoDBQuery extends DataQuery {
   limit?: number;
   datetimeAttributes: DatetimeAttribute[];
   customFilters?: CustomFilter[];
+  sortBy?: string;           // Field name to sort by (client-side)
+  sortDirection?: 'asc' | 'desc';  // Sort direction (client-side)
+  sortKey?: string;          // Sort key attribute for DynamoDB native sorting
+  scanIndexForward?: boolean;      // DynamoDB native sort order (Query API only)
 }
 
 export interface CustomFilter {

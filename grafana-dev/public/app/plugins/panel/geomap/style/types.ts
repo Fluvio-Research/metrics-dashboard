@@ -112,6 +112,7 @@ export interface TextStyleConfig {
   offsetY?: number;
   textAlign?: TextAlignment;
   textBaseline?: TextBaseline;
+  color?: string;
 }
 
 // Applying the config to real data gives the values

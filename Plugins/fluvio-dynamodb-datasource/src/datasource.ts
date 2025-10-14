@@ -107,6 +107,12 @@ export class DataSource extends DataSourceWithBackend<DynamoQuery, FluvioDataSou
       partitionKeyName: query.partitionKeyName
         ? this.templateSrv.replace(query.partitionKeyName, variables)
         : query.partitionKeyName,
+      partitionKeyMode: query.partitionKeyMode,
+      partitionKeyValues: query.partitionKeyValues
+        ? query.partitionKeyValues
+            .map((value) => this.templateSrv.replace(value, variables))
+            .filter((value) => value !== '')
+        : query.partitionKeyValues,
       partitionKeyValue: query.partitionKeyValue
         ? this.templateSrv.replace(query.partitionKeyValue, variables)
         : query.partitionKeyValue,
@@ -116,6 +122,19 @@ export class DataSource extends DataSourceWithBackend<DynamoQuery, FluvioDataSou
       sortKeyValue: query.sortKeyValue
         ? this.templateSrv.replace(query.sortKeyValue, variables)
         : query.sortKeyValue,
+      sortKeyOperator: query.sortKeyOperator,
+      sortKeyRangeStart: query.sortKeyRangeStart
+        ? this.templateSrv.replace(query.sortKeyRangeStart, variables)
+        : query.sortKeyRangeStart,
+      sortKeyRangeEnd: query.sortKeyRangeEnd
+        ? this.templateSrv.replace(query.sortKeyRangeEnd, variables)
+        : query.sortKeyRangeEnd,
+      sortKeyValues: query.sortKeyValues
+        ? query.sortKeyValues
+            .map((value) => this.templateSrv.replace(value, variables))
+            .filter((value) => value !== '')
+        : query.sortKeyValues,
+      sortDirection: query.sortDirection,
       timestampField: interpolatedTimestampField,
       fieldMappings:
         query.fieldMappings?.map((mapping) => ({

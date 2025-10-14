@@ -103,14 +103,31 @@ export const markersLayer: MapLayerRegistryItem<MarkersConfig> = {
       style.base.pinTipColor = config.pinTipColor ?? style.base.pinTipColor ?? '#202124';
     }
     const symbol = config.style.symbol?.fixed;
+    console.log('🔍 Markers Layer - Symbol selected:', symbol);
+    console.log('🔍 Markers Layer - usePin:', usePin);
+    
     const webGLStyle = await getWebGLStyle(symbol, config.style.opacity);
     const hasText = styleUsesText(config.style);
     const location = await getLocationMatchers(options.location);
     const source = new FrameVectorSource<Point>(location);
     const symbolLayer = new WebGLPointsLayer({ source, style: webGLStyle });
     const vectorLayer = new VectorImage({ source, declutter: true });
-    // Initialize hasVector with just text check, will be updated when features are available
-    let hasVector = hasText || usePin;
+    
+    // Check if symbol needs vector layer (complex shapes that WebGL can't render)
+    const needsVectorForSymbol = symbol && (
+      symbol.includes('pin') || 
+      symbol.includes('star') || 
+      symbol.includes('cross') ||
+      symbol.includes('x-mark')
+    );
+    
+    console.log('🔍 Markers Layer - needsVectorForSymbol:', needsVectorForSymbol);
+    console.log('🔍 Markers Layer - hasText:', hasText);
+    
+    // Initialize hasVector with text check, pin shapes, or complex symbols
+    let hasVector = hasText || usePin || needsVectorForSymbol;
+    
+    console.log('🔍 Markers Layer - hasVector (will use vector layer):', hasVector);
 
     const layers = new LayerGroup({
       layers: hasVector ? (symbol ? [symbolLayer, vectorLayer] : [vectorLayer]) : [symbolLayer],
@@ -224,8 +241,9 @@ export const markersLayer: MapLayerRegistryItem<MarkersConfig> = {
               feature.setProperties({ offsetY: displacement[1] });
             }
 
-            // Set style to be used by VectorLayer (text only)
-            if (usePin) {
+            // Set style to be used by VectorLayer (text, pins, or complex symbols)
+            if (usePin || needsVectorForSymbol) {
+              console.log('📍 Applying vector style for pin/complex symbol');
               const markerStyle = style.maker(values);
               feature.setStyle(markerStyle);
             } else if (hasText) {
@@ -235,7 +253,7 @@ export const markersLayer: MapLayerRegistryItem<MarkersConfig> = {
           });
 
           // Update hasVector state after processing all features
-          hasVector = hasText || hasLineString || usePin;
+          hasVector = hasText || hasLineString || usePin || needsVectorForSymbol;
 
           // Update layer visibility based on current hasVector state
           const layersArray = layers.getLayers();
@@ -279,7 +297,7 @@ export const markersLayer: MapLayerRegistryItem<MarkersConfig> = {
             name: t('geomap.markers-layer.pin-tip-color', 'Pin tip color'),
             description: t('geomap.markers-layer.pin-tip-color-desc', 'Tip color when using the Google-style marker'),
             defaultValue: defaultOptions.pinTipColor,
-            showIf: (cfg) => cfg.markerShape === 'pin',
+            showIf: (cfg) => cfg.config?.markerShape === 'pin',
             settings: [{ enableNamedColors: true }],
           })
           .addBooleanSwitch({

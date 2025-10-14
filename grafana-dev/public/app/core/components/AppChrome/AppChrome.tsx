@@ -1,18 +1,19 @@
 import { css, cx } from '@emotion/css';
 import classNames from 'classnames';
 import { Resizable } from 're-resizable';
-import { PropsWithChildren, useEffect } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { Trans } from '@grafana/i18n';
 import { locationSearchToObject, locationService, useScopes } from '@grafana/runtime';
 import { ErrorBoundaryAlert, getDragStyles, LinkButton, useStyles2 } from '@grafana/ui';
 import { useGrafana } from 'app/core/context/GrafanaContext';
-import { contextSrv } from 'app/core/core';
 import { useMediaQueryMinWidth } from 'app/core/hooks/useMediaQueryMinWidth';
 import store from 'app/core/store';
 import { CommandPalette } from 'app/features/commandPalette/CommandPalette';
 import { ScopesDashboards } from 'app/features/scopes/dashboards/ScopesDashboards';
+
+import './dashboard-height.css';
 
 import { AppChromeMenu } from './AppChromeMenu';
 import { AppChromeService, DOCKED_LOCAL_STORAGE_KEY } from './AppChromeService';
@@ -29,6 +30,8 @@ import { SingleTopBar } from './TopBar/SingleTopBar';
 import { getChromeHeaderLevelHeight, useChromeHeaderLevels } from './TopBar/useChromeHeaderHeight';
 
 export interface Props extends PropsWithChildren<{}> {}
+
+const FULL_HEIGHT_STORAGE_KEY = 'grafana.dashboard.fullheight';
 
 export function AppChrome({ children }: Props) {
   const { chrome } = useGrafana();
@@ -48,10 +51,14 @@ export function AppChrome({ children }: Props) {
 
   const headerLevels = useChromeHeaderLevels();
   const headerHeight = headerLevels * getChromeHeaderLevelHeight();
-  const isSuperAdmin = Boolean((contextSrv.user as any).isSuperAdmin ?? contextSrv.user.isGrafanaAdmin);
-  const isOrgAdmin = contextSrv.hasRole('Admin');
-  const isNonAdminUser = !isOrgAdmin && !isSuperAdmin;
-  const styles = useStyles2(getStyles, headerHeight, isNonAdminUser);
+  
+  // Track full height toggle state
+  const [isFullHeight, setIsFullHeight] = useState(() => {
+    const stored = store.get(FULL_HEIGHT_STORAGE_KEY);
+    return stored !== undefined ? stored === 'true' : true;
+  });
+
+  const styles = useStyles2(getStyles, headerHeight, isFullHeight);
   const contentSizeStyles = useStyles2(getContentSizeStyles, extensionSidebarWidth);
   const dragStyles = useStyles2(getDragStyles);
 
@@ -86,6 +93,18 @@ export function AppChrome({ children }: Props) {
     const queryParams = locationSearchToObject(search);
     chrome.setKioskModeFromUrl(queryParams.kiosk);
   }, [chrome, search]);
+
+  // Listen for full height toggle events
+  useEffect(() => {
+    const handleFullHeightToggle = (event: CustomEvent) => {
+      setIsFullHeight(event.detail.isFullHeight);
+    };
+
+    window.addEventListener('fullHeightToggle', handleFullHeightToggle as EventListener);
+    return () => {
+      window.removeEventListener('fullHeightToggle', handleFullHeightToggle as EventListener);
+    };
+  }, []);
 
   // Chromeless routes are without topNav, mega menu, search & command palette
   // We check chromeless twice here instead of having a separate path so {children}
@@ -189,16 +208,17 @@ function useResponsiveDockedMegaMenu(chrome: AppChromeService) {
   }, [isLargeScreen, chrome, dockedMenuLocalStorageState]);
 }
 
-const getStyles = (theme: GrafanaTheme2, headerHeight: number, isNonAdminUser: boolean = false) => {
-  
+const getStyles = (theme: GrafanaTheme2, headerHeight: number, isFullHeight: boolean = true) => {
   return {
     content: css({
       label: 'page-content',
       display: 'flex',
       flexDirection: 'column',
-      paddingTop: isNonAdminUser ? 0 : headerHeight, // Remove padding for non-admin users so content flows behind floating header
+      paddingTop: headerHeight, // Always add padding to prevent content from flowing behind the fixed header
       flexGrow: 1,
+      minHeight: 'var(--grafana-dashboard-min-height, auto)', // Use CSS custom property
       height: 'auto',
+      transition: 'min-height 0.3s ease-in-out',
     }),
     contentWithSidebar: css({
       height: '100vh',
@@ -247,6 +267,7 @@ const getStyles = (theme: GrafanaTheme2, headerHeight: number, isNonAdminUser: b
       display: 'flex',
       flexDirection: 'column',
       flexGrow: 1,
+      minHeight: 'var(--grafana-dashboard-min-height, auto)', // Apply min-height from CSS custom property
       label: 'page-panes',
     }),
     panesWithSidebar: css({
@@ -265,6 +286,7 @@ const getStyles = (theme: GrafanaTheme2, headerHeight: number, isNonAdminUser: b
       display: 'flex',
       flexDirection: 'column',
       flexGrow: 1,
+      minHeight: 'var(--grafana-dashboard-min-height, auto)', // Apply min-height from CSS custom property
     }),
     pageContainerWithSidebar: css({
       overflow: 'auto',

@@ -1,10 +1,9 @@
 import { css } from '@emotion/css';
-import { useKBar } from 'kbar';
 import { cloneDeep } from 'lodash';
-import { memo, useCallback, useMemo } from 'react';
+import { memo } from 'react';
 
 import { GrafanaTheme2, NavModelItem } from '@grafana/data';
-import { Components, selectors } from '@grafana/e2e-selectors';
+import { Components } from '@grafana/e2e-selectors';
 import { t } from '@grafana/i18n';
 import { ScopesContextValue } from '@grafana/runtime';
 import { Dropdown, Icon, Stack, ToolbarButton, useStyles2, useTheme2 } from '@grafana/ui';
@@ -14,7 +13,6 @@ import { useGrafana } from 'app/core/context/GrafanaContext';
 import { contextSrv } from 'app/core/core';
 import { useMediaQueryMinWidth } from 'app/core/hooks/useMediaQueryMinWidth';
 import { HOME_NAV_ID } from 'app/core/reducers/navModel';
-import { getModKey } from 'app/core/utils/browser';
 import { useSelector } from 'app/types/store';
 
 import { Branding } from '../../Branding/Branding';
@@ -65,7 +63,6 @@ export const SingleTopBar = memo(function SingleTopBar({
   const isNonAdminUser = !isOrgAdmin && !isSuperAdmin;
   const useMapsLayout = isNonAdminUser;
   const styles = useStyles2(getStyles, menuDockedAndOpen, theme.isDark);
-  const { query: kbar } = useKBar();
   const navIndex = useSelector((state) => state.navIndex);
   const helpNode = cloneDeep(navIndex['help']);
   const enrichedHelpNode = helpNode ? enrichHelpItem(helpNode) : undefined;
@@ -74,14 +71,12 @@ export const SingleTopBar = memo(function SingleTopBar({
   const breadcrumbs = buildBreadcrumbs(sectionNav, pageNav, homeNav);
   const unifiedHistoryEnabled = config.featureToggles.unifiedHistory;
   const isSmallScreen = !useMediaQueryMinWidth('sm');
-  const isDesktopSearch = useMediaQueryMinWidth('md');
-  const modKey = useMemo(() => getModKey(), []);
-  const handleOpenSearch = useCallback(() => {
-    kbar.toggle();
-  }, [kbar]);
 
   // Layout for non-admin users
   if (useMapsLayout) {
+    // Get org name from context
+    const orgName = contextSrv.user.orgName || 'Organization';
+    
     return (
       <>
         <div className={styles.mapsLayout}>
@@ -98,70 +93,18 @@ export const SingleTopBar = memo(function SingleTopBar({
               </ToolbarButton>
             )}
             <Branding.MenuLogo className={styles.mapsLogo} />
-            <Breadcrumbs breadcrumbs={breadcrumbs} className={styles.mapsBreadcrumbs} />
           </div>
 
-          <div className={styles.mapsSearchSection}>
-            {isDesktopSearch ? (
-              <button
-                type="button"
-                onClick={handleOpenSearch}
-                className={styles.mapsSearchButton}
-                data-testid={selectors.components.NavToolbar.commandPaletteTrigger}
-              >
-                <Icon name="search" />
-                <span className={styles.mapsSearchPlaceholder}>
-                  {t('nav.search.placeholderModern', 'Search dashboards, data, and destinations')}
-                </span>
-                <span className={styles.mapsSearchShortcut}>{`${modKey}+K`}</span>
-              </button>
-            ) : (
-              <ToolbarButton
-                narrow
-                iconOnly
-                icon="search"
-                aria-label={t('nav.search.placeholderCommandPalette', 'Search...')}
-                className={styles.mapsCompactSearch}
-                onClick={handleOpenSearch}
-                data-testid={selectors.components.NavToolbar.commandPaletteTrigger}
-              />
-            )}
+          {/* Organization Name in Center */}
+          <div className={styles.mapsCenterSection}>
+            <div className={styles.orgNameContainer}>
+              <Icon name="building" size="sm" className={styles.orgIcon} />
+              <span className={styles.orgName}>{orgName}</span>
+            </div>
           </div>
 
-          <div className={styles.mapsRightGroup} data-testid={Components.NavToolbar.container}>
-            <Stack gap={1} alignItems="center" justifyContent="flex-end" wrap="wrap">
-              {breadcrumbActions && <div className={styles.mapsActionSlot}>{breadcrumbActions}</div>}
-              {actions && <div className={styles.mapsActionSlot}>{actions}</div>}
-              {unifiedHistoryEnabled && !isSmallScreen && (
-                <div className={styles.mapsIconShell}>
-                  <HistoryContainer />
-                </div>
-              )}
-              {!isSmallScreen && (
-                <div className={styles.mapsIconShell}>
-                  <QuickAdd />
-                </div>
-              )}
-              <div className={styles.mapsIconShell}>
-                <ThemeToggleButton />
-              </div>
-              {config.featureToggles.extensionSidebar && !isSmallScreen && (
-                <div className={styles.mapsIconShell}>
-                  <ExtensionToolbarItem />
-                </div>
-              )}
-              {!contextSrv.user.isSignedIn && <SignInLink />}
-              {config.featureToggles.inviteUserExperimental && (
-                <div className={styles.mapsIconShell}>
-                  <InviteUserButton />
-                </div>
-              )}
-              {profileNode && (
-                <div className={styles.mapsIconShell}>
-                  <ProfileButton profileNode={profileNode} onToggleKioskMode={onToggleKioskMode} />
-                </div>
-              )}
-            </Stack>
+          <div className={styles.mapsRightGroup}>
+            {/* All controls moved to sidebar for non-admin users */}
           </div>
         </div>
       </>
@@ -457,33 +400,34 @@ const getStyles = (
     mapsBreadcrumbs: css({
       display: 'flex',
       alignItems: 'center',
-      fontSize: theme.typography.bodySmall.fontSize,
+      fontSize: '12px',
       fontWeight: theme.typography.fontWeightMedium,
       color: mapsText,
       whiteSpace: 'nowrap',
-      padding: `${theme.spacing(0.5)} ${theme.spacing(1.75)}`,
+      padding: `${theme.spacing(0.375)} ${theme.spacing(1)}`,
       borderRadius: theme.shape.radius.pill,
       backgroundColor: mapsBreadcrumbSurface,
       border: `1px solid ${mapsBreadcrumbBorder}`,
       boxShadow: mapsBreadcrumbShadow,
-      backdropFilter: 'blur(16px)',
-      maxWidth: '48vw',
+      backdropFilter: 'blur(12px)',
+      maxWidth: '40vw',
        '& ol': {
          display: 'flex',
          alignItems: 'center',
-         gap: theme.spacing(0.75),
+         gap: theme.spacing(0.5),
          margin: 0,
          padding: 0,
          listStyle: 'none',
        },
        '& li': {
-         padding: theme.spacing(0.5, 1.25),
+         padding: theme.spacing(0.375, 0.875),
          borderRadius: theme.shape.radius.pill,
-         backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.06)' : 'rgba(255, 255, 255, 0.8)',
-         boxShadow: `0 2px 8px ${isDarkMode ? 'rgba(15, 23, 42, 0.35)' : 'rgba(148, 163, 184, 0.25)'}`,
+         backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.75)',
+         boxShadow: `0 1px 4px ${isDarkMode ? 'rgba(15, 23, 42, 0.25)' : 'rgba(148, 163, 184, 0.2)'}`,
          color: mapsText,
          position: 'relative',
          overflow: 'hidden',
+         fontSize: '11px',
          [theme.transitions.handleMotion('no-preference')]: {
            transitionProperty: 'background-color, box-shadow, transform',
            transitionDuration: '140ms',
@@ -494,8 +438,8 @@ const getStyles = (
            position: 'absolute',
            inset: 0,
            background: isDarkMode
-             ? 'linear-gradient(135deg, rgba(96, 165, 250, 0.12), rgba(147, 197, 253, 0.08))'
-             : 'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 197, 253, 0.06))',
+             ? 'linear-gradient(135deg, rgba(96, 165, 250, 0.1), rgba(147, 197, 253, 0.06))'
+             : 'linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(147, 197, 253, 0.04))',
            opacity: 0,
            [theme.transitions.handleMotion('no-preference')]: {
              transitionProperty: 'opacity',
@@ -504,9 +448,9 @@ const getStyles = (
            },
          },
          '&:hover': {
-           backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.95)',
-           boxShadow: `0 4px 12px ${isDarkMode ? 'rgba(96, 165, 250, 0.2)' : 'rgba(59, 130, 246, 0.2)'}`,
-           transform: 'translateY(-1px) scale(1.02)',
+           backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.9)',
+           boxShadow: `0 2px 8px ${isDarkMode ? 'rgba(96, 165, 250, 0.15)' : 'rgba(59, 130, 246, 0.15)'}`,
+           transform: 'translateY(-1px)',
            '&::before': {
              opacity: 1,
            },
@@ -518,8 +462,8 @@ const getStyles = (
            },
          },
          '&:last-child': {
-           fontWeight: theme.typography.fontWeightMedium,
-           backgroundColor: isDarkMode ? 'rgba(96, 165, 250, 0.15)' : 'rgba(59, 130, 246, 0.12)',
+           fontWeight: 600,
+           backgroundColor: isDarkMode ? 'rgba(96, 165, 250, 0.12)' : 'rgba(59, 130, 246, 0.1)',
            color: isDarkMode ? 'rgba(147, 197, 253, 0.95)' : 'rgba(30, 64, 175, 0.9)',
          },
        },
@@ -541,14 +485,14 @@ const getStyles = (
       },
        '& svg': {
          color: mapsSeparatorColor,
-         fontSize: 12,
+         fontSize: 10,
          [theme.transitions.handleMotion('no-preference')]: {
            transitionProperty: 'transform, color',
            transitionDuration: '140ms',
            transitionTimingFunction: theme.transitions.easing.easeInOut,
          },
          '&:hover': {
-           transform: 'scale(1.1)',
+           transform: 'scale(1.05)',
            color: isDarkMode ? 'rgba(96, 165, 250, 0.8)' : 'rgba(59, 130, 246, 0.8)',
          },
        },
@@ -558,20 +502,59 @@ const getStyles = (
         display: 'none',
       },
     }),
-    mapsSearchSection: css({
-      flex: '1 1 280px',
-      minWidth: 0,
-      maxWidth: 480,
+    mapsCenterSection: css({
+      flex: '1 1 auto',
       display: 'flex',
       justifyContent: 'center',
+      alignItems: 'center',
+      minWidth: 0,
       
-      // Mobile optimizations - second row, full width
       [theme.breakpoints.down('md')]: {
-        flex: '1 1 auto',
-        width: '100%',
-        maxWidth: 'none',
-        order: 2, // Move to second row
+        display: 'none', // Hide on mobile for cleaner layout
       },
+    }),
+    
+    orgNameContainer: css({
+      display: 'flex',
+      alignItems: 'center',
+      gap: theme.spacing(1),
+      padding: theme.spacing(0.75, 2),
+      borderRadius: theme.shape.radius.pill,
+      background: isDarkMode
+        ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.85) 100%)'
+        : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.95) 100%)',
+      border: `1px solid ${isDarkMode ? 'rgba(148, 163, 184, 0.2)' : 'rgba(15, 23, 42, 0.1)'}`,
+      boxShadow: isDarkMode
+        ? '0 4px 12px rgba(0, 0, 0, 0.25)'
+        : '0 2px 8px rgba(15, 23, 42, 0.08)',
+      backdropFilter: 'blur(12px)',
+      transition: 'all 0.2s ease-in-out',
+      
+      '&:hover': {
+        background: isDarkMode
+          ? 'linear-gradient(135deg, rgba(51, 65, 85, 0.8) 0%, rgba(30, 41, 59, 0.9) 100%)'
+          : 'linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(241, 245, 249, 1) 100%)',
+        boxShadow: isDarkMode
+          ? '0 6px 16px rgba(77, 172, 255, 0.2)'
+          : '0 4px 12px rgba(77, 172, 255, 0.15)',
+        transform: 'translateY(-1px)',
+      },
+    }),
+    
+    orgIcon: css({
+      color: isDarkMode ? 'rgba(147, 197, 253, 0.9)' : 'rgba(59, 130, 246, 0.9)',
+      transition: 'all 0.2s ease',
+    }),
+    
+    orgName: css({
+      fontSize: theme.typography.body.fontSize,
+      fontWeight: 600,
+      color: isDarkMode ? 'rgba(226, 232, 240, 0.95)' : 'rgba(15, 23, 42, 0.9)',
+      letterSpacing: '0.015em',
+      whiteSpace: 'nowrap',
+      maxWidth: '300px',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
     }),
     mapsSearchButton: css({
       position: 'relative',

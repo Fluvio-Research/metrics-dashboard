@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 import { css } from '@emotion/css';
 import {
@@ -42,9 +42,10 @@ export type AdvancedToolPitDetailConfig = {
   iconColor?: string;
   isLink?: boolean;
   linkDisplayText?: string; // Custom text to display when field is treated as a link
+  linkTemplate?: string; // Template to build link URL (supports {{value}} and {{fieldName}})
 };
 
-interface FieldOptionData {
+export interface AdvancedToolPitFieldOptionData {
   frameIndex: number;
   fieldIndex: number;
   frameRefId?: string;
@@ -77,10 +78,55 @@ export const AdvancedToolPitFieldsEditor = ({ value, onChange, context }: Props)
       return allFieldOptions;
     }
     return allFieldOptions.filter((option) => {
-      const data = option.data as FieldOptionData | undefined;
+      const data = option.data as AdvancedToolPitFieldOptionData | undefined;
       return data ? allowedTypes.includes(data.fieldType) : true;
     });
   }, [allFieldOptions, allowedTypes]);
+
+  const resolveOptionForEntry = useCallback(
+    (entry: AdvancedToolPitDetailConfig) => {
+      if (!fieldOptions.length || entry.type !== 'field') {
+        return undefined;
+      }
+
+      if (entry.fieldKey) {
+        const byKey = fieldOptions.find((opt) => opt.value === entry.fieldKey);
+        if (byKey) {
+          return byKey;
+        }
+      }
+
+      if (entry.frameRefId && entry.fieldName) {
+        const byRef = fieldOptions.find((opt) => {
+          const data = opt.data as AdvancedToolPitFieldOptionData | undefined;
+          return data?.frameRefId === entry.frameRefId && data?.fieldName === entry.fieldName;
+        });
+        if (byRef) {
+          return byRef;
+        }
+      }
+
+      if (entry.fieldName) {
+        const byFieldName = fieldOptions.find((opt) => {
+          const data = opt.data as AdvancedToolPitFieldOptionData | undefined;
+          return data?.fieldName === entry.fieldName;
+        });
+        if (byFieldName) {
+          return byFieldName;
+        }
+      }
+
+      if (entry.field) {
+        const byLabel = fieldOptions.find((opt) => opt.label === entry.field);
+        if (byLabel) {
+          return byLabel;
+        }
+      }
+
+      return undefined;
+    },
+    [fieldOptions]
+  );
 
   useEffect(() => {
     if (!fieldOptions.length || !entries.length) {
@@ -93,20 +139,16 @@ export const AdvancedToolPitFieldsEditor = ({ value, onChange, context }: Props)
         return entry;
       }
 
-      if (!entry.fieldKey && entry.field) {
-        // user provided a custom value manually; respect it
-        return entry;
+      let option = resolveOptionForEntry(entry);
+      if (!option && !entry.fieldKey && !entry.field && !entry.fieldName && fieldOptions[0]) {
+        option = fieldOptions[0];
       }
-
-      const option = entry.fieldKey
-        ? fieldOptions.find((opt) => opt.value === entry.fieldKey)
-        : fieldOptions[0];
 
       if (!option) {
         return entry;
       }
 
-      const data = option.data as FieldOptionData | undefined;
+      const data = option.data as AdvancedToolPitFieldOptionData | undefined;
       if (!data) {
         return entry;
       }
@@ -133,7 +175,7 @@ export const AdvancedToolPitFieldsEditor = ({ value, onChange, context }: Props)
     if (mutated) {
       onChange(next);
     }
-  }, [entries, fieldOptions, onChange]);
+  }, [entries, fieldOptions, onChange, resolveOptionForEntry]);
 
   const handleUpdate = (index: number, patch: Partial<AdvancedToolPitDetailConfig>) => {
     const next = entries.map((entry, idx) => (idx === index ? { ...entry, ...patch } : entry));
@@ -157,7 +199,7 @@ export const AdvancedToolPitFieldsEditor = ({ value, onChange, context }: Props)
     };
     if (type === 'field' && fieldOptions.length) {
       const first = fieldOptions[0];
-      const data = first.data as FieldOptionData | undefined;
+      const data = first.data as AdvancedToolPitFieldOptionData | undefined;
       nextEntry.fieldKey = first.value;
       nextEntry.field = first.label;
       nextEntry.fieldName = data?.fieldName;
@@ -219,7 +261,7 @@ export const AdvancedToolPitFieldsEditor = ({ value, onChange, context }: Props)
                   const patch: Partial<AdvancedToolPitDetailConfig> = { type: nextType };
                   if (nextType === 'field') {
                     const defaultOption = fieldOptions[0];
-                    const data = defaultOption?.data as FieldOptionData | undefined;
+                    const data = defaultOption?.data as AdvancedToolPitFieldOptionData | undefined;
                     if (defaultOption) {
                       patch.fieldKey = defaultOption.value;
                       patch.field = defaultOption.label;
@@ -309,11 +351,10 @@ export const AdvancedToolPitFieldsEditor = ({ value, onChange, context }: Props)
                     <Select
                       options={fieldOptions}
                       value={
-                        entry.fieldKey
-                          ? fieldOptions.find((opt) => opt.value === entry.fieldKey)
-                          : entry.field
+                        resolveOptionForEntry(entry) ??
+                        (entry.field
                           ? { label: entry.field, value: entry.field }
-                          : undefined
+                          : undefined)
                       }
                       onChange={(selection) => {
                         if (!selection?.value) {
@@ -321,7 +362,7 @@ export const AdvancedToolPitFieldsEditor = ({ value, onChange, context }: Props)
                           return;
                         }
 
-                        const data = selection.data as FieldOptionData | undefined;
+                        const data = selection.data as AdvancedToolPitFieldOptionData | undefined;
                         if (data) {
                           handleUpdate(index, {
                             fieldKey: selection.value,
@@ -367,6 +408,26 @@ export const AdvancedToolPitFieldsEditor = ({ value, onChange, context }: Props)
                       onChange={(e) => handleUpdate(index, { isLink: e.currentTarget.checked })} 
                     />
                   </InlineField>
+                  {entry.isLink && (
+                    <InlineField
+                      label={t('geomap.advanced-toolpit.entry.link-template', 'Link template')}
+                      labelWidth={10}
+                      grow
+                      tooltip={t(
+                        'geomap.advanced-toolpit.entry.link-template-description',
+                        'Optional URL template. Use {{value}} for this field or {{FieldName}} to reference another field.'
+                      )}
+                    >
+                      <Input
+                        value={entry.linkTemplate ?? ''}
+                        placeholder={t(
+                          'geomap.advanced-toolpit.entry.link-template-placeholder',
+                          '/d/uid/slug?var-serial={{value}}'
+                        )}
+                        onChange={(e) => handleUpdate(index, { linkTemplate: e.currentTarget.value })}
+                      />
+                    </InlineField>
+                  )}
                   {entry.isLink && (
                     <InlineField
                       label={t('geomap.advanced-toolpit.entry.link-display-text', 'Link text')}
@@ -416,6 +477,26 @@ export const AdvancedToolPitFieldsEditor = ({ value, onChange, context }: Props)
                       onChange={(e) => handleUpdate(index, { isLink: e.currentTarget.checked })} 
                     />
                   </InlineField>
+                  {entry.isLink && (
+                    <InlineField
+                      label={t('geomap.advanced-toolpit.entry.link-template', 'Link template')}
+                      labelWidth={12}
+                      grow
+                      tooltip={t(
+                        'geomap.advanced-toolpit.entry.link-template-description',
+                        'Optional URL template. Use {{value}} for this entry or {{FieldName}} to reference another field.'
+                      )}
+                    >
+                      <Input
+                        value={entry.linkTemplate ?? ''}
+                        placeholder={t(
+                          'geomap.advanced-toolpit.entry.link-template-placeholder',
+                          '/d/uid/slug?var-serial={{value}}'
+                        )}
+                        onChange={(e) => handleUpdate(index, { linkTemplate: e.currentTarget.value })}
+                      />
+                    </InlineField>
+                  )}
                 </>
               )}
             </div>
@@ -480,7 +561,7 @@ export function buildFieldOptions(frames: DataFrame[]): Array<SelectableValue<st
           fieldName: field.name,
           display: label,
           fieldType: field.type,
-        } as FieldOptionData,
+        } as AdvancedToolPitFieldOptionData,
       });
     }
   }

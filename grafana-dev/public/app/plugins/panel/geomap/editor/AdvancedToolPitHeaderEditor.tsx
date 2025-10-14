@@ -5,12 +5,13 @@ import { FieldType, GrafanaTheme2, StandardEditorProps, PanelData } from '@grafa
 import { t } from '@grafana/i18n';
 import { ColorPicker, InlineField, Input, Select, Switch, useStyles2 } from '@grafana/ui';
 
-import { buildFieldOptions } from './AdvancedToolPitFieldsEditor';
+import { AdvancedToolPitFieldOptionData, buildFieldOptions } from './AdvancedToolPitFieldsEditor';
 import { IconPicker } from '../components/IconPicker';
 
 export interface AdvancedToolPitHeaderConfig {
   fieldKey?: string;
   fieldName?: string;
+  frameRefId?: string;
   customText?: string;
   icon?: string;
   iconColor?: string;
@@ -36,7 +37,7 @@ export const AdvancedToolPitHeaderEditor = ({ value, onChange, context }: Props)
       return allOptions;
     }
     return allOptions.filter((option) => {
-      const data = option.data as { fieldType: FieldType } | undefined;
+      const data = option.data as AdvancedToolPitFieldOptionData | undefined;
       return data ? allowedTypes.includes(data.fieldType) : true;
     });
   }, [allOptions, allowedTypes]);
@@ -45,10 +46,40 @@ export const AdvancedToolPitHeaderEditor = ({ value, onChange, context }: Props)
     onChange({ ...header, ...patch });
   };
 
-  const selectedOption =
-    header.fieldKey && fieldOptions.length
-      ? fieldOptions.find((opt) => opt.value === header.fieldKey)
-      : undefined;
+  const selectedOption = useMemo(() => {
+    if (!fieldOptions.length) {
+      return undefined;
+    }
+
+    if (header.fieldKey) {
+      const byKey = fieldOptions.find((opt) => opt.value === header.fieldKey);
+      if (byKey) {
+        return byKey;
+      }
+    }
+
+    if (header.frameRefId && header.fieldName) {
+      const byRef = fieldOptions.find((opt) => {
+        const data = opt.data as AdvancedToolPitFieldOptionData | undefined;
+        return data?.frameRefId === header.frameRefId && data?.fieldName === header.fieldName;
+      });
+      if (byRef) {
+        return byRef;
+      }
+    }
+
+    if (header.fieldName) {
+      const byField = fieldOptions.find((opt) => {
+        const data = opt.data as AdvancedToolPitFieldOptionData | undefined;
+        return data?.fieldName === header.fieldName || opt.label === header.fieldName;
+      });
+      if (byField) {
+        return byField;
+      }
+    }
+
+    return undefined;
+  }, [fieldOptions, header.fieldKey, header.fieldName, header.frameRefId]);
 
   return (
     <div className={styles.wrapper}>
@@ -71,13 +102,14 @@ export const AdvancedToolPitHeaderEditor = ({ value, onChange, context }: Props)
           menuShouldPortal
           onChange={(selection) => {
             if (!selection?.value) {
-              update({ fieldKey: undefined, fieldName: undefined });
+              update({ fieldKey: undefined, fieldName: undefined, frameRefId: undefined });
               return;
             }
-            const data = selection.data as FieldOptionData | undefined;
+            const data = selection.data as AdvancedToolPitFieldOptionData | undefined;
             update({
               fieldKey: selection.value,
-              fieldName: data?.display ?? selection.label ?? selection.value,
+              fieldName: data?.fieldName ?? selection.label ?? selection.value,
+              frameRefId: data?.frameRefId,
             });
           }}
         />
@@ -131,11 +163,6 @@ export const AdvancedToolPitHeaderEditor = ({ value, onChange, context }: Props)
     </div>
   );
 };
-
-interface FieldOptionData {
-  fieldType: FieldType;
-  display: string;
-}
 
 const getStyles = (theme: GrafanaTheme2) => ({
   wrapper: css({

@@ -69,11 +69,13 @@ const textLabel = (cfg: StyleConfigValues) => {
     ...defaultStyleConfig.textConfig,
     ...cfg.textConfig,
   };
+  const { fontSize, color: textColor, ...textOptions } = textConfig;
+  const resolvedFontSize = fontSize ?? defaultStyleConfig.textConfig.fontSize;
   return new Text({
     text: cfg.text,
-    fill: new Fill({ color: cfg.color ?? defaultStyleConfig.color.fixed }),
-    font: `normal ${textConfig.fontSize}px ${fontFamily}`,
-    ...textConfig,
+    fill: new Fill({ color: textColor ?? cfg.color ?? defaultStyleConfig.color.fixed }),
+    font: `normal ${resolvedFontSize}px ${fontFamily}`,
+    ...textOptions,
   });
 };
 

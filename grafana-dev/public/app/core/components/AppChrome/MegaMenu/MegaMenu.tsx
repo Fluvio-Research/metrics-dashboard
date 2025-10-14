@@ -11,16 +11,19 @@ import { ScrollContainer, useStyles2 } from '@grafana/ui';
 import { useGrafana } from 'app/core/context/GrafanaContext';
 import { contextSrv } from 'app/core/services/context_srv';
 import { setBookmark } from 'app/core/reducers/navBarTree';
+import { HOME_NAV_ID } from 'app/core/reducers/navModel';
 import { usePatchUserPreferencesMutation } from 'app/features/preferences/api/index';
 import { useDispatch, useSelector } from 'app/types/store';
 
 import { InviteUserButton } from '../../InviteUserButton/InviteUserButton';
 import { shouldRenderInviteUserButton } from '../../InviteUserButton/utils';
+import { buildBreadcrumbs } from '../../Breadcrumbs/utils';
 
 import { MegaMenuHeader } from './MegaMenuHeader';
 import { MegaMenuItem } from './MegaMenuItem';
 import { UserTypeDisplay } from './UserTypeDisplay';
 import { DashboardCardsSection } from './DashboardCardsSection';
+import { ControlsSection } from './ControlsSection';
 import { usePinnedItems } from './hooks';
 import { useDashboardList } from './useDashboardList';
 import { enrichWithInteractionTracking, findByUrl, getActiveItem } from './utils';
@@ -34,6 +37,7 @@ export interface Props extends DOMAttributes {
 export const MegaMenu = memo(
   forwardRef<HTMLDivElement, Props>(({ onClose, ...restProps }, ref) => {
     const navTree = useSelector((state) => state.navBarTree);
+    const navIndex = useSelector((state) => state.navIndex);
     const styles = useStyles2(getStyles);
     const location = useLocation();
     const { chrome } = useGrafana();
@@ -46,6 +50,13 @@ export const MegaMenu = memo(
     const isSuperAdmin = Boolean((contextSrv.user as any).isSuperAdmin ?? contextSrv.user.isGrafanaAdmin);
     const isOrgAdmin = contextSrv.hasRole('Admin');
     const isRestrictedUser = !isOrgAdmin && !isSuperAdmin;
+    
+    // Build breadcrumbs for non-admin users
+    const homeNav = navIndex[HOME_NAV_ID];
+    const breadcrumbs = buildBreadcrumbs(state.sectionNav.node, state.pageNav, homeNav);
+    
+    // Get profile node for non-admin users
+    const profileNode = navIndex['profile'];
     
     // Fetch dashboards for non-admin users
     const { dashboards } = useDashboardList({ 
@@ -69,6 +80,10 @@ export const MegaMenu = memo(
           }
           // Remove the dashboards section (we'll add individual dashboards instead)
           if (item.id === 'dashboards/browse') {
+            return false;
+          }
+          // Remove the home section
+          if (item.id === 'home') {
             return false;
           }
         }
@@ -152,6 +167,25 @@ export const MegaMenu = memo(
         <nav className={styles.content}>
           <div className={styles.scrollableContent}>
             <ScrollContainer height="100%" overflowX="hidden" showScrollIndicators>
+              {/* Controls Section for non-admin users */}
+              {isRestrictedUser && (
+                <div className={styles.controlsWrapper}>
+                  <ControlsSection 
+                    breadcrumbs={breadcrumbs} 
+                    profileNode={profileNode}
+                    onToggleKioskMode={chrome.onToggleKioskMode}
+                  />
+                </div>
+              )}
+              
+              {/* Dashboard Cards Section for non-admin users */}
+              {isRestrictedUser && dashboards.length > 0 && (
+                <DashboardCardsSection 
+                  dashboards={dashboards} 
+                  onClose={state.megaMenuDocked ? undefined : onClose}
+                />
+              )}
+              
               <ul className={styles.itemList} aria-label={t('navigation.megamenu.list-label', 'Navigation')}>
                 {navItems.map((link, index) => (
                   <MegaMenuItem
@@ -164,14 +198,6 @@ export const MegaMenu = memo(
                   />
                 ))}
               </ul>
-              
-              {/* Dashboard Cards Section for non-admin users */}
-              {isRestrictedUser && dashboards.length > 0 && (
-                <DashboardCardsSection 
-                  dashboards={dashboards} 
-                  onClose={state.megaMenuDocked ? undefined : onClose}
-                />
-              )}
             </ScrollContainer>
           </div>
           {shouldRenderInviteUserButton && (
@@ -296,6 +322,10 @@ const getStyles = (theme: GrafanaTheme2) => {
       minHeight: 0,
       display: 'flex',
       flexDirection: 'column',
+    }),
+    controlsWrapper: css({
+      padding: theme.spacing(2, 1.5),
+      borderBottom: `1px solid ${isDarkTheme ? 'rgba(148, 163, 184, 0.1)' : 'rgba(15, 23, 42, 0.06)'}`,
     }),
     dockMenuButton: css({
       display: 'none',

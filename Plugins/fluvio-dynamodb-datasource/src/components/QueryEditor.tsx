@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from 'react';
-import { Input, RadioButtonGroup, Button, Select, Alert, useTheme2, InlineField, InlineSwitch, DateTimePicker } from '@grafana/ui'; 
+import { Input, RadioButtonGroup, Button, Select, Alert, useTheme2, InlineField, InlineSwitch, DateTimePicker, TextArea } from '@grafana/ui'; 
 import { QueryEditorProps, SelectableValue, GrafanaTheme2, DataQueryRequest, DataFrame, CoreApp, TimeRange, dateTime, Field, DateTime } from '@grafana/data';
 import { css } from '@emotion/css';
 import { DataSource } from '../datasource';
@@ -502,6 +502,89 @@ export function QueryEditor({ query, onChange, onRunQuery, datasource }: Props) 
     onChange({ ...query, outputFormat: outputFormat || 'auto' });
   };
 
+  const onPartitionModeChange = (mode: 'single' | 'in') => {
+    if (mode === 'in') {
+      const seedValues =
+        (partitionKeyValues && partitionKeyValues.length > 0
+          ? partitionKeyValues
+          : partitionKeyValue
+          ? [partitionKeyValue]
+          : []) ?? [];
+      onChange({
+        ...query,
+        partitionKeyMode: mode,
+        partitionKeyValues: seedValues,
+      });
+    } else {
+      onChange({
+        ...query,
+        partitionKeyMode: mode,
+        partitionKeyValue: partitionKeyValue ?? partitionKeyValues?.[0] ?? '',
+      });
+    }
+  };
+
+  const onPartitionValuesChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    const raw = event.target.value ?? '';
+    const values = raw
+      .split(/[\n,]/)
+      .map((value) => value.trim())
+      .filter((value) => value.length > 0);
+    onChange({
+      ...query,
+      partitionKeyValues: values,
+    });
+  };
+
+  const onSortOperatorChange = (selection: SelectableValue<string>) => {
+    const nextOperator = (selection.value as DynamoQuery['sortKeyOperator']) ?? 'eq';
+    const updated: DynamoQuery = {
+      ...query,
+      sortKeyOperator: nextOperator,
+    };
+
+    if (nextOperator === 'between') {
+      updated.sortKeyRangeStart = sortKeyRangeStart ?? sortKeyValue ?? '';
+      updated.sortKeyRangeEnd = sortKeyRangeEnd ?? '';
+      updated.sortKeyValues = undefined;
+    } else if (nextOperator === 'in') {
+      // Initialize sortKeyValues for IN operator
+      const seedValues = query.sortKeyValues && query.sortKeyValues.length > 0
+        ? query.sortKeyValues
+        : query.sortKeyValue
+        ? [query.sortKeyValue]
+        : [];
+      updated.sortKeyValues = seedValues;
+      updated.sortKeyRangeStart = undefined;
+      updated.sortKeyRangeEnd = undefined;
+    } else {
+      updated.sortKeyRangeStart = undefined;
+      updated.sortKeyRangeEnd = undefined;
+      updated.sortKeyValues = undefined;
+    }
+
+    onChange(updated);
+  };
+
+  const onSortKeyValuesChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    const raw = event.target.value ?? '';
+    const values = raw
+      .split(/[\n,]/)
+      .map((value) => value.trim())
+      .filter((value) => value.length > 0);
+    onChange({
+      ...query,
+      sortKeyValues: values,
+    });
+  };
+
+  const onSortDirectionChange = (value: 'asc' | 'desc') => {
+    onChange({
+      ...query,
+      sortDirection: value,
+    });
+  };
+
   const discoverSchema = async () => {
     if (!query.table) {
       alert('Please enter a table name first');
@@ -788,13 +871,55 @@ export function QueryEditor({ query, onChange, onRunQuery, datasource }: Props) 
     }
   };
 
-  const { partiql, table, partitionKeyName, partitionKeyValue, sortKeyName, sortKeyValue, limit, outputFormat, fieldMappings } = query;
+  const {
+    partiql,
+    table,
+    partitionKeyName,
+    partitionKeyValue,
+    partitionKeyMode,
+    partitionKeyValues,
+    sortKeyName,
+    sortKeyValue,
+    sortKeyOperator,
+    sortKeyRangeStart,
+    sortKeyRangeEnd,
+    sortKeyValues,
+    sortDirection,
+    limit,
+    outputFormat,
+    fieldMappings,
+  } = query;
+
+  const resolvedPartitionMode = partitionKeyMode ?? 'single';
+  const resolvedSortOperator = sortKeyOperator ?? 'eq';
+  const resolvedSortDirection = sortDirection ?? 'asc';
 
   const outputFormatOptions = [
     { label: 'Auto-detect', value: 'auto' },
     { label: 'Table View', value: 'table' },
     { label: 'Geomap', value: 'geomap' },
     { label: 'Time Series', value: 'timeseries' }
+  ];
+
+  const partitionModeOptions: Array<SelectableValue<'single' | 'in'>> = [
+    { label: 'Single value', value: 'single' },
+    { label: 'Multiple values (IN)', value: 'in' },
+  ];
+
+  const sortOperatorOptions: Array<SelectableValue<string>> = [
+    { label: 'Equals (=)', value: 'eq' },
+    { label: 'IN (multiple values)', value: 'in' },
+    { label: 'Begins with', value: 'begins_with' },
+    { label: 'Between', value: 'between' },
+    { label: '>=', value: 'gte' },
+    { label: '>', value: 'gt' },
+    { label: '<=', value: 'lte' },
+    { label: '<', value: 'lt' },
+  ];
+
+  const sortDirectionOptions: Array<SelectableValue<'asc' | 'desc'>> = [
+    { label: 'Ascending', value: 'asc' },
+    { label: 'Descending', value: 'desc' },
   ];
 
   const dataTypeOptions = [
@@ -1058,9 +1183,36 @@ export function QueryEditor({ query, onChange, onRunQuery, datasource }: Props) 
                   placeholder="0009 or $user_id (or empty for all)" 
                   value={partitionKeyValue || ''} 
                   onChange={onFieldChange('partitionKeyValue')} 
+                  disabled={resolvedPartitionMode === 'in'}
                 />
               </div>
             </div>
+            
+            <div className={`${styles.formRow} ${styles.mobileStack}`}>
+              <InlineField label="Partition Key Mode" labelWidth={20}>
+                <RadioButtonGroup
+                  value={resolvedPartitionMode}
+                  onChange={(value) => onPartitionModeChange(value as 'single' | 'in')}
+                  options={partitionModeOptions}
+                />
+              </InlineField>
+            </div>
+
+            {resolvedPartitionMode === 'in' && (
+              <div className={styles.fieldContainer}>
+                <label className={styles.fieldLabel}>Partition Key Values (IN)</label>
+                <TextArea
+                  rows={3}
+                  placeholder="value1&#10;value2&#10;${variable}"
+                  value={(partitionKeyValues && partitionKeyValues.length > 0 ? partitionKeyValues : partitionKeyValue ? [partitionKeyValue] : [])
+                    .join('\n')}
+                  onChange={onPartitionValuesChange}
+                />
+                <div className={styles.infoText}>
+                  Provide one value per line. Template variables are supported and will be expanded before querying DynamoDB.
+                </div>
+              </div>
+            )}
             
             {/* Sort Key Row */}
             <div className={`${styles.keyValueRow} ${styles.mobileStack}`}>
@@ -1072,15 +1224,70 @@ export function QueryEditor({ query, onChange, onRunQuery, datasource }: Props) 
                   onChange={onFieldChange('sortKeyName')} 
                 />
               </div>
-              <span className={styles.equalSign}>=</span>
-              <div className={styles.fieldContainer}>
-                <label className={styles.fieldLabel}>Sort Key Value</label>
-                <Input 
-                  placeholder="1753765220, $timestamp, or use time filtering below" 
-                  value={sortKeyValue || ''} 
-                  onChange={onFieldChange('sortKeyValue')} 
+              <div className={styles.smallFieldContainer}>
+                <label className={styles.fieldLabel}>Operator</label>
+                <Select
+                  options={sortOperatorOptions}
+                  value={sortOperatorOptions.find((opt) => opt.value === resolvedSortOperator) ?? sortOperatorOptions[0]}
+                  onChange={onSortOperatorChange}
+                  placeholder="Select operator"
+                  menuShouldPortal
                 />
               </div>
+              {resolvedSortOperator === 'between' ? (
+                <>
+                  <div className={styles.fieldContainer}>
+                    <label className={styles.fieldLabel}>Range start</label>
+                    <Input
+                      placeholder="From value"
+                      value={sortKeyRangeStart ?? ''}
+                      onChange={onFieldChange('sortKeyRangeStart')}
+                    />
+                  </div>
+                  <div className={styles.fieldContainer}>
+                    <label className={styles.fieldLabel}>Range end</label>
+                    <Input
+                      placeholder="To value"
+                      value={sortKeyRangeEnd ?? ''}
+                      onChange={onFieldChange('sortKeyRangeEnd')}
+                    />
+                  </div>
+                </>
+              ) : resolvedSortOperator === 'in' ? (
+                <div className={styles.fieldContainer}>
+                  <label className={styles.fieldLabel}>Sort Key Values (IN)</label>
+                  <TextArea
+                    rows={3}
+                    placeholder="value1&#10;value2&#10;value3"
+                    value={(sortKeyValues && sortKeyValues.length > 0 ? sortKeyValues : sortKeyValue ? [sortKeyValue] : [])
+                      .join('\n')}
+                    onChange={onSortKeyValuesChange}
+                  />
+                  <div className={styles.infoText}>
+                    Provide one value per line. Template variables are supported.
+                  </div>
+                </div>
+              ) : (
+                <div className={styles.fieldContainer}>
+                  <label className={styles.fieldLabel}>Sort Key Value</label>
+                  <Input
+                    placeholder="1753765220, $timestamp, or use time filtering below"
+                    value={sortKeyValue || ''}
+                    onChange={onFieldChange('sortKeyValue')}
+                    disabled={resolvedSortOperator === 'in'}
+                  />
+                </div>
+              )}
+            </div>
+            
+            <div className={`${styles.formRow} ${styles.mobileStack}`}>
+              <InlineField label="Sort Direction" labelWidth={20}>
+                <RadioButtonGroup
+                  value={resolvedSortDirection}
+                  onChange={(value) => onSortDirectionChange(value as 'asc' | 'desc')}
+                  options={sortDirectionOptions}
+                />
+              </InlineField>
             </div>
             
             {/* Time Filtering Section */}

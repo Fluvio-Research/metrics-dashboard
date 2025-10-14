@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -162,14 +163,21 @@ type FieldMapping struct {
 
 type DynamoQuery struct {
 	// Basic query parameters
-	Partiql           string `json:"partiql"`
-	Table             string `json:"table"`
-	PartitionKeyName  string `json:"partitionKeyName"`
-	PartitionKeyValue string `json:"partitionKeyValue"`
-	SortKeyName       string `json:"sortKeyName"`
-	SortKeyValue      string `json:"sortKeyValue"`
-	Limit             int    `json:"limit"`
-	QueryMode         string `json:"queryMode"`
+	Partiql            string   `json:"partiql"`
+	Table              string   `json:"table"`
+	PartitionKeyName   string   `json:"partitionKeyName"`
+	PartitionKeyValue  string   `json:"partitionKeyValue"`
+	PartitionKeyMode   string   `json:"partitionKeyMode"`
+	PartitionKeyValues []string `json:"partitionKeyValues"`
+	SortKeyName        string   `json:"sortKeyName"`
+	SortKeyValue       string   `json:"sortKeyValue"`
+	SortKeyOperator    string   `json:"sortKeyOperator"`
+	SortKeyRangeStart  string   `json:"sortKeyRangeStart"`
+	SortKeyRangeEnd    string   `json:"sortKeyRangeEnd"`
+	SortKeyValues      []string `json:"sortKeyValues"` // For IN operator on sort key
+	SortDirection      string   `json:"sortDirection"`
+	Limit              int      `json:"limit"`
+	QueryMode          string   `json:"queryMode"`
 
 	// Time filtering
 	TimeFilterEnabled bool   `json:"timeFilterEnabled"`
@@ -379,6 +387,14 @@ func (d *DataSource) executeQuery(ctx context.Context, q *DynamoQuery, tr backen
 	q.PartitionKeyName = strings.TrimSpace(q.PartitionKeyName)
 	q.SortKeyName = strings.TrimSpace(q.SortKeyName)
 	q.TimestampField = strings.TrimSpace(q.TimestampField)
+	q.PartitionKeyMode = strings.TrimSpace(q.PartitionKeyMode)
+	q.SortKeyOperator = strings.TrimSpace(q.SortKeyOperator)
+	q.SortKeyRangeStart = strings.TrimSpace(q.SortKeyRangeStart)
+	q.SortKeyRangeEnd = strings.TrimSpace(q.SortKeyRangeEnd)
+	q.SortDirection = strings.TrimSpace(q.SortDirection)
+	for i, val := range q.PartitionKeyValues {
+		q.PartitionKeyValues[i] = strings.TrimSpace(val)
+	}
 
 	trimmedPartiql := strings.TrimSpace(q.Partiql)
 	q.Partiql = trimmedPartiql
@@ -890,37 +906,72 @@ func (d *DataSource) executePartiQL(statement string, tr *backend.TimeRange, q *
 	input := &dynamodb.ExecuteStatementInput{
 		Statement: aws.String(trimmed),
 	}
-	if limit > 0 {
-		input.Limit = aws.Int64(int64(limit))
+
+	// Use paginated execution to respect limit properly when filters are applied
+	// DynamoDB Limit only limits examined items, not returned items after filtering
+	var allItems []map[string]*dynamodb.AttributeValue
+	var nextToken *string
+	maxIterations := 100 // Prevent infinite loops
+
+	for i := 0; i < maxIterations; i++ {
+		if nextToken != nil {
+			input.NextToken = nextToken
+		}
+
+		out, err := d.client.ExecuteStatement(input)
+		if err != nil {
+			// Provide more detailed error information
+			backend.Logger.Error("PartiQL execution failed", "error", err.Error(), "statement", trimmed)
+
+			// Check for common PartiQL errors and provide helpful messages
+			errMsg := err.Error()
+			if strings.Contains(errMsg, "ValidationException") {
+				if strings.Contains(errMsg, "table") {
+					return nil, fmt.Errorf("PartiQL error: Invalid table name or table does not exist. Please check your table name and ensure it's properly quoted")
+				}
+				if strings.Contains(errMsg, "syntax") {
+					return nil, fmt.Errorf("PartiQL syntax error: %s", errMsg)
+				}
+			}
+			if strings.Contains(errMsg, "ResourceNotFoundException") {
+				return nil, fmt.Errorf("PartiQL error: Table not found. Please verify the table exists in your DynamoDB")
+			}
+			if strings.Contains(errMsg, "AccessDeniedException") {
+				return nil, fmt.Errorf("PartiQL error: Access denied. Please check your AWS credentials and IAM permissions")
+			}
+
+			return nil, fmt.Errorf("PartiQL execution failed: %s", errMsg)
+		}
+
+		allItems = append(allItems, out.Items...)
+		backend.Logger.Info("PartiQL execution iteration",
+			"iteration", i+1,
+			"itemsInBatch", len(out.Items),
+			"totalItems", len(allItems))
+
+		// Check if we have enough items or no more data
+		if limit > 0 && len(allItems) >= limit {
+			backend.Logger.Info("Reached desired limit", "limit", limit, "actualItems", len(allItems))
+			break
+		}
+
+		// Check if there are more results
+		if out.NextToken == nil || *out.NextToken == "" {
+			backend.Logger.Info("No more items to fetch")
+			break
+		}
+
+		nextToken = out.NextToken
 	}
 
-	out, err := d.client.ExecuteStatement(input)
-	if err != nil {
-		// Provide more detailed error information
-		backend.Logger.Error("PartiQL execution failed", "error", err.Error(), "statement", trimmed)
-
-		// Check for common PartiQL errors and provide helpful messages
-		errMsg := err.Error()
-		if strings.Contains(errMsg, "ValidationException") {
-			if strings.Contains(errMsg, "table") {
-				return nil, fmt.Errorf("PartiQL error: Invalid table name or table does not exist. Please check your table name and ensure it's properly quoted")
-			}
-			if strings.Contains(errMsg, "syntax") {
-				return nil, fmt.Errorf("PartiQL syntax error: %s", errMsg)
-			}
-		}
-		if strings.Contains(errMsg, "ResourceNotFoundException") {
-			return nil, fmt.Errorf("PartiQL error: Table not found. Please verify the table exists in your DynamoDB")
-		}
-		if strings.Contains(errMsg, "AccessDeniedException") {
-			return nil, fmt.Errorf("PartiQL error: Access denied. Please check your AWS credentials and IAM permissions")
-		}
-
-		return nil, fmt.Errorf("PartiQL execution failed: %s", errMsg)
+	// Enforce the limit on final results
+	if limit > 0 && len(allItems) > limit {
+		backend.Logger.Info("Trimming PartiQL results to limit", "before", len(allItems), "after", limit)
+		allItems = allItems[:limit]
 	}
 
-	backend.Logger.Info("PartiQL execution succeeded", "itemsReturned", len(out.Items))
-	return out.Items, nil
+	backend.Logger.Info("PartiQL execution succeeded", "itemsReturned", len(allItems))
+	return allItems, nil
 }
 
 func sanitizePartiQLStatement(statement string, tr *backend.TimeRange, q *DynamoQuery) (string, error) {
@@ -992,27 +1043,166 @@ func sanitizePartiQLStatement(statement string, tr *backend.TimeRange, q *Dynamo
 }
 
 func (d *DataSource) executeKeyQuery(q *DynamoQuery) ([]map[string]*dynamodb.AttributeValue, error) {
-	// Build key condition expression
+	if strings.EqualFold(q.PartitionKeyMode, "in") {
+		values := collectPartitionKeyValues(q)
+		if len(values) == 0 {
+			return nil, fmt.Errorf("partition key IN mode requires at least one non-empty value")
+		}
+
+		backend.Logger.Info("executeKeyQuery IN mode",
+			"table", q.Table,
+			"partitionKeyName", q.PartitionKeyName,
+			"valueCount", len(values),
+			"sortKeyName", q.SortKeyName,
+			"sortOperator", q.SortKeyOperator,
+			"limit", q.Limit,
+		)
+
+		var combined []map[string]*dynamodb.AttributeValue
+		for _, pk := range values {
+			if q.Limit > 0 && len(combined) >= q.Limit {
+				break
+			}
+
+			remainingLimit := 0
+			if q.Limit > 0 {
+				remaining := q.Limit - len(combined)
+				if remaining <= 0 {
+					break
+				}
+				remainingLimit = remaining
+			}
+
+			clone := *q
+			clone.PartitionKeyMode = ""
+			clone.PartitionKeyValue = pk
+			clone.PartitionKeyValues = nil
+
+			items, err := d.executeSinglePartitionQuery(&clone, remainingLimit)
+			if err != nil {
+				return nil, err
+			}
+			combined = append(combined, items...)
+		}
+
+		if q.Limit > 0 && len(combined) > q.Limit {
+			combined = combined[:q.Limit]
+		}
+
+		if strings.TrimSpace(q.SortKeyName) != "" && len(combined) > 1 {
+			applyAttributeSort(combined, q.SortKeyName, q.SortDirection)
+		}
+
+		return combined, nil
+	}
+
+	return d.executeSinglePartitionQuery(q, 0)
+}
+
+func (d *DataSource) executeSinglePartitionQuery(q *DynamoQuery, limitOverride int) ([]map[string]*dynamodb.AttributeValue, error) {
 	if q.Table == "" || q.PartitionKeyName == "" || q.PartitionKeyValue == "" {
 		return nil, fmt.Errorf("table and partition key name/value are required")
 	}
 
-	// Debug logging
 	backend.Logger.Info("executeKeyQuery called",
 		"table", q.Table,
 		"partitionKeyName", q.PartitionKeyName,
 		"partitionKeyValue", q.PartitionKeyValue,
 		"sortKeyName", q.SortKeyName,
 		"sortKeyValue", q.SortKeyValue,
-		"limit", q.Limit)
+		"sortOperator", q.SortKeyOperator,
+		"sortRangeStart", q.SortKeyRangeStart,
+		"sortRangeEnd", q.SortKeyRangeEnd,
+		"sortDirection", q.SortDirection,
+		"limit", q.Limit,
+		"limitOverride", limitOverride,
+	)
 
 	exprAttrVals := map[string]*dynamodb.AttributeValue{
-		":pk": {S: aws.String(q.PartitionKeyValue)},
+		":pk": buildAttributeValue(q.PartitionKeyValue),
 	}
 	keyCondition := fmt.Sprintf("%s = :pk", q.PartitionKeyName)
-	if q.SortKeyName != "" && q.SortKeyValue != "" {
-		exprAttrVals[":sk"] = &dynamodb.AttributeValue{S: aws.String(q.SortKeyValue)}
-		keyCondition += fmt.Sprintf(" AND %s = :sk", q.SortKeyName)
+
+	sortKeyName := strings.TrimSpace(q.SortKeyName)
+	sortOperator := strings.ToLower(strings.TrimSpace(q.SortKeyOperator))
+	var filterExprParts []string
+	exprAttrNames := make(map[string]*string)
+
+	if sortKeyName != "" {
+		if sortOperator == "" {
+			sortOperator = "eq"
+		}
+
+		switch sortOperator {
+		case "in":
+			// IN operator must use filter expression, not key condition
+			// Build filter expression for IN clause
+			sortKeyValues := collectSortKeyValues(q)
+			if len(sortKeyValues) == 0 {
+				return nil, fmt.Errorf("sort key IN operator requires at least one value")
+			}
+
+			backend.Logger.Info("Using IN operator for sort key",
+				"sortKeyName", sortKeyName,
+				"valueCount", len(sortKeyValues))
+
+			// Add sort key name to expression attribute names
+			exprAttrNames["#sk"] = aws.String(sortKeyName)
+
+			// Build IN expression: #sk IN (:sk0, :sk1, :sk2, ...)
+			inPlaceholders := make([]string, len(sortKeyValues))
+			for i, val := range sortKeyValues {
+				placeholder := fmt.Sprintf(":sk%d", i)
+				inPlaceholders[i] = placeholder
+				exprAttrVals[placeholder] = buildAttributeValue(val)
+			}
+
+			inExpr := fmt.Sprintf("#sk IN (%s)", strings.Join(inPlaceholders, ", "))
+			filterExprParts = append(filterExprParts, inExpr)
+
+		case "between":
+			if q.SortKeyRangeStart == "" || q.SortKeyRangeEnd == "" {
+				return nil, fmt.Errorf("sort key BETWEEN requires both start and end values")
+			}
+			exprAttrVals[":skStart"] = buildAttributeValue(q.SortKeyRangeStart)
+			exprAttrVals[":skEnd"] = buildAttributeValue(q.SortKeyRangeEnd)
+			keyCondition += fmt.Sprintf(" AND %s BETWEEN :skStart AND :skEnd", sortKeyName)
+		case "begins_with":
+			if q.SortKeyValue == "" {
+				return nil, fmt.Errorf("sort key begins_with requires a value")
+			}
+			exprAttrVals[":sk"] = buildAttributeValue(q.SortKeyValue)
+			keyCondition += fmt.Sprintf(" AND begins_with(%s, :sk)", sortKeyName)
+		case "gt", "greater_than":
+			if q.SortKeyValue == "" {
+				return nil, fmt.Errorf("sort key greater-than requires a value")
+			}
+			exprAttrVals[":sk"] = buildAttributeValue(q.SortKeyValue)
+			keyCondition += fmt.Sprintf(" AND %s > :sk", sortKeyName)
+		case "gte", "ge", "greater_than_or_equal":
+			if q.SortKeyValue == "" {
+				return nil, fmt.Errorf("sort key greater-than-or-equal requires a value")
+			}
+			exprAttrVals[":sk"] = buildAttributeValue(q.SortKeyValue)
+			keyCondition += fmt.Sprintf(" AND %s >= :sk", sortKeyName)
+		case "lt", "less_than":
+			if q.SortKeyValue == "" {
+				return nil, fmt.Errorf("sort key less-than requires a value")
+			}
+			exprAttrVals[":sk"] = buildAttributeValue(q.SortKeyValue)
+			keyCondition += fmt.Sprintf(" AND %s < :sk", sortKeyName)
+		case "lte", "le", "less_than_or_equal":
+			if q.SortKeyValue == "" {
+				return nil, fmt.Errorf("sort key less-than-or-equal requires a value")
+			}
+			exprAttrVals[":sk"] = buildAttributeValue(q.SortKeyValue)
+			keyCondition += fmt.Sprintf(" AND %s <= :sk", sortKeyName)
+		default: // eq
+			if q.SortKeyValue != "" {
+				exprAttrVals[":sk"] = buildAttributeValue(q.SortKeyValue)
+				keyCondition += fmt.Sprintf(" AND %s = :sk", sortKeyName)
+			}
+		}
 	}
 
 	backend.Logger.Info("DynamoDB query details",
@@ -1024,8 +1214,25 @@ func (d *DataSource) executeKeyQuery(q *DynamoQuery) ([]map[string]*dynamodb.Att
 		KeyConditionExpression:    aws.String(keyCondition),
 		ExpressionAttributeValues: exprAttrVals,
 	}
-	if q.Limit > 0 {
-		input.Limit = aws.Int64(int64(q.Limit))
+
+	// Add expression attribute names if any were created
+	if len(exprAttrNames) > 0 {
+		input.ExpressionAttributeNames = exprAttrNames
+	}
+
+	effectiveLimit := q.Limit
+	if limitOverride > 0 && (effectiveLimit == 0 || limitOverride < effectiveLimit) {
+		effectiveLimit = limitOverride
+	}
+	if effectiveLimit > 0 {
+		input.Limit = aws.Int64(int64(effectiveLimit))
+	}
+
+	switch strings.ToLower(q.SortDirection) {
+	case "desc", "descending":
+		input.ScanIndexForward = aws.Bool(false)
+	case "asc", "ascending":
+		input.ScanIndexForward = aws.Bool(true)
 	}
 
 	// Add time filtering if enabled
@@ -1058,19 +1265,16 @@ func (d *DataSource) executeKeyQuery(q *DynamoQuery) ([]map[string]*dynamodb.Att
 
 		// Create filter expression for time range
 		// Support number, ISO string, and numeric-string timestamp formats
-		filterExpr := strings.Join([]string{
+		timeFilterExpr := strings.Join([]string{
 			"(#ts BETWEEN :timeFromNum AND :timeToNum)",
 			"(#ts BETWEEN :timeFromIso AND :timeToIso)",
 			"(#ts BETWEEN :timeFromEpochStr AND :timeToEpochStr)",
 		}, " OR ")
 
-		input.FilterExpression = aws.String(filterExpr)
+		filterExprParts = append(filterExprParts, "("+timeFilterExpr+")")
 
-		// Initialize expression attribute names if not already set
-		if input.ExpressionAttributeNames == nil {
-			input.ExpressionAttributeNames = make(map[string]*string)
-		}
-		input.ExpressionAttributeNames["#ts"] = aws.String(timestampField)
+		// Add timestamp field to expression attribute names
+		exprAttrNames["#ts"] = aws.String(timestampField)
 
 		// Add time filter values to existing expression attribute values
 		exprAttrVals[":timeFromNum"] = &dynamodb.AttributeValue{
@@ -1092,23 +1296,240 @@ func (d *DataSource) executeKeyQuery(q *DynamoQuery) ([]map[string]*dynamodb.Att
 			S: aws.String(strconv.FormatInt(unixTo, 10)),
 		}
 
-		backend.Logger.Info("Time filter applied to key query", "filterExpression", filterExpr)
+		backend.Logger.Info("Time filter added to filter expression parts")
+	}
+
+	// Combine all filter expressions
+	if len(filterExprParts) > 0 {
+		combinedFilter := strings.Join(filterExprParts, " AND ")
+		input.FilterExpression = aws.String(combinedFilter)
+		backend.Logger.Info("Combined filter expression applied", "filterExpression", combinedFilter)
 	}
 
 	backend.Logger.Info("Executing DynamoDB Query", "input", input)
 
-	out, err := d.client.Query(input)
-	if err != nil {
-		backend.Logger.Error("DynamoDB Query failed", "error", err.Error())
-		return nil, err
+	// Use paginated query to respect limit properly when filters are applied
+	// DynamoDB Limit only limits examined items, not returned items after filtering
+	var allItems []map[string]*dynamodb.AttributeValue
+	var lastEvaluatedKey map[string]*dynamodb.AttributeValue
+	maxIterations := 100 // Prevent infinite loops
+
+	for i := 0; i < maxIterations; i++ {
+		if lastEvaluatedKey != nil {
+			input.ExclusiveStartKey = lastEvaluatedKey
+		}
+
+		out, err := d.client.Query(input)
+		if err != nil {
+			backend.Logger.Error("DynamoDB Query failed", "error", err.Error())
+			return nil, err
+		}
+
+		allItems = append(allItems, out.Items...)
+		backend.Logger.Info("DynamoDB Query iteration",
+			"iteration", i+1,
+			"itemsInBatch", len(out.Items),
+			"totalItems", len(allItems),
+			"scannedCount", out.ScannedCount,
+			"count", out.Count)
+
+		// Check if we have enough items or no more data
+		if effectiveLimit > 0 && len(allItems) >= effectiveLimit {
+			backend.Logger.Info("Reached desired limit", "limit", effectiveLimit, "actualItems", len(allItems))
+			break
+		}
+
+		// Check if there are more results
+		if len(out.LastEvaluatedKey) == 0 {
+			backend.Logger.Info("No more items to query")
+			break
+		}
+
+		lastEvaluatedKey = out.LastEvaluatedKey
 	}
 
-	backend.Logger.Info("DynamoDB Query succeeded",
-		"itemsReturned", len(out.Items),
-		"scannedCount", out.ScannedCount,
-		"count", out.Count)
+	// Enforce the limit on final results
+	if effectiveLimit > 0 && len(allItems) > effectiveLimit {
+		backend.Logger.Info("Trimming query results to limit", "before", len(allItems), "after", effectiveLimit)
+		allItems = allItems[:effectiveLimit]
+	}
 
-	return out.Items, nil
+	backend.Logger.Info("DynamoDB Query completed", "finalItemCount", len(allItems))
+
+	return allItems, nil
+}
+
+func collectPartitionKeyValues(q *DynamoQuery) []string {
+	values := make([]string, 0, len(q.PartitionKeyValues))
+	for _, raw := range q.PartitionKeyValues {
+		if trimmed := strings.TrimSpace(raw); trimmed != "" {
+			values = append(values, trimmed)
+		}
+	}
+
+	if len(values) == 0 && strings.TrimSpace(q.PartitionKeyValue) != "" {
+		fallback := strings.FieldsFunc(q.PartitionKeyValue, func(r rune) bool {
+			return r == ',' || r == '\n' || r == '\r'
+		})
+		for _, candidate := range fallback {
+			if trimmed := strings.TrimSpace(candidate); trimmed != "" {
+				values = append(values, trimmed)
+			}
+		}
+	}
+
+	return values
+}
+
+func collectSortKeyValues(q *DynamoQuery) []string {
+	values := make([]string, 0, len(q.SortKeyValues))
+	for _, raw := range q.SortKeyValues {
+		if trimmed := strings.TrimSpace(raw); trimmed != "" {
+			values = append(values, trimmed)
+		}
+	}
+
+	// Fallback to single value if no array provided
+	if len(values) == 0 && strings.TrimSpace(q.SortKeyValue) != "" {
+		fallback := strings.FieldsFunc(q.SortKeyValue, func(r rune) bool {
+			return r == ',' || r == '\n' || r == '\r'
+		})
+		for _, candidate := range fallback {
+			if trimmed := strings.TrimSpace(candidate); trimmed != "" {
+				values = append(values, trimmed)
+			}
+		}
+	}
+
+	return values
+}
+
+var numericValueRegex = regexp.MustCompile(`^-?\d+(\.\d+)?$`)
+
+func buildAttributeValue(raw string) *dynamodb.AttributeValue {
+	trimmed := strings.TrimSpace(raw)
+	if trimmed == "" {
+		return &dynamodb.AttributeValue{S: aws.String("")}
+	}
+
+	if numericValueRegex.MatchString(trimmed) {
+		return &dynamodb.AttributeValue{N: aws.String(trimmed)}
+	}
+
+	return &dynamodb.AttributeValue{S: aws.String(trimmed)}
+}
+
+func applyAttributeSort(items []map[string]*dynamodb.AttributeValue, attribute, direction string) {
+	desc := strings.EqualFold(direction, "desc") || strings.EqualFold(direction, "descending")
+	sort.SliceStable(items, func(i, j int) bool {
+		cmp := compareAttributeValues(items[i][attribute], items[j][attribute])
+		if desc {
+			return cmp > 0
+		}
+		return cmp < 0
+	})
+}
+
+func compareAttributeValues(a, b *dynamodb.AttributeValue) int {
+	if a == nil && b == nil {
+		return 0
+	}
+	if a == nil {
+		return -1
+	}
+	if b == nil {
+		return 1
+	}
+
+	if a.BOOL != nil && b.BOOL != nil {
+		if *a.BOOL == *b.BOOL {
+			return 0
+		}
+		if !*a.BOOL && *b.BOOL {
+			return -1
+		}
+		return 1
+	}
+
+	if a.N != nil && b.N != nil {
+		af, errA := strconv.ParseFloat(*a.N, 64)
+		bf, errB := strconv.ParseFloat(*b.N, 64)
+		if errA == nil && errB == nil {
+			switch {
+			case af < bf:
+				return -1
+			case af > bf:
+				return 1
+			default:
+				return 0
+			}
+		}
+	}
+
+	if af, okA := attributeValueToFloat(a); okA {
+		if bf, okB := attributeValueToFloat(b); okB {
+			switch {
+			case af < bf:
+				return -1
+			case af > bf:
+				return 1
+			default:
+				return 0
+			}
+		}
+	}
+
+	as := attributeValueToString(a)
+	bs := attributeValueToString(b)
+	switch {
+	case as < bs:
+		return -1
+	case as > bs:
+		return 1
+	default:
+		return 0
+	}
+}
+
+func attributeValueToFloat(av *dynamodb.AttributeValue) (float64, bool) {
+	if av == nil {
+		return 0, false
+	}
+
+	if av.N != nil {
+		if f, err := strconv.ParseFloat(*av.N, 64); err == nil {
+			return f, true
+		}
+	}
+
+	if av.S != nil && numericValueRegex.MatchString(*av.S) {
+		if f, err := strconv.ParseFloat(*av.S, 64); err == nil {
+			return f, true
+		}
+	}
+
+	return 0, false
+}
+
+func attributeValueToString(av *dynamodb.AttributeValue) string {
+	if av == nil {
+		return ""
+	}
+
+	switch {
+	case av.S != nil:
+		return *av.S
+	case av.N != nil:
+		return *av.N
+	case av.BOOL != nil:
+		return strconv.FormatBool(*av.BOOL)
+	default:
+		bytes, err := json.Marshal(av)
+		if err != nil {
+			return ""
+		}
+		return string(bytes)
+	}
 }
 
 func (d *DataSource) executeScanWithFilter(q *DynamoQuery) ([]map[string]*dynamodb.AttributeValue, error) {
@@ -1122,9 +1543,6 @@ func (d *DataSource) executeScanWithFilter(q *DynamoQuery) ([]map[string]*dynamo
 
 	input := &dynamodb.ScanInput{
 		TableName: aws.String(q.Table),
-	}
-	if q.Limit > 0 {
-		input.Limit = aws.Int64(int64(q.Limit))
 	}
 
 	// Add time filtering if enabled
@@ -1183,19 +1601,56 @@ func (d *DataSource) executeScanWithFilter(q *DynamoQuery) ([]map[string]*dynamo
 
 	backend.Logger.Info("Executing DynamoDB Scan with filter", "tableName", q.Table, "limit", q.Limit)
 
-	out, err := d.client.Scan(input)
-	if err != nil {
-		backend.Logger.Error("DynamoDB Scan failed", "error", err.Error(), "table", q.Table)
-		return nil, fmt.Errorf("DynamoDB scan failed for table '%s': %w", q.Table, err)
+	// Use paginated scan to respect limit properly when filters are applied
+	// DynamoDB Limit only limits examined items, not returned items after filtering
+	var allItems []map[string]*dynamodb.AttributeValue
+	var lastEvaluatedKey map[string]*dynamodb.AttributeValue
+	maxIterations := 100 // Prevent infinite loops
+
+	for i := 0; i < maxIterations; i++ {
+		if lastEvaluatedKey != nil {
+			input.ExclusiveStartKey = lastEvaluatedKey
+		}
+
+		out, err := d.client.Scan(input)
+		if err != nil {
+			backend.Logger.Error("DynamoDB Scan failed", "error", err.Error(), "table", q.Table)
+			return nil, fmt.Errorf("DynamoDB scan failed for table '%s': %w", q.Table, err)
+		}
+
+		allItems = append(allItems, out.Items...)
+		backend.Logger.Info("DynamoDB Scan iteration",
+			"iteration", i+1,
+			"itemsInBatch", len(out.Items),
+			"totalItems", len(allItems),
+			"scannedCount", aws.Int64Value(out.ScannedCount))
+
+		// Check if we have enough items or no more data
+		if q.Limit > 0 && len(allItems) >= q.Limit {
+			backend.Logger.Info("Reached desired limit", "limit", q.Limit, "actualItems", len(allItems))
+			break
+		}
+
+		// Check if there are more results
+		if len(out.LastEvaluatedKey) == 0 {
+			backend.Logger.Info("No more items to scan")
+			break
+		}
+
+		lastEvaluatedKey = out.LastEvaluatedKey
 	}
 
-	backend.Logger.Info("DynamoDB Scan succeeded",
-		"table", q.Table,
-		"itemsReturned", len(out.Items),
-		"scannedCount", aws.Int64Value(out.ScannedCount),
-		"count", aws.Int64Value(out.Count))
+	// Enforce the limit on final results
+	if q.Limit > 0 && len(allItems) > q.Limit {
+		backend.Logger.Info("Trimming results to limit", "before", len(allItems), "after", q.Limit)
+		allItems = allItems[:q.Limit]
+	}
 
-	return out.Items, nil
+	backend.Logger.Info("DynamoDB Scan completed",
+		"table", q.Table,
+		"finalItemCount", len(allItems))
+
+	return allItems, nil
 }
 
 func (d *DataSource) executeScan(tableName string, limit int) ([]map[string]*dynamodb.AttributeValue, error) {

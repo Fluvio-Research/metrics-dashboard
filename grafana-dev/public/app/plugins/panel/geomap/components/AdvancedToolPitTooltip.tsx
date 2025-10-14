@@ -33,6 +33,7 @@ export interface AdvancedToolPitResolvedDetail {
   isLink?: boolean;
   labelColor?: string;
   linkDisplayText?: string;
+  linkTemplate?: string;
 }
 
 export interface AdvancedToolPitTooltipRow {
@@ -44,6 +45,7 @@ export interface AdvancedToolPitTooltipRow {
   isLink?: boolean;
   labelColor?: string;
   linkDisplayText?: string;
+  linkTemplate?: string;
 }
 
 export interface AdvancedToolPitTooltipConfig {
@@ -68,6 +70,7 @@ export const AdvancedToolPitTooltip = ({ feature, config }: Props) => {
   const styles = useStyles2(getStyles);
   const theme = useTheme2();
   const frame = feature.get('frame') as DataFrame | undefined;
+  const allFrames = (feature.get('allFrames') as DataFrame[] | undefined) ?? (frame ? [frame] : []);
   const rowIndex = feature.get('rowIndex') as number | undefined;
 
   if (!frame || rowIndex === undefined) {
@@ -78,7 +81,7 @@ export const AdvancedToolPitTooltip = ({ feature, config }: Props) => {
   const rowsFromConfig = config.rows && config.rows.length ? config.rows : undefined;
   const computedRows =
     rowsFromConfig ??
-    getRows(frame, rowIndex, config.detailEntries, config.fieldIndexes, allowedTypes);
+    getRows(frame, allFrames, rowIndex, config.detailEntries, config.fieldIndexes, allowedTypes);
   const limitedRows = computedRows.slice(0, 6);
   // Only show header if explicitly configured, don't fallback to layer name
   const headingText = config.headerText;
@@ -218,6 +221,7 @@ function renderIcon(
 
 function getRows(
   frame: DataFrame,
+  allFrames: DataFrame[],
   rowIndex: number,
   detailEntries: AdvancedToolPitResolvedDetail[] | undefined,
   fallbackIndexes: number[] | undefined,
@@ -247,7 +251,13 @@ function getRows(
         continue;
       }
 
-      const field: Field | undefined = frame.fields[entry.fieldIndex];
+      // Resolve the correct frame based on frameIndex
+      const sourceFrame = 
+        entry.frameIndex !== undefined && allFrames[entry.frameIndex]
+          ? allFrames[entry.frameIndex]
+          : frame;
+
+      const field: Field | undefined = sourceFrame.fields[entry.fieldIndex];
       if (!field) {
         continue;
       }
@@ -261,7 +271,7 @@ function getRows(
       const value = field.values[rowIndex];
       const display = field.display ? field.display(value) : { text: value != null ? `${value}` : '' };
       rows.push({
-        label: entry.label || getFieldDisplayName(field, frame),
+        label: entry.label || getFieldDisplayName(field, sourceFrame, allFrames),
         value: formattedValueToString(display),
         showLabel: entry.showLabel !== false,
         icon: entry.icon,

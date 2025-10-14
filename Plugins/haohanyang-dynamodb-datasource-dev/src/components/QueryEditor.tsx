@@ -1,11 +1,12 @@
-import React, { useRef, useState } from "react";
-import { Button, CodeEditor, Field, IconButton, InlineField, InlineFieldRow, Input, Select, HorizontalGroup } from "@grafana/ui";
+import React, { useRef, useState, useEffect } from "react";
+import { Button, CodeEditor, Field, IconButton, InlineField, InlineFieldRow, Input, Select, HorizontalGroup, Switch } from "@grafana/ui";
 import { QueryEditorProps, SelectableValue } from "@grafana/data";
 import { DataSource } from "../datasource";
 import { DynamoDBDataSourceOptions, DynamoDBQuery, DatetimeFormat } from "../types";
 import * as monacoType from "monaco-editor/esm/vs/editor/editor.api";
 import "./QueryEditor.css";
 import { Divider } from "@grafana/aws-sdk";
+import { getBackendSrv } from '@grafana/runtime';
 
 type Props = QueryEditorProps<DataSource, DynamoDBQuery, DynamoDBDataSourceOptions>;
 
@@ -29,11 +30,16 @@ const datetimeFormatOptions: Array<SelectableValue<string>> = [
 
 
 
-export function QueryEditor({ query, onChange, onRunQuery }: Props) {
+export function QueryEditor({ query, onChange, onRunQuery, datasource }: Props) {
   const codeEditorRef = useRef<monacoType.editor.IStandaloneCodeEditor | null>(null);
   const [datetimeAttributeInput, setDatetimeAttributeInput] = useState<string>("");
   const [datetimeFormatOption, setDatetimeFormatOption] = useState<string>(DatetimeFormat.UnixTimestampSeconds);
   const [customDatetimeFormatInput, setCustomDatetimeFormatInput] = useState<string>("");
+  const [tables, setTables] = useState<Array<SelectableValue<string>>>([]);
+  const [loadingTables, setLoadingTables] = useState<boolean>(false);
+  const [tableAttributes, setTableAttributes] = useState<Array<SelectableValue<string>>>([]);
+  const [loadingAttributes, setLoadingAttributes] = useState<boolean>(false);
+  const [selectedTable, setSelectedTable] = useState<string>('');
   
 
   const onQueryTextChange = (text: string) => {
@@ -109,12 +115,167 @@ export function QueryEditor({ query, onChange, onRunQuery }: Props) {
   };
 
 
+  const onSortByChange: React.FormEventHandler<HTMLInputElement> = e => {
+    onChange({ ...query, sortBy: e.currentTarget.value || undefined });
+  };
+
+  const onSortDirectionChange = (value: SelectableValue<string>) => {
+    onChange({ ...query, sortDirection: (value.value as 'asc' | 'desc') || undefined });
+  };
+
+  const sortDirectionOptions: Array<SelectableValue<string>> = [
+    { label: 'None', value: '' },
+    { label: 'Ascending', value: 'asc' },
+    { label: 'Descending', value: 'desc' }
+  ];
+
+  // Dynamic sort key options based on table attributes
+  const sortKeyOptions: Array<SelectableValue<string>> = [
+    { label: 'None (default behavior)', value: '' },
+    ...tableAttributes
+  ];
+
+  // Fetch tables on component mount
+  useEffect(() => {
+    const fetchTables = async () => {
+      setLoadingTables(true);
+      try {
+        const response = await getBackendSrv().fetch<{ tables: string[] }>({
+          url: `/api/datasources/${datasource.id}/resources/tables`,
+          method: 'GET',
+        }).toPromise();
+        
+        if (response?.data?.tables) {
+          const tableOptions = response.data.tables.map((table: string) => ({
+            label: table,
+            value: table,
+          }));
+          setTables(tableOptions);
+        }
+      } catch (error) {
+        console.error('Failed to fetch tables:', error);
+      } finally {
+        setLoadingTables(false);
+      }
+    };
+
+    fetchTables();
+  }, [datasource.id]);
+
+  const fetchTableAttributes = async (tableName: string) => {
+    setLoadingAttributes(true);
+    try {
+      const response = await getBackendSrv().fetch<{ attributes: string[] }>({
+        url: `/api/datasources/${datasource.id}/resources/table-attributes?table=${encodeURIComponent(tableName)}`,
+        method: 'GET',
+      }).toPromise();
+      
+      if (response?.data?.attributes) {
+        const attributeOptions = response.data.attributes.map((attr: string) => ({
+          label: attr,
+          value: attr,
+        }));
+        setTableAttributes(attributeOptions);
+      }
+    } catch (error) {
+      console.error('Failed to fetch table attributes:', error);
+      setTableAttributes([]);
+    } finally {
+      setLoadingAttributes(false);
+    }
+  };
+
+  const onTableSelect = (value: SelectableValue<string>) => {
+    if (value.value) {
+      const newQuery = `SELECT * FROM "${value.value}"`;
+      onChange({ ...query, queryText: newQuery });
+      setSelectedTable(value.value);
+      fetchTableAttributes(value.value);
+    } else {
+      setSelectedTable('');
+      setTableAttributes([]);
+    }
+  };
+
+  const onScanIndexForwardChange = (checked: boolean) => {
+    onChange({ ...query, scanIndexForward: checked });
+  };
+
+  const onSortKeyChange = (value: SelectableValue<string>) => {
+    onChange({ ...query, sortKey: value.value || undefined });
+  };
+
   return (
     <>
+      <InlineFieldRow>
+        <InlineField label="Table" tooltip="Select a table to auto-generate query" labelWidth={11}>
+          <Select 
+            options={tables} 
+            placeholder="Select table..." 
+            onChange={onTableSelect}
+            isLoading={loadingTables}
+            width={40}
+            isClearable
+          />
+        </InlineField>
+      </InlineFieldRow>
       <InlineFieldRow>
         <InlineField label="Limit" tooltip="(Optional) The maximum number of items to evaluate" labelWidth={11}>
           <Input type="number" min={0} value={query.limit} onChange={onLimitChange} aria-label="Limit" width={15} />
         </InlineField>
+      </InlineFieldRow>
+      <InlineFieldRow>
+        <InlineField label="Sort By" tooltip="(Optional) Client-side sorting - works for any field" labelWidth={11}>
+          <Input 
+            placeholder="field name (e.g., serial, timestamp)" 
+            value={query.sortBy || ''} 
+            onChange={onSortByChange} 
+            aria-label="Sort By" 
+            width={15} 
+          />
+        </InlineField>
+        <InlineField label="Direction" labelWidth={11}>
+          <Select 
+            options={sortDirectionOptions} 
+            value={query.sortDirection || ''} 
+            width={15}
+            onChange={onSortDirectionChange} 
+            aria-label="Sort Direction" 
+          />
+        </InlineField>
+      </InlineFieldRow>
+      <InlineFieldRow>
+        <InlineField 
+          label="Sort Key Attribute" 
+          tooltip="Select the sort key attribute for DynamoDB native sorting. Only works with exact equality (=) on partition key."
+          labelWidth={18}
+        >
+          <Select 
+            options={sortKeyOptions} 
+            value={query.sortKey || ''} 
+            width={25}
+            onChange={onSortKeyChange} 
+            aria-label="Sort Key Attribute"
+            isLoading={loadingAttributes}
+            placeholder={selectedTable ? "Loading attributes..." : "Select table first"}
+            isDisabled={!selectedTable}
+          />
+        </InlineField>
+      </InlineFieldRow>
+      <InlineFieldRow>
+        <InlineField 
+          label="Native Sort Order" 
+          tooltip="DynamoDB Query API ScanIndexForward (true=ascending, false=descending). Only works with Query API (partition key + optional sort key conditions)."
+          labelWidth={18}
+        >
+          <Switch 
+            value={query.scanIndexForward !== undefined ? query.scanIndexForward : true} 
+            onChange={(e) => onScanIndexForwardChange(e.currentTarget.checked)}
+          />
+        </InlineField>
+        <span style={{ marginLeft: '8px', color: '#888' }}>
+          {query.scanIndexForward !== undefined && !query.scanIndexForward ? '(Descending)' : '(Ascending)'}
+        </span>
       </InlineFieldRow>
       <InlineFieldRow>
         <InlineField label="Attribute" tooltip="Attribute which has datetime data type" labelWidth={11}>

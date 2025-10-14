@@ -6,6 +6,10 @@ type QueryModel struct {
 	QueryText          string
 	Limit              int64
 	DatetimeAttributes []DatetimeAttribute
+	SortBy             string `json:"sortBy"`           // Field name to sort by (client-side)
+	SortDirection      string `json:"sortDirection"`    // "asc" or "desc" (client-side)
+	SortKey            string `json:"sortKey"`          // Sort key attribute for DynamoDB native sorting
+	ScanIndexForward   *bool  `json:"scanIndexForward"` // DynamoDB native sort order (Query API only)
 }
 
 type DatetimeAttribute struct {

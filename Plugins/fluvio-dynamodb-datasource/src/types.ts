@@ -16,8 +16,15 @@ export interface DynamoQuery extends DataQuery {
   table?: string;
   partitionKeyName?: string;
   partitionKeyValue?: string;
+  partitionKeyMode?: 'single' | 'in';
+  partitionKeyValues?: string[];
   sortKeyName?: string;
   sortKeyValue?: string;
+  sortKeyOperator?: 'eq' | 'begins_with' | 'between' | 'in' | 'gt' | 'gte' | 'lt' | 'lte';
+  sortKeyRangeStart?: string;
+  sortKeyRangeEnd?: string;
+  sortKeyValues?: string[];     // For IN operator on sort key
+  sortDirection?: 'asc' | 'desc';
   limit?: number;
   
   // Query mode state
@@ -46,6 +53,9 @@ export const DEFAULT_QUERY: Partial<DynamoQuery> = {
   timeFilterEnabled: false,
   timestampField: 'timestamp',
   queryMode: 'key',
+  partitionKeyMode: 'single',
+  sortKeyOperator: 'eq',
+  sortDirection: 'asc',
 };
 
 // Data source configuration options (saved in Grafana)

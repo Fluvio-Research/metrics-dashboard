@@ -49,6 +49,8 @@ import { DEFAULT_SIZE, defaultStyleConfig, StyleConfigValues } from '../../style
 import { getDisplacement, getRGBValues, getStyleConfigState, styleUsesText } from '../../style/utils';
 import { getStyleDimension } from '../../utils/utils';
 import { MarkersConfig } from './markersLayer';
+import { generateSimplePinSVG, getColorForValue } from '../../utils/customMarkers';
+import { Icon as OLIcon, Style as OLStyle } from 'ol/style';
 
 export interface AdvancedToolPitConfig extends MarkersConfig {
   imageField?: string;
@@ -60,6 +62,11 @@ export interface AdvancedToolPitConfig extends MarkersConfig {
   imageFit?: 'cover' | 'contain';
   imageBorderRadius?: number;
   header?: AdvancedToolPitHeaderConfig;
+  useCustomPinMarker?: boolean;
+  pinOutlineColor?: string;
+  pinColorField?: string;
+  pinColorScheme?: 'status' | 'priority' | 'category' | 'default';
+  pinSize?: number;
 }
 
 const DEFAULT_IMAGE_WIDTH = 280;
@@ -81,6 +88,11 @@ const defaultOptions: AdvancedToolPitConfig = {
   header: {
     hideDuplicate: true,
   },
+  useCustomPinMarker: false,
+  pinOutlineColor: '#2c3e50',
+  pinColorField: undefined,
+  pinColorScheme: 'default',
+  pinSize: 40,
 };
 
 export const ADVANCED_TOOLPIT_LAYER_ID = 'advanced-toolpit';
@@ -119,6 +131,8 @@ export const advancedToolPitLayer: MapLayerRegistryItem<AdvancedToolPitConfig> =
     const symbol = config.style.symbol?.fixed;
     const webGLStyle = await getWebGLStyle(symbol, config.style.opacity);
     const hasText = styleUsesText(config.style);
+
+    // Always use WebGL for positioning, apply custom pins as overlay
     const symbolLayer = new WebGLPointsLayer({ source, style: webGLStyle });
     const vectorLayer = new VectorImage({ source, declutter: true });
     let hasVector = hasText;
@@ -161,10 +175,30 @@ export const advancedToolPitLayer: MapLayerRegistryItem<AdvancedToolPitConfig> =
         const imageField = config.imageField ? findField(frame, config.imageField) : undefined;
         const resolvedDetails = resolveDetailEntries(config, frame, data.series);
         const imageOptions = getImageOptions(config);
+        
+        // Resolve color field for custom pin markers - check all frames
+        let pinColorField: Field | undefined;
+        if (config.useCustomPinMarker && config.pinColorField) {
+          const colorFieldLocation = resolveFieldReference(data.series, frame, {
+            fieldNames: [config.pinColorField],
+          });
+          if (colorFieldLocation) {
+            const colorFrame = data.series[colorFieldLocation.frameIndex] ?? frame;
+            pinColorField = colorFrame?.fields?.[colorFieldLocation.fieldIndex];
+          } else {
+            // Fallback to first frame
+            pinColorField = findField(frame, config.pinColorField);
+          }
+        }
 
         // Reset vector layer when necessary for text markers
         hasVector = styleUsesText(config.style);
-        if (hasVector && !layers.getLayers().getArray().includes(vectorLayer)) {
+
+        const currentLayers = layers.getLayers().getArray();
+        const shouldHaveVector = hasVector && symbol;
+        const hasVectorInLayers = currentLayers.includes(vectorLayer);
+
+        if (shouldHaveVector !== hasVectorInLayers) {
           const newLayers = hasVector ? (symbol ? [symbolLayer, vectorLayer] : [vectorLayer]) : [symbolLayer];
           layers.setLayers(new Collection(newLayers));
         }
@@ -210,16 +244,63 @@ export const advancedToolPitLayer: MapLayerRegistryItem<AdvancedToolPitConfig> =
             const lineStringStyle = style.maker(values);
             feature.setStyle(lineStringStyle);
           } else {
+            // Apply WebGL properties for positioning and interaction
             applyWebGLProperties(feature, values, theme);
-          }
 
-          if (hasVector && geometry.getType() === 'Point') {
-            feature.setStyle(textMarker(values));
+            if (geometry.getType() === 'Point') {
+              // Handle custom pin markers
+              if (config.useCustomPinMarker) {
+                // Get color value from the correct frame if needed
+                let colorValue = null;
+                if (pinColorField) {
+                  // If color field is from a different frame, we need to match rows properly
+                  // For now, use the same row index (assumes frames are aligned)
+                  colorValue = pinColorField.values[idx];
+                }
+                const innerColor = colorValue
+                  ? getColorForValue(colorValue, config.pinColorScheme || 'default')
+                  : values.color || theme.colors.primary.main;
+
+                const pinSvg = generateSimplePinSVG({
+                  pinColor: config.pinOutlineColor || '#2c3e50',
+                  circleColor: innerColor,
+                  size: config.pinSize || 40,
+                });
+
+                const pinIcon = new OLIcon({
+                  src: pinSvg,
+                  anchor: [0.5, 1], // Anchor at bottom center of pin
+                  scale: 1,
+                });
+
+                const pinStyle = new OLStyle({
+                  image: pinIcon,
+                });
+
+                // Add text marker if needed
+                if (hasVector) {
+                  const textStyle = textMarker(values);
+                  if (Array.isArray(textStyle)) {
+                    feature.setStyle([...textStyle, pinStyle]);
+                  } else if (textStyle) {
+                    feature.setStyle([textStyle, pinStyle]);
+                  } else {
+                    feature.setStyle(pinStyle);
+                  }
+                } else {
+                  feature.setStyle(pinStyle);
+                }
+              } else if (hasVector) {
+                // Standard text markers when not using custom pins
+                feature.setStyle(textMarker(values));
+              }
+            }
           }
 
           const headerInfo = resolveHeader(config.header, frame, data.series, idx);
           const detailRows = buildDetailRows(
             frame,
+            data.series,
             idx,
             resolvedDetails,
             allowedTypes,
@@ -231,6 +312,7 @@ export const advancedToolPitLayer: MapLayerRegistryItem<AdvancedToolPitConfig> =
             imageUrl: getImageForRow(imageField, idx),
             fieldIndexes: tooltipFieldIndexes,
             fieldTypes: allowedTypes,
+            detailEntries: resolvedDetails,
             rows: detailRows,
             imageOptions,
             layerLabel: options.name,
@@ -239,20 +321,79 @@ export const advancedToolPitLayer: MapLayerRegistryItem<AdvancedToolPitConfig> =
             headerIconColor: headerInfo?.iconColor,
           };
           feature.set('advancedToolPit', advancedConfig);
+          
+          // Attach all frames so tooltip can resolve multi-frame field references
+          feature.set('allFrames', data.series);
         });
       },
       registerOptionsUI: (builder) => {
         const imageCategory = [t('geomap.advanced-toolpit.category-image', 'Image display')];
         const headerCategory = [t('geomap.advanced-toolpit.category-header', 'Header content')];
         const contentCategory = [t('geomap.advanced-toolpit.category-content', 'Tooltip content')];
+        const markerCategory = [t('geomap.advanced-toolpit.category-marker', 'Marker appearance')];
 
         builder
+          .addBooleanSwitch({
+            path: 'config.useCustomPinMarker',
+            name: t('geomap.advanced-toolpit.use-pin-marker', 'Use pin-style markers'),
+            description: t(
+              'geomap.advanced-toolpit.use-pin-marker-description',
+              'Enable Google Maps-style pin markers with customizable colors.'
+            ),
+            category: markerCategory,
+            defaultValue: defaultOptions.useCustomPinMarker,
+          })
+          .addColorPicker({
+            path: 'config.pinOutlineColor',
+            name: t('geomap.advanced-toolpit.pin-outline-color', 'Pin outline color'),
+            category: markerCategory,
+            defaultValue: defaultOptions.pinOutlineColor,
+            showIf: (options) => options.config?.useCustomPinMarker === true,
+          })
+          .addFieldNamePicker({
+            path: 'config.pinColorField',
+            name: t('geomap.advanced-toolpit.pin-color-field', 'Inner circle color field'),
+            description: t(
+              'geomap.advanced-toolpit.pin-color-field-description',
+              'Field values will determine the inner circle color. Leave empty for fixed color.'
+            ),
+            category: markerCategory,
+            showIf: (options) => options.config?.useCustomPinMarker === true,
+          })
+          .addRadio({
+            path: 'config.pinColorScheme',
+            name: t('geomap.advanced-toolpit.pin-color-scheme', 'Color scheme'),
+            category: markerCategory,
+            settings: {
+              options: [
+                { label: t('geomap.advanced-toolpit.scheme.default', 'Auto (8 colors)'), value: 'default' },
+                { label: t('geomap.advanced-toolpit.scheme.status', 'Status (active/inactive)'), value: 'status' },
+                { label: t('geomap.advanced-toolpit.scheme.priority', 'Priority (high/medium/low)'), value: 'priority' },
+                { label: t('geomap.advanced-toolpit.scheme.category', 'Category (A/B/C/D/E)'), value: 'category' },
+              ],
+            },
+            defaultValue: defaultOptions.pinColorScheme,
+            showIf: (options) => options.config?.useCustomPinMarker === true && !!options.config?.pinColorField,
+          })
+          .addSliderInput({
+            path: 'config.pinSize',
+            name: t('geomap.advanced-toolpit.pin-size', 'Pin size'),
+            category: markerCategory,
+            settings: {
+              min: 20,
+              max: 80,
+              step: 5,
+            },
+            defaultValue: defaultOptions.pinSize,
+            showIf: (options) => options.config?.useCustomPinMarker === true,
+          })
           .addCustomEditor({
             id: 'config.style',
             path: 'config.style',
             name: t('geomap.advanced-toolpit.style', 'Marker style'),
             editor: StyleEditor,
             defaultValue: defaultOptions.style,
+            showIf: (options) => options.config?.useCustomPinMarker !== true,
           })
           .addBooleanSwitch({
             path: 'config.showLegend',
@@ -412,39 +553,29 @@ function resolveDetailEntries(
           labelColor: detail.labelColor,
           isLink: detail.isLink,
           linkDisplayText: detail.linkDisplayText,
+          linkTemplate: detail.linkTemplate,
         });
       }
       continue;
     }
 
-    const parsedKey = parseFieldKey(detail.fieldKey);
-    let fieldIndex: number | undefined;
-    let frameIndex = 0;
+    const resolvedLocation = resolveFieldReference(frames, frame, {
+      fieldKey: detail.fieldKey,
+      frameRefId: detail.frameRefId,
+      fieldNames: [detail.fieldName, detail.field],
+    });
 
-    let displayLabel = detail.label ?? detail.field;
-
-    if (parsedKey) {
-      frameIndex = parsedKey.frameIndex;
-      fieldIndex = parsedKey.fieldIndex;
-      if (!frames[frameIndex] || !frames[frameIndex].fields[fieldIndex]) {
-        fieldIndex = undefined;
-      }
-    }
-
-    if (fieldIndex === undefined && detail.field) {
-      frameIndex = 0;
-      fieldIndex = findFieldIndex(detail.field, frame, frames);
-    }
-
-    if (fieldIndex === undefined) {
+    if (!resolvedLocation) {
       continue;
     }
 
-    const sourceFrame = frames[frameIndex] ?? frame;
-    const sourceField = sourceFrame?.fields?.[fieldIndex];
+    const sourceFrame = frames[resolvedLocation.frameIndex] ?? frame;
+    const sourceField = sourceFrame?.fields?.[resolvedLocation.fieldIndex];
     if (!sourceField) {
       continue;
     }
+
+    let displayLabel = detail.label ?? detail.field;
     if (!displayLabel) {
       displayLabel = getFieldDisplayName(sourceField, sourceFrame, frames);
     }
@@ -452,14 +583,15 @@ function resolveDetailEntries(
     resolved.push({
       type: 'field',
       label: displayLabel,
-      fieldIndex,
-      frameIndex,
+      fieldIndex: resolvedLocation.fieldIndex,
+      frameIndex: resolvedLocation.frameIndex,
       showLabel: detail.showLabel !== false,
       icon: detail.icon,
       iconColor: detail.iconColor,
       labelColor: detail.labelColor,
       isLink: detail.isLink,
       linkDisplayText: detail.linkDisplayText,
+      linkTemplate: detail.linkTemplate,
     });
   }
 
@@ -496,29 +628,24 @@ function resolveHeader(
 
   let text = header.customText?.trim();
   let fieldIndex: number | undefined = undefined;
-  let frameIndex = 0;
+  let frameIndex: number | undefined = undefined;
 
-  if (header.fieldKey) {
-    const parsed = parseFieldKey(header.fieldKey);
-    if (parsed) {
-      frameIndex = parsed.frameIndex;
-      fieldIndex = parsed.fieldIndex;
-    }
-  }
+  const resolvedLocation = resolveFieldReference(frames, frame, {
+    fieldKey: header.fieldKey,
+    frameRefId: header.frameRefId,
+    fieldNames: [header.fieldName],
+  });
 
-  if (fieldIndex === undefined && header.fieldName) {
-    fieldIndex = findFieldIndex(header.fieldName, frame, frames);
-    frameIndex = 0;
-  }
-
-  if (fieldIndex !== undefined) {
-    const sourceFrame = frames[frameIndex] ?? frame;
-    const field = sourceFrame?.fields?.[fieldIndex];
+  if (resolvedLocation) {
+    frameIndex = resolvedLocation.frameIndex;
+    const sourceFrame = frames[resolvedLocation.frameIndex] ?? frame;
+    const field = sourceFrame?.fields?.[resolvedLocation.fieldIndex];
     if (field) {
       const value = getFieldValue(field, rowIndex);
       if (value && value.trim().length) {
         text = value;
       }
+      fieldIndex = resolvedLocation.fieldIndex;
     }
   }
 
@@ -538,6 +665,7 @@ function resolveHeader(
 
 function buildDetailRows(
   frame: DataFrame,
+  frames: DataFrame[],
   rowIndex: number,
   details: AdvancedToolPitResolvedDetail[] | undefined,
   allowedTypes: FieldType[] | undefined,
@@ -546,23 +674,37 @@ function buildDetailRows(
 ): AdvancedToolPitTooltipRow[] {
   const rows: AdvancedToolPitTooltipRow[] = [];
 
+  const getSourceFrame = (detail?: AdvancedToolPitResolvedDetail): DataFrame => {
+    if (detail?.frameIndex != null && frames[detail.frameIndex]) {
+      return frames[detail.frameIndex]!;
+    }
+    return frame;
+  };
+
   const pushCustomRow = (detail: AdvancedToolPitResolvedDetail) => {
     if (!detail.value || !detail.value.trim().length) {
       return;
     }
+    const sourceFrame = getSourceFrame(detail);
+    const resolvedValue = applyLinkTemplate(detail.linkTemplate, detail.value.trim(), sourceFrame, rowIndex);
     rows.push({
       label: detail.label ?? '',
-      value: detail.value.trim(),
+      value: resolvedValue ?? '',
       showLabel: detail.showLabel !== false,
       icon: detail.icon,
       iconColor: detail.iconColor,
       labelColor: detail.labelColor,
       isLink: detail.isLink,
       linkDisplayText: detail.linkDisplayText,
+      linkTemplate: detail.linkTemplate,
     });
   };
 
-  const pushFieldRow = (field: Field | undefined, detail?: AdvancedToolPitResolvedDetail) => {
+  const pushFieldRow = (
+    field: Field | undefined,
+    sourceFrame: DataFrame,
+    detail?: AdvancedToolPitResolvedDetail
+  ) => {
     if (!shouldIncludeField(field, allowedTypes)) {
       return;
     }
@@ -570,15 +712,17 @@ function buildDetailRows(
     if (text == null || text === '') {
       return;
     }
+    const resolvedValue = applyLinkTemplate(detail?.linkTemplate, text, sourceFrame, rowIndex);
     rows.push({
-      label: detail?.label ?? getFieldDisplayName(field!, frame),
-      value: text,
+      label: detail?.label ?? getFieldDisplayName(field!, sourceFrame, frames),
+      value: resolvedValue ?? text,
       showLabel: detail ? detail.showLabel !== false : true,
       icon: detail?.icon,
       iconColor: detail?.iconColor,
       labelColor: detail?.labelColor,
       isLink: detail?.isLink,
       linkDisplayText: detail?.linkDisplayText,
+      linkTemplate: detail?.linkTemplate,
     });
   };
 
@@ -593,11 +737,16 @@ function buildDetailRows(
         continue;
       }
 
-      const field = frame.fields[detail.fieldIndex ?? -1];
-      if (headerInfo?.hideDuplicate !== false && detail.fieldIndex === headerInfo?.fieldIndex && (detail.frameIndex ?? 0) === (headerInfo?.frameIndex ?? 0)) {
+      const sourceFrame = getSourceFrame(detail);
+      const field = sourceFrame.fields?.[detail.fieldIndex ?? -1];
+      if (
+        headerInfo?.hideDuplicate !== false &&
+        detail.fieldIndex === headerInfo?.fieldIndex &&
+        (detail.frameIndex ?? 0) === (headerInfo?.frameIndex ?? 0)
+      ) {
         continue;
       }
-      pushFieldRow(field, detail);
+      pushFieldRow(field, sourceFrame, detail);
     }
   } else {
     const indexes =
@@ -610,11 +759,42 @@ function buildDetailRows(
         continue;
       }
       const field = frame.fields[idx];
-      pushFieldRow(field);
+      pushFieldRow(field, frame);
     }
   }
 
   return rows.slice(0, MAX_DETAIL_ITEMS);
+}
+
+function applyLinkTemplate(
+  template: string | undefined,
+  baseValue: string | undefined,
+  frame: DataFrame,
+  rowIndex: number
+): string | undefined {
+  if (!template || !template.trim().length) {
+    return baseValue;
+  }
+
+  return template.replace(/\{\{\s*([^}]+)\s*\}\}/g, (match, rawKey) => {
+    const key = rawKey.trim();
+    if (!key) {
+      return '';
+    }
+    if (key === 'value') {
+      return baseValue ?? '';
+    }
+
+    const field =
+      frame.fields.find((f) => f.name === key) ??
+      frame.fields.find((f) => getFieldDisplayName(f, frame) === key);
+    if (field) {
+      const replacement = getFieldValue(field, rowIndex);
+      return replacement ?? '';
+    }
+
+    return '';
+  });
 }
 
 function parseFieldKey(fieldKey?: string): { frameIndex: number; fieldIndex: number } | undefined {
@@ -634,6 +814,78 @@ function parseFieldKey(fieldKey?: string): { frameIndex: number; fieldIndex: num
   }
 
   return { frameIndex, fieldIndex };
+}
+
+interface FieldReferenceContext {
+  fieldKey?: string;
+  frameRefId?: string;
+  fieldNames?: Array<string | undefined>;
+}
+
+function findFrameIndexByRefId(frames: DataFrame[], refId?: string): number | undefined {
+  if (!refId?.length) {
+    return undefined;
+  }
+
+  const index = frames.findIndex((candidate) => candidate?.refId === refId);
+  return index >= 0 ? index : undefined;
+}
+
+function resolveFieldReference(
+  frames: DataFrame[],
+  defaultFrame: DataFrame,
+  reference: FieldReferenceContext
+): { frameIndex: number; fieldIndex: number } | undefined {
+  const parsedKey = parseFieldKey(reference.fieldKey);
+  const refIndex = findFrameIndexByRefId(frames, reference.frameRefId);
+
+  const candidateFrames: number[] = [];
+  if (refIndex !== undefined) {
+    candidateFrames.push(refIndex);
+  }
+  if (parsedKey) {
+    candidateFrames.push(parsedKey.frameIndex);
+  }
+  candidateFrames.push(0);
+
+  const fieldNames = (reference.fieldNames ?? []).filter(
+    (name): name is string => typeof name === 'string' && name.trim().length > 0
+  );
+  const seen = new Set<number>();
+
+  for (const candidate of candidateFrames) {
+    if (candidate < 0 || seen.has(candidate)) {
+      continue;
+    }
+    seen.add(candidate);
+
+    const sourceFrame = frames[candidate] ?? defaultFrame;
+    if (!sourceFrame?.fields?.length) {
+      continue;
+    }
+
+    if (
+      parsedKey &&
+      parsedKey.frameIndex === candidate &&
+      sourceFrame.fields[parsedKey.fieldIndex]
+    ) {
+      return { frameIndex: candidate, fieldIndex: parsedKey.fieldIndex };
+    }
+
+    for (const name of fieldNames) {
+      const exactIdx = sourceFrame.fields.findIndex((field) => field?.name === name);
+      if (exactIdx !== -1) {
+        return { frameIndex: candidate, fieldIndex: exactIdx };
+      }
+
+      const displayIdx = findFieldIndex(name, sourceFrame, frames);
+      if (displayIdx !== undefined) {
+        return { frameIndex: candidate, fieldIndex: displayIdx };
+      }
+    }
+  }
+
+  return undefined;
 }
 
 function shouldIncludeField(field: Field | undefined, allowedTypes?: FieldType[]): field is Field {
@@ -689,19 +941,49 @@ function buildMarkerKey(coordinates: number[], values: StyleConfigValues): strin
   return `advancedToolPit|${coordinates[0]}|${coordinates[1]}|${color}|${size}|${text}|${rotation}`;
 }
 
+function resolveMarkerColor(theme: GrafanaTheme2, color?: string): string {
+  const fallback = tinycolor(theme.colors.primary.main).toString();
+  if (!color) {
+    return fallback;
+  }
+
+  const candidate = color.trim();
+  if (!candidate.length) {
+    return fallback;
+  }
+
+  if (candidate.startsWith('#') || candidate.startsWith('rgb') || candidate.startsWith('hsl')) {
+    return tinycolor(candidate).toString();
+  }
+
+  const themed = theme.visualization.getColorByName(candidate);
+  if (themed) {
+    return tinycolor(themed).toString();
+  }
+
+  return tinycolor(candidate).toString();
+}
+
 function applyWebGLProperties(feature: any, values: StyleConfigValues, theme: GrafanaTheme2) {
-  const colorString = tinycolor(theme.visualization.getColorByName(values.color)).toString();
-  const colorValues = getRGBValues(colorString);
+  const baseColorCandidate = values.color ?? defaultStyleConfig.color.fixed;
+  const colorString = resolveMarkerColor(theme, baseColorCandidate);
+
+  let colorValues = getRGBValues(colorString);
+  if (!colorValues) {
+    const fallbackColor = resolveMarkerColor(theme, defaultStyleConfig.color.fixed);
+    colorValues = getRGBValues(fallbackColor) ?? { r: 255, g: 255, b: 255, a: 1 };
+  }
 
   const radius = values.size ?? DEFAULT_SIZE;
   const displacement = getDisplacement(values.symbolAlign ?? defaultStyleConfig.symbolAlign, radius);
+  const alpha = colorValues.a ?? 1;
 
-  feature.setProperties({ red: colorValues?.r ?? 255 });
-  feature.setProperties({ green: colorValues?.g ?? 255 });
-  feature.setProperties({ blue: colorValues?.b ?? 255 });
-  feature.setProperties({ size: (values.size ?? 1) * 2 });
+  feature.setProperties({ red: colorValues.r });
+  feature.setProperties({ green: colorValues.g });
+  feature.setProperties({ blue: colorValues.b });
+  feature.setProperties({ size: radius * 2 });
   feature.setProperties({ rotation: ((values.rotation ?? 0) * Math.PI) / 180 });
-  feature.setProperties({ opacity: (values.opacity ?? 1) * (colorValues?.a ?? 1) });
+  feature.setProperties({ opacity: (values.opacity ?? 1) * alpha });
   feature.setProperties({ offsetX: displacement[0] });
   feature.setProperties({ offsetY: displacement[1] });
 }

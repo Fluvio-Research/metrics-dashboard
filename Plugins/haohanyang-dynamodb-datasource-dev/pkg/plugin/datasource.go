@@ -4,6 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"net/url"
+	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
@@ -22,6 +25,7 @@ import (
 var (
 	_ backend.QueryDataHandler      = (*Datasource)(nil)
 	_ backend.CheckHealthHandler    = (*Datasource)(nil)
+	_ backend.CallResourceHandler   = (*Datasource)(nil)
 	_ instancemgmt.InstanceDisposer = (*Datasource)(nil)
 )
 
@@ -122,15 +126,21 @@ func (d *Datasource) query(ctx context.Context, dynamoDBClient *dynamodb.DynamoD
 		return backend.ErrDataResponse(backend.StatusBadRequest, "query text cannot be empty")
 	}
 
+	// Modify query to add ORDER BY if ScanIndexForward is set and no ORDER BY exists
+	finalQuery := qm.QueryText
+	if qm.ScanIndexForward != nil {
+		finalQuery = injectOrderByClause(qm.QueryText, qm.ScanIndexForward, qm.SortKey)
+	}
+
 	input := &dynamodb.ExecuteStatementInput{
-		Statement: aws.String(qm.QueryText),
+		Statement: aws.String(finalQuery),
 	}
 
 	if qm.Limit > 0 {
 		input.Limit = aws.Int64(qm.Limit)
 	}
 
-	backend.Logger.Info("Executing PartiQL query", "statement", qm.QueryText, "limit", qm.Limit)
+	backend.Logger.Info("Executing PartiQL query", "statement", finalQuery, "limit", qm.Limit, "scanIndexForward", qm.ScanIndexForward)
 
 	// Safety limits to prevent infinite loops and memory exhaustion
 	const maxPages = 1000    // Maximum number of pages to fetch
@@ -193,6 +203,12 @@ func (d *Datasource) query(ctx context.Context, dynamoDBClient *dynamodb.DynamoD
 			break
 		}
 
+		// Check if we've reached the user's requested limit
+		if qm.Limit > 0 && int64(len(allItems)) >= qm.Limit {
+			backend.Logger.Info("Reached user's requested limit", "limit", qm.Limit, "totalItems", len(allItems))
+			break
+		}
+
 		// Check if there are more results to fetch
 		if output.NextToken == nil || *output.NextToken == "" {
 			backend.Logger.Info("Query complete", "totalPages", pageCount, "totalItems", len(allItems))
@@ -211,6 +227,39 @@ func (d *Datasource) query(ctx context.Context, dynamoDBClient *dynamodb.DynamoD
 		frame := data.NewFrame(query.RefID)
 		response.Frames = append(response.Frames, frame)
 		return response
+	}
+
+	// Apply client-side sorting if:
+	// 1. Explicitly requested via sortBy field, OR
+	// 2. ScanIndexForward is set but ORDER BY couldn't be injected server-side (no WHERE clause)
+	if qm.SortBy != "" && len(allItems) > 1 {
+		backend.Logger.Info("Applying client-side sort (explicit sortBy)", "field", qm.SortBy, "direction", qm.SortDirection)
+		sortItems(allItems, qm.SortBy, qm.SortDirection)
+	} else if qm.ScanIndexForward != nil && len(allItems) > 1 && !strings.Contains(strings.ToUpper(qm.QueryText), "ORDER BY") {
+		// Fallback: if ScanIndexForward was set but ORDER BY wasn't added (no WHERE clause),
+		// apply client-side sorting on common sort key fields
+		direction := "asc"
+		if !*qm.ScanIndexForward {
+			direction = "desc"
+		}
+
+		// Try to find a common sort key field in the data
+		sortKeyFields := []string{"timestamp", "created_at", "createdAt", "date", "time"}
+		for _, field := range sortKeyFields {
+			if len(allItems) > 0 && allItems[0][field] != nil {
+				backend.Logger.Info("Applying client-side sort (ScanIndexForward fallback - no WHERE clause for ORDER BY)", "field", field, "direction", direction)
+				sortItems(allItems, field, direction)
+				break
+			}
+		}
+	}
+
+	// Enforce user's limit on the final results
+	// This is critical because DynamoDB's Limit parameter only limits examined items,
+	// not the items returned after filtering
+	if qm.Limit > 0 && int64(len(allItems)) > qm.Limit {
+		backend.Logger.Info("Trimming results to user's limit", "before", len(allItems), "after", qm.Limit)
+		allItems = allItems[:qm.Limit]
 	}
 
 	// Create a combined output with all accumulated items
@@ -269,4 +318,385 @@ func (d *Datasource) CheckHealth(ctx context.Context, req *backend.CheckHealthRe
 		Status:  backend.HealthStatusOk,
 		Message: "Successfully connects to DynamoDB",
 	}, nil
+}
+
+// CallResource handles custom resource calls from the frontend
+func (d *Datasource) CallResource(ctx context.Context, req *backend.CallResourceRequest, sender backend.CallResourceResponseSender) error {
+	backend.Logger.Debug("CallResource", "path", req.Path, "method", req.Method)
+
+	switch req.Path {
+	case "tables":
+		return d.handleListTables(ctx, req, sender)
+	case "table-attributes":
+		return d.handleTableAttributes(ctx, req, sender)
+	default:
+		return sender.Send(&backend.CallResourceResponse{
+			Status: http.StatusNotFound,
+			Body:   []byte(`{"error": "endpoint not found"}`),
+		})
+	}
+}
+
+// handleListTables returns a list of DynamoDB tables
+func (d *Datasource) handleListTables(ctx context.Context, req *backend.CallResourceRequest, sender backend.CallResourceResponseSender) error {
+	client, err := d.getDynamoDBClient(ctx, req.PluginContext.DataSourceInstanceSettings)
+	if err != nil {
+		backend.Logger.Error("Failed to get DynamoDB client", "error", err.Error())
+		return sender.Send(&backend.CallResourceResponse{
+			Status: http.StatusInternalServerError,
+			Body:   []byte(fmt.Sprintf(`{"error": "failed to get client: %s"}`, err.Error())),
+		})
+	}
+
+	// List all tables (with pagination support)
+	var tableNames []string
+	var lastEvaluatedTableName *string
+
+	for {
+		input := &dynamodb.ListTablesInput{
+			Limit: aws.Int64(100), // Fetch 100 tables per page
+		}
+		if lastEvaluatedTableName != nil {
+			input.ExclusiveStartTableName = lastEvaluatedTableName
+		}
+
+		output, err := client.ListTablesWithContext(ctx, input)
+		if err != nil {
+			backend.Logger.Error("Failed to list tables", "error", err.Error())
+			return sender.Send(&backend.CallResourceResponse{
+				Status: http.StatusInternalServerError,
+				Body:   []byte(fmt.Sprintf(`{"error": "failed to list tables: %s"}`, err.Error())),
+			})
+		}
+
+		// Convert []*string to []string
+		for _, tableName := range output.TableNames {
+			if tableName != nil {
+				tableNames = append(tableNames, *tableName)
+			}
+		}
+
+		// Check if there are more tables to fetch
+		if output.LastEvaluatedTableName == nil {
+			break
+		}
+		lastEvaluatedTableName = output.LastEvaluatedTableName
+	}
+
+	backend.Logger.Info("Listed tables", "count", len(tableNames))
+
+	// Return as JSON
+	response := struct {
+		Tables []string `json:"tables"`
+	}{
+		Tables: tableNames,
+	}
+
+	responseJSON, err := json.Marshal(response)
+	if err != nil {
+		return sender.Send(&backend.CallResourceResponse{
+			Status: http.StatusInternalServerError,
+			Body:   []byte(fmt.Sprintf(`{"error": "failed to marshal response: %s"}`, err.Error())),
+		})
+	}
+
+	return sender.Send(&backend.CallResourceResponse{
+		Status: http.StatusOK,
+		Body:   responseJSON,
+	})
+}
+
+// handleTableAttributes returns the attributes (column names) for a specific DynamoDB table
+func (d *Datasource) handleTableAttributes(ctx context.Context, req *backend.CallResourceRequest, sender backend.CallResourceResponseSender) error {
+	// Parse URL to get query parameters
+	parsedURL, err := url.Parse(req.URL)
+	if err != nil {
+		return sender.Send(&backend.CallResourceResponse{
+			Status: http.StatusBadRequest,
+			Body:   []byte(`{"error": "invalid URL"}`),
+		})
+	}
+
+	// Get table name from query parameter
+	tableName := parsedURL.Query().Get("table")
+	if tableName == "" {
+		return sender.Send(&backend.CallResourceResponse{
+			Status: http.StatusBadRequest,
+			Body:   []byte(`{"error": "table parameter is required"}`),
+		})
+	}
+
+	client, err := d.getDynamoDBClient(ctx, req.PluginContext.DataSourceInstanceSettings)
+	if err != nil {
+		backend.Logger.Error("Failed to get DynamoDB client", "error", err.Error())
+		return sender.Send(&backend.CallResourceResponse{
+			Status: http.StatusInternalServerError,
+			Body:   []byte(fmt.Sprintf(`{"error": "failed to get client: %s"}`, err.Error())),
+		})
+	}
+
+	// Describe the table to get its schema
+	describeInput := &dynamodb.DescribeTableInput{
+		TableName: aws.String(tableName),
+	}
+
+	describeOutput, err := client.DescribeTableWithContext(ctx, describeInput)
+	if err != nil {
+		backend.Logger.Error("Failed to describe table", "table", tableName, "error", err.Error())
+		return sender.Send(&backend.CallResourceResponse{
+			Status: http.StatusInternalServerError,
+			Body:   []byte(fmt.Sprintf(`{"error": "failed to describe table: %s"}`, err.Error())),
+		})
+	}
+
+	// Extract attribute names from table schema
+	var attributes []string
+
+	// Add key schema attributes (partition key and sort key)
+	for _, keyElement := range describeOutput.Table.KeySchema {
+		if keyElement.AttributeName != nil {
+			attributes = append(attributes, *keyElement.AttributeName)
+		}
+	}
+
+	// Add other attributes from attribute definitions
+	for _, attrDef := range describeOutput.Table.AttributeDefinitions {
+		if attrDef.AttributeName != nil {
+			// Avoid duplicates (key attributes are already added)
+			found := false
+			for _, existing := range attributes {
+				if existing == *attrDef.AttributeName {
+					found = true
+					break
+				}
+			}
+			if !found {
+				attributes = append(attributes, *attrDef.AttributeName)
+			}
+		}
+	}
+
+	// Also scan a few items to discover additional attributes not in the schema
+	// (DynamoDB is schemaless, so items can have attributes not defined in key schema)
+	scanInput := &dynamodb.ScanInput{
+		TableName: aws.String(tableName),
+		Limit:     aws.Int64(5), // Just scan a few items to discover attributes
+	}
+
+	scanOutput, err := client.ScanWithContext(ctx, scanInput)
+	if err == nil && len(scanOutput.Items) > 0 {
+		// Extract attribute names from actual items
+		attributeSet := make(map[string]bool)
+
+		// Add existing attributes to set
+		for _, attr := range attributes {
+			attributeSet[attr] = true
+		}
+
+		// Discover new attributes from items
+		for _, item := range scanOutput.Items {
+			for attrName := range item {
+				if !attributeSet[attrName] {
+					attributes = append(attributes, attrName)
+					attributeSet[attrName] = true
+				}
+			}
+		}
+	}
+
+	backend.Logger.Info("Discovered table attributes", "table", tableName, "attributes", attributes)
+
+	// Return as JSON
+	response := struct {
+		Attributes []string `json:"attributes"`
+	}{
+		Attributes: attributes,
+	}
+
+	responseJSON, err := json.Marshal(response)
+	if err != nil {
+		return sender.Send(&backend.CallResourceResponse{
+			Status: http.StatusInternalServerError,
+			Body:   []byte(fmt.Sprintf(`{"error": "failed to marshal response: %s"}`, err.Error())),
+		})
+	}
+
+	return sender.Send(&backend.CallResourceResponse{
+		Status: http.StatusOK,
+		Body:   responseJSON,
+	})
+}
+
+// sortItems sorts DynamoDB items by a specified field
+// Works with any field type (string, number, boolean)
+func sortItems(items []map[string]*dynamodb.AttributeValue, sortBy string, sortDirection string) {
+	if sortBy == "" || len(items) == 0 {
+		return
+	}
+
+	descending := sortDirection == "desc"
+
+	// Use stable sort to maintain order for equal elements
+	backend.Logger.Debug("Sorting items", "field", sortBy, "direction", sortDirection, "count", len(items))
+
+	// Define comparison function
+	less := func(i, j int) bool {
+		valI := items[i][sortBy]
+		valJ := items[j][sortBy]
+
+		// Handle nil values - put them at the end
+		if valI == nil && valJ == nil {
+			return false
+		}
+		if valI == nil {
+			return false // nil goes to end
+		}
+		if valJ == nil {
+			return true // non-nil comes before nil
+		}
+
+		// Compare based on DynamoDB attribute type
+		var cmp int
+
+		// String comparison
+		if valI.S != nil && valJ.S != nil {
+			if *valI.S < *valJ.S {
+				cmp = -1
+			} else if *valI.S > *valJ.S {
+				cmp = 1
+			} else {
+				cmp = 0
+			}
+		} else if valI.N != nil && valJ.N != nil {
+			// Number comparison - parse as float64
+			numI, errI := parseFloat(*valI.N)
+			numJ, errJ := parseFloat(*valJ.N)
+			if errI == nil && errJ == nil {
+				if numI < numJ {
+					cmp = -1
+				} else if numI > numJ {
+					cmp = 1
+				} else {
+					cmp = 0
+				}
+			} else {
+				// Fallback to string comparison if parse fails
+				if *valI.N < *valJ.N {
+					cmp = -1
+				} else if *valI.N > *valJ.N {
+					cmp = 1
+				} else {
+					cmp = 0
+				}
+			}
+		} else if valI.BOOL != nil && valJ.BOOL != nil {
+			// Boolean comparison - false < true
+			if !*valI.BOOL && *valJ.BOOL {
+				cmp = -1
+			} else if *valI.BOOL && !*valJ.BOOL {
+				cmp = 1
+			} else {
+				cmp = 0
+			}
+		} else {
+			// Mixed types or unsupported types - no ordering
+			return false
+		}
+
+		if descending {
+			return cmp > 0
+		}
+		return cmp < 0
+	}
+
+	// Use Go's sort.SliceStable for stable sorting
+	sortSliceStable(items, less)
+}
+
+// Helper function for stable sorting
+func sortSliceStable(items []map[string]*dynamodb.AttributeValue, less func(i, j int) bool) {
+	n := len(items)
+	for i := 1; i < n; i++ {
+		for j := i; j > 0 && less(j, j-1); j-- {
+			items[j], items[j-1] = items[j-1], items[j]
+		}
+	}
+}
+
+// reverseItems reverses the order of items in place
+// Used for ScanIndexForward=false to mimic DynamoDB Query API behavior
+func reverseItems(items []map[string]*dynamodb.AttributeValue) {
+	for i, j := 0, len(items)-1; i < j; i, j = i+1, j-1 {
+		items[i], items[j] = items[j], items[i]
+	}
+}
+
+// Helper to parse float from string
+func parseFloat(s string) (float64, error) {
+	var f float64
+	_, err := fmt.Sscanf(s, "%f", &f)
+	return f, err
+}
+
+// injectOrderByClause adds ORDER BY to PartiQL query for server-side sorting
+// This mimics DynamoDB's native Query API ScanIndexForward parameter
+// Note: DynamoDB requires a WHERE clause when using ORDER BY (can only sort within a partition)
+func injectOrderByClause(query string, scanIndexForward *bool, sortKey string) string {
+	if scanIndexForward == nil {
+		return query
+	}
+
+	queryUpper := strings.ToUpper(query)
+
+	// Check if ORDER BY already exists (case-insensitive)
+	if strings.Contains(queryUpper, "ORDER BY") {
+		backend.Logger.Debug("Query already contains ORDER BY, skipping injection")
+		return query
+	}
+
+	// DynamoDB requires WHERE clause when using ORDER BY
+	// ORDER BY only works within a partition (Query API, not Scan)
+	if !strings.Contains(queryUpper, "WHERE") {
+		backend.Logger.Warn("Cannot add ORDER BY without WHERE clause - DynamoDB requires partition key equality in WHERE for ORDER BY. Using client-side sorting.")
+		return query
+	}
+
+	// DynamoDB also requires the WHERE clause to have an exact equality condition on the partition key
+	// It does NOT support ORDER BY with: IN, BETWEEN, <, >, <=, >=, BEGINS_WITH on partition key
+	// These operators prevent using ORDER BY at the database level
+	problematicOperators := []string{" IN ", " BETWEEN ", " BEGINS_WITH ", " CONTAINS ", " > ", " < ", " >= ", " <= ", " <> ", " != "}
+	for _, op := range problematicOperators {
+		if strings.Contains(queryUpper, op) {
+			backend.Logger.Debug("Cannot add ORDER BY with WHERE clause using comparison/range operators - DynamoDB requires exact partition key equality (=) for ORDER BY. Using client-side sorting.", "operator", op)
+			return query
+		}
+	}
+
+	// Determine sort direction
+	direction := "ASC"
+	if !*scanIndexForward {
+		direction = "DESC"
+	}
+
+	// Use provided sort key or default to "timestamp"
+	var sortFieldQuoted string
+	if sortKey != "" {
+		// User specified a sort key, use it with quotes for safety
+		sortFieldQuoted = fmt.Sprintf(`"%s"`, sortKey)
+		backend.Logger.Debug("Using user-specified sort key", "field", sortFieldQuoted)
+	} else {
+		// No sort key specified, use default behavior (timestamp)
+		sortFieldQuoted = `"timestamp"`
+		backend.Logger.Debug("No sort key specified, using default", "field", sortFieldQuoted)
+	}
+
+	// Add ORDER BY clause before any trailing semicolon
+	query = strings.TrimSpace(query)
+	query = strings.TrimSuffix(query, ";")
+
+	modifiedQuery := fmt.Sprintf("%s ORDER BY %s %s", query, sortFieldQuoted, direction)
+
+	backend.Logger.Info("Injected ORDER BY clause", "field", sortFieldQuoted, "direction", direction, "originalQuery", query, "modifiedQuery", modifiedQuery)
+
+	return modifiedQuery
 }

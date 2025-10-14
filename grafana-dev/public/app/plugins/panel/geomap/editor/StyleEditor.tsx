@@ -100,6 +100,17 @@ export const StyleEditor = (props: Props) => {
     onChange({ ...value, textConfig: { ...value.textConfig, offsetY } });
   };
 
+  const onTextColorChange = (textColor: string | undefined) => {
+    const trimmedColor = textColor?.trim();
+    const nextTextConfig = { ...value?.textConfig };
+    if (trimmedColor) {
+      nextTextConfig.color = textColor;
+    } else {
+      delete nextTextConfig.color;
+    }
+    onChange({ ...value, textConfig: nextTextConfig });
+  };
+
   const onTextAlignChange = (textAlign: TextAlignment) => {
     onChange({ ...value, textConfig: { ...value.textConfig, textAlign: textAlign } });
   };
@@ -338,6 +349,13 @@ export const StyleEditor = (props: Props) => {
 
       {hasTextLabel && (
         <>
+          <Field label={t('geomap.style-editor.label-text-color', 'Text color')}>
+            <ColorPicker
+              color={value?.textConfig?.color ?? value?.color?.fixed ?? defaultStyleConfig.color.fixed}
+              enableNamedColors
+              onChange={(color) => onTextColorChange(color)}
+            />
+          </Field>
           <HorizontalGroup>
             <Field label={t('geomap.style-editor.label-font-size', 'Font size')}>
               <NumberValueEditor
