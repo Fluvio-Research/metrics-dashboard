@@ -21,6 +21,20 @@ func loadExtraPluginSettings(source backend.DataSourceInstanceSettings) (*ExtraP
 		return nil, fmt.Errorf("could not unmarshal PluginSettings json: %w", err)
 	}
 
+	if settings.UploadPresets == nil {
+		settings.UploadPresets = []UploadPreset{}
+	}
+
+	if settings.MaxUploadPayloadKB <= 0 {
+		settings.MaxUploadPayloadKB = 512 // sensible default ~0.5MB
+	}
+
+	for i := range settings.UploadPresets {
+		if settings.UploadPresets[i].MaxPayloadKB <= 0 {
+			settings.UploadPresets[i].MaxPayloadKB = settings.MaxUploadPayloadKB
+		}
+	}
+
 	return &settings, nil
 }
 

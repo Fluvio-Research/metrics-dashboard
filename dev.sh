@@ -13,8 +13,8 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-GRAFANA_BIN="./grafana-dev/bin/darwin-arm64/grafana"
-CONFIG_FILE="grafana-dev/conf/dev.ini"
+GRAFANA_BIN="./metrics-dashboard-dev/bin/darwin-arm64/grafana"
+CONFIG_FILE="metrics-dashboard-dev/conf/dev.ini"
 DATA_DIR="data"
 PID_FILE="data/grafana.pid"
 LOG_FILE="data/grafana.log"
@@ -34,11 +34,11 @@ print_error() {
 
 print_header() {
     echo -e "${BLUE}================================${NC}"
-    echo -e "${BLUE}  Grafana Development Manager${NC}"
+    echo -e "${BLUE}  Development Manager${NC}"
     echo -e "${BLUE}================================${NC}"
 }
 
-# Function to check if Grafana is running
+# Function to check if  is running
 is_running() {
     if [ -f "$PID_FILE" ]; then
         local pid=$(cat "$PID_FILE")
@@ -51,7 +51,7 @@ is_running() {
     return 1
 }
 
-# Function to get Grafana process PID
+# Function to get  process PID
 get_grafana_pid() {
     ps aux | grep "grafana server" | grep -v grep | awk '{print $2}' | head -1
 }
@@ -63,12 +63,12 @@ setup_directories() {
     mkdir -p "$DATA_DIR/plugins"
 }
 
-# Function to build Grafana
+# Function to build 
 build_grafana() {
-    print_status "Building Grafana..."
+    print_status "Building ..."
     
-    # Change to grafana-dev directory
-    cd grafana-dev
+    # Change to metrics-dashboard-dev directory
+    cd metrics-dashboard-dev
     
     # Install dependencies
     print_status "Installing dependencies..."
@@ -84,12 +84,12 @@ build_grafana() {
     print_status "Build completed successfully!"
 }
 
-# Function to start Grafana
+# Function to start 
 start_grafana() {
-    print_status "Starting Grafana development server..."
+    print_status "Starting development server..."
     
     if is_running; then
-        print_warning "Grafana is already running!"
+        print_warning "is already running!"
         return 1
     fi
     
@@ -98,37 +98,37 @@ start_grafana() {
     
     # Check if binary exists
     if [ ! -f "$GRAFANA_BIN" ]; then
-        print_error "Grafana binary not found. Run './dev.sh build' first."
+        print_error "binary not found. Run './dev.sh build' first."
         return 1
     fi
     
-    # Start Grafana in background
-    print_status "Starting Grafana server on http://localhost:3000"
+    # Start in background
+    print_status "Starting  server on http://localhost:3000"
     print_status "Username: admin, Password: admin"
     
-    # Pass AWS environment variables to Grafana if they exist
+    # Pass AWS environment variables to  if they exist
     if [ -n "$AWS_ACCESS_KEY_ID" ]; then
         print_status "Using AWS credentials from environment variables"
-        AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" AWS_SESSION_TOKEN="$AWS_SESSION_TOKEN" AWS_DEFAULT_REGION="$AWS_DEFAULT_REGION" nohup "$GRAFANA_BIN" server --config="$CONFIG_FILE" --homepath="./grafana-dev" > "$LOG_FILE" 2>&1 &
+        AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" AWS_SESSION_TOKEN="$AWS_SESSION_TOKEN" AWS_DEFAULT_REGION="$AWS_DEFAULT_REGION" nohup "$GRAFANA_BIN" server --config="$CONFIG_FILE" --homepath="./metrics-dashboard-dev" > "$LOG_FILE" 2>&1 &
     else
         print_status "No AWS credentials found in environment variables"
-        nohup "$GRAFANA_BIN" server --config="$CONFIG_FILE" --homepath="./grafana-dev" > "$LOG_FILE" 2>&1 &
+        nohup "$GRAFANA_BIN" server --config="$CONFIG_FILE" --homepath="./metrics-dashboard-dev" > "$LOG_FILE" 2>&1 &
     fi
     local pid=$!
     echo $pid > "$PID_FILE"
     
-    print_status "Grafana started with PID: $pid"
+    print_status "started with PID: $pid"
     print_status "Logs are being written to: $LOG_FILE"
-    print_status "Access Grafana at: http://localhost:3000"
+    print_status "Access at: http://localhost:3000"
 }
 
-# Function to stop Grafana
+# Function to stop 
 stop_grafana() {
-    print_status "Stopping Grafana..."
+    print_status "Stopping ..."
     
     if is_running; then
         local pid=$(cat "$PID_FILE")
-        print_status "Stopping Grafana process (PID: $pid)..."
+        print_status "Stopping  process (PID: $pid)..."
         kill "$pid" 2>/dev/null || true
         
         # Wait for process to stop
@@ -140,40 +140,40 @@ stop_grafana() {
         
         # Force kill if still running
         if ps -p "$pid" > /dev/null 2>&1; then
-            print_warning "Force killing Grafana process..."
+            print_warning "Force killing  process..."
             kill -9 "$pid" 2>/dev/null || true
         fi
         
         rm -f "$PID_FILE"
-        print_status "Grafana stopped successfully!"
+        print_status "stopped successfully!"
     else
         # Try to find and kill any Grafana processes
         local grafana_pid=$(get_grafana_pid)
         if [ -n "$grafana_pid" ]; then
-            print_status "Found Grafana process (PID: $grafana_pid), stopping..."
+            print_status "Found  process (PID: $grafana_pid), stopping..."
             kill "$grafana_pid" 2>/dev/null || true
-            print_status "Grafana stopped successfully!"
+            print_status "stopped successfully!"
         else
-            print_warning "No Grafana process found running."
+            print_warning "No  process found running."
         fi
     fi
 }
 
-# Function to restart Grafana
+# Function to restart 
 restart_grafana() {
-    print_status "Restarting Grafana..."
+    print_status "Restarting ..."
     stop_grafana
     sleep 2
     start_grafana
 }
 
-# Function to show Grafana status
+# Function to show  status
 status_grafana() {
-    print_status "Checking Grafana status..."
+    print_status "Checking  status..."
     
     if is_running; then
         local pid=$(cat "$PID_FILE")
-        print_status "Grafana is running (PID: $pid)"
+        print_status " is running (PID: $pid)"
         print_status "Access URL: http://localhost:3000"
         
         # Check if port is listening
@@ -183,14 +183,14 @@ status_grafana() {
             print_warning "Port 3000 is not listening"
         fi
     else
-        print_warning "Grafana is not running"
+        print_warning "is not running"
     fi
 }
 
 # Function to show logs
 show_logs() {
     if [ -f "$LOG_FILE" ]; then
-        print_status "Showing Grafana logs (press Ctrl+C to exit)..."
+        print_status "Showing logs (press Ctrl+C to exit)..."
         tail -f "$LOG_FILE"
     else
         print_warning "No log file found at $LOG_FILE"
@@ -201,13 +201,13 @@ show_logs() {
 clean_grafana() {
     print_status "Cleaning build artifacts..."
     
-    # Stop Grafana if running
+    # Stop  if running
     if is_running; then
         stop_grafana
     fi
     
     # Clean build directories
-    cd grafana-dev
+    cd metrics-dashboard-dev
     rm -rf bin/
     rm -rf public/build/
     rm -rf node_modules/.cache/
@@ -219,7 +219,7 @@ clean_grafana() {
 # Function to install dependencies
 install_deps() {
     print_status "Installing dependencies..."
-    cd grafana-dev
+    cd metrics-dashboard-dev
     make deps
     cd ..
     print_status "Dependencies installed!"
@@ -228,7 +228,7 @@ install_deps() {
 # Function to run tests
 run_tests() {
     print_status "Running tests..."
-    cd grafana-dev
+    cd metrics-dashboard-dev
     yarn test
     cd ..
 }
@@ -236,7 +236,7 @@ run_tests() {
 # Function to run frontend development server
 dev_frontend() {
     print_status "Starting frontend development server..."
-    cd grafana-dev
+    cd metrics-dashboard-dev
     yarn dev
     cd ..
 }
@@ -247,12 +247,12 @@ show_help() {
     echo "Usage: $0 [COMMAND]"
     echo ""
     echo "Commands:"
-    echo "  build         - Build Grafana (backend + frontend)"
-    echo "  start         - Start Grafana development server"
-    echo "  stop          - Stop Grafana development server"
-    echo "  restart       - Restart Grafana development server"
-    echo "  status        - Show Grafana status"
-    echo "  logs          - Show Grafana logs (follow mode)"
+    echo "  build         - Build (backend + frontend)"
+    echo "  start         - Start development server"
+    echo "  stop          - Stop development server"
+    echo "  restart       - Restart development server"
+    echo "  status        - Show  status"
+    echo "  logs          - Show  logs (follow mode)"
     echo "  clean         - Clean build artifacts"
     echo "  deps          - Install dependencies"
     echo "  test          - Run tests"
@@ -260,8 +260,8 @@ show_help() {
     echo "  help          - Show this help message"
     echo ""
     echo "Examples:"
-    echo "  $0 build      - Build Grafana"
-    echo "  $0 start      - Start Grafana server"
+    echo "  $0 build      - Build "
+    echo "  $0 start      - Start  server"
     echo "  $0 logs       - View logs"
     echo "  $0 status     - Check if running"
 }

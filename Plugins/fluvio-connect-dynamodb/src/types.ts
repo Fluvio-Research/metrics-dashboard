@@ -26,6 +26,8 @@ export const DEFAULT_QUERY: Partial<DynamoDBQuery> = {
 
 export interface DynamoDBDataSourceOptions extends AwsAuthDataSourceJsonData {
   connectionTestTable?: string;
+  uploadPresets?: UploadPreset[];
+  maxUploadPayloadKB?: number;
 }
 
 export interface DynamoDBDataSourceSecureJsonData extends AwsAuthDataSourceSecureJsonData { }
@@ -42,4 +44,28 @@ export interface DatetimeAttribute {
 
 export interface DynamoDBVariableQuery {
   query: string;
+}
+
+export type UploadOperation = 'insert' | 'update' | 'delete' | 'select';
+
+export interface UploadField {
+  name: string;
+  type?: string;
+  required?: boolean;
+  description?: string;
+}
+
+export interface UploadPreset {
+  id: string;
+  name: string;
+  description?: string;
+  table: string;
+  index?: string;
+  operation: UploadOperation;
+  schema?: UploadField[];
+  partiqlTemplate?: string;
+  allowAdHocFields?: boolean;
+  allowDryRun?: boolean;
+  maxPayloadKB?: number;
+  responsePreview?: boolean;
 }

@@ -2,7 +2,7 @@
 
 ## 1.1.0
 
-- Updates styles to work better with Grafana v9.5.1.
+- Updates styles to work better with Metrics Dashboard v9.5.1.
 - Hide Astro Panel option
   - This option hides the astro panel via a `display: none` styling. This allows the theme to take hold, but hides the Astro panel in case it's not desired. This does however make it a bit more difficult to access the Astro panel options after it's hidden. The best way to do this is via the JSON model.
 - Various style fixes to make up for markup change in the version bump.
@@ -18,7 +18,7 @@
 ## 1.0.5
 
 - Updates links
-- Updates required Grafana version
+- Updates required Metrics Dashboard version
 
 ## 1.0.0 (Unreleased)
 

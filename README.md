@@ -1,6 +1,6 @@
-# Grafana Development Environment
+# Metrics Dashboard Development Environment
 
-This repository provides multiple ways to set up Grafana for development and testing purposes.
+This repository provides multiple ways to set up Metrics Dashboard for development and testing purposes.
 
 ## 🚀 Quick Start Options
 
@@ -12,37 +12,37 @@ This repository provides multiple ways to set up Grafana for development and tes
 
 **Setup Instructions:**
 
-1. **Start Grafana:**
+1. **Start Metrics Dashboard:**
    ```bash
    docker-compose up -d
    ```
 
-2. **Access Grafana:**
+2. **Access Metrics Dashboard:**
    - Open your browser and go to: http://localhost:3000
    - Login with:
      - Username: `admin`
      - Password: `admin`
 
-3. **Stop Grafana:**
+3. **Stop Metrics Dashboard:**
    ```bash
    docker-compose down
    ```
 
 4. **View logs:**
    ```bash
-   docker-compose logs -f grafana
+   docker-compose logs -f metrics-dashboard
    ```
 
 #### Building Docker Image from Source
 
-To build a custom Docker image from the Grafana source code:
+To build a custom Docker image from the Metrics Dashboard source code:
 
 ```bash
-# Navigate to grafana-dev directory
-cd grafana-dev
+# Navigate to metrics-dashboard-dev directory
+cd metrics-dashboard-dev
 
 # Build for your platform (linux/amd64, linux/arm64, etc.)
-docker build --target final -t grafana-custom .
+docker build --target final -t metrics-dashboard-custom .
 
 # Or build with specific build arguments
 docker build \
@@ -50,18 +50,18 @@ docker build \
   --build-arg GO_BUILD_TAGS="oss" \
   --build-arg COMMIT_SHA="$(git rev-parse HEAD)" \
   --build-arg BUILD_BRANCH="$(git branch --show-current)" \
-  -t grafana-custom .
+  -t metrics-dashboard-custom .
 
 # Run your custom image
-docker run -d -p 3000:3000 --name grafana-custom grafana-custom
+docker run -d -p 3000:3000 --name metrics-dashboard-custom metrics-dashboard-custom
 ```
 
 **Common Build Arguments:**
 - `GO_BUILD_TAGS`: Build tags (default: "oss")
 - `COMMIT_SHA`: Git commit hash for version info
 - `BUILD_BRANCH`: Git branch name for version info
-- `GF_UID`: Grafana user ID (default: 472)
-- `GF_GID`: Grafana group ID (default: 0)
+- `MD_UID`: Metrics Dashboard user ID (default: 472)
+- `MD_GID`: Metrics Dashboard group ID (default: 0)
 
 ### Option 2: Development Environment (For contributors)
 
@@ -81,7 +81,7 @@ docker run -d -p 3000:3000 --name grafana-custom grafana-custom
    ./dev.sh start
    ```
 
-3. **Access Grafana:**
+3. **Access Metrics Dashboard:**
    - URL: http://localhost:3000
    - Credentials: admin/admin
 
@@ -109,17 +109,17 @@ docker run -d -p 3000:3000 --name grafana-custom grafana-custom
 - **Unified Alerting:** Enabled
 
 ### Development Setup
-- **Backend:** Built from source in `grafana-dev/`
+- **Backend:** Built from source in `metrics-dashboard-dev/`
 - **Frontend:** Webpack dev server with hot reload
-- **Database:** SQLite in `data/grafana.db`
-- **Configuration:** `grafana-dev/conf/dev.ini`
+- **Database:** SQLite in `data/metrics-dashboard.db`
+- **Configuration:** `metrics-dashboard-dev/conf/dev.ini`
 
 ## Development Features
 
 ### Docker Environment
 - Persistent storage using Docker volumes
-- Custom configuration via `grafana.ini`
-- Latest Grafana Community Edition
+- Custom configuration via `metrics-dashboard.ini`
+- Latest Metrics Dashboard Community Edition
 - Easy to start/stop/restart
 
 ### Development Environment
@@ -131,7 +131,7 @@ docker run -d -p 3000:3000 --name grafana-custom grafana-custom
 
 ## Data Sources
 
-After starting Grafana, you can add data sources through the web interface:
+After starting Metrics Dashboard, you can add data sources through the web interface:
 1. Go to Configuration → Data Sources
 2. Add your preferred data sources (Prometheus, InfluxDB, etc.)
 
@@ -141,7 +141,7 @@ After starting Grafana, you can add data sources through the web interface:
 To install additional plugins:
 
 1. **Using pre-built image:**
-   - Use the Grafana web interface (Configuration → Plugins)
+   - Use the Metrics Dashboard web interface (Configuration → Plugins)
    - Or modify the Docker Compose file to include plugin installation
 
 2. **When building custom Docker image:**
@@ -153,8 +153,8 @@ To install additional plugins:
    # Build with plugins included
    docker build \
      --target final \
-     -t grafana-with-plugins \
-     --build-arg GF_INSTALL_PLUGINS="plugin1,plugin2" \
+     -t metrics-dashboard-with-plugins \
+     --build-arg MD_INSTALL_PLUGINS="plugin1,plugin2" \
      .
    ```
 
@@ -162,13 +162,13 @@ To install additional plugins:
 Plugin development is supported with:
 - Build system for custom plugins
 - Hot reload during development
-- Access to all Grafana packages
+- Access to all Metrics Dashboard packages
 
 ## Troubleshooting
 
 ### Docker Issues
 - If port 3000 is in use, modify the port mapping in `docker-compose.yml`
-- Check logs with `docker-compose logs grafana`
+- Check logs with `docker-compose logs metrics-dashboard`
 - Reset data by running `docker-compose down -v` (this will delete all data)
 
 ### Docker Build Issues
@@ -188,4 +188,6 @@ Plugin development is supported with:
 - **Development Guide:** [DEVELOPMENT-README.md](DEVELOPMENT-README.md)
 - **Docker Issues:** Check Docker logs and container status
 - **Development Issues:** Use `./dev.sh logs` for detailed error information
-- **Community:** [Grafana Community Forums](https://community.grafana.com/) 
+- **Community:** [Metrics Dashboard Community Forums](https://community.metrics-dashboard.com/) 
+
+# metrics-dashboard

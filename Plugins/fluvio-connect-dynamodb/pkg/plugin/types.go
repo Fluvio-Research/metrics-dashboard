@@ -41,5 +41,38 @@ const (
 )
 
 type ExtraPluginSettings struct {
-	ConnectionTestTable string `json:"connectionTestTable"`
+	ConnectionTestTable string         `json:"connectionTestTable"`
+	UploadPresets       []UploadPreset `json:"uploadPresets"`
+	MaxUploadPayloadKB  int64          `json:"maxUploadPayloadKB"`
+}
+
+type UploadPreset struct {
+	ID               string          `json:"id"`
+	Name             string          `json:"name"`
+	Description      string          `json:"description,omitempty"`
+	Table            string          `json:"table"`
+	Index            string          `json:"index,omitempty"`
+	Operation        UploadOperation `json:"operation"`
+	Schema           []UploadField   `json:"schema,omitempty"`
+	PartiQLTemplate  string          `json:"partiqlTemplate,omitempty"`
+	AllowAdHocFields bool            `json:"allowAdHocFields,omitempty"`
+	AllowDryRun      bool            `json:"allowDryRun,omitempty"`
+	MaxPayloadKB     int64           `json:"maxPayloadKB,omitempty"`
+	ResponsePreview  bool            `json:"responsePreview,omitempty"`
+}
+
+type UploadOperation string
+
+const (
+	UploadOperationInsert UploadOperation = "insert"
+	UploadOperationUpdate UploadOperation = "update"
+	UploadOperationDelete UploadOperation = "delete"
+	UploadOperationSelect UploadOperation = "select"
+)
+
+type UploadField struct {
+	Name        string `json:"name"`
+	Type        string `json:"type"`
+	Required    bool   `json:"required,omitempty"`
+	Description string `json:"description,omitempty"`
 }

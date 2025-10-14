@@ -429,6 +429,8 @@ func (d *Datasource) CallResource(ctx context.Context, req *backend.CallResource
 		return d.handleListTables(ctx, req, sender)
 	case "table-attributes":
 		return d.handleTableAttributes(ctx, req, sender)
+	case "upload/presets", "upload/preview", "upload/execute", "upload/schema":
+		return d.handleUploadResource(ctx, req, sender)
 	default:
 		return sender.Send(&backend.CallResourceResponse{
 			Status: http.StatusNotFound,
