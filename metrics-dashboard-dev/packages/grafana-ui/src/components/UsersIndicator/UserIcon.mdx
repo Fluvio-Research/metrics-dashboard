@@ -12,7 +12,7 @@ import { UserIcon } from './UserIcon';
 To use the `UserIcon` component, import it and pass in the required `UserIconProps`. The component can be used as follows:
 
 ```jsx
-import { UserIcon } from '@grafana/ui';
+import { UserIcon } from '@metrics-dashboard/ui';
 
 const ExampleComponent = () => {
   const userView = {
@@ -33,7 +33,7 @@ const ExampleComponent = () => {
 `children` prop can be used to display a custom content inside `UserIcon`. This is useful to show the data about extra users.
 
 ```jsx
-import { UserIcon } from '@grafana/ui';
+import { UserIcon } from '@metrics-dashboard/ui';
 
 const ExampleComponent = () => {
   const userView = {
@@ -56,7 +56,7 @@ const ExampleComponent = () => {
 ## UserView type
 
 ```tsx
-import { DateTimeInput } from '@grafana/data';
+import { DateTimeInput } from '@metrics-dashboard/data';
 
 export interface UserView {
   user: {

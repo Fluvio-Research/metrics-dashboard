@@ -30,7 +30,7 @@ About Alert component:
 
 ## <a name="types"/>Types
 
-Within Grafana, we have two different types of alerts and they can be used depending on the context and content.
+Within Metrics Dashboard, we have two different types of alerts and they can be used depending on the context and content.
 
 1. **[Inline banner](#alert-inline)**:
    - To notify users of the status of an action. They appear at the top or bottom of the main content area
@@ -118,8 +118,8 @@ Toast notifications are short messages that appear in the top-right corner of th
     - Show the `Toast` publishing the `appEvent` with the proper type and payload needed.
 
 ```jsx
-import { AppEvents } from '@grafana/data';
-import { getAppEvents } from '@grafana/runtime';
+import { AppEvents } from '@metrics-dashboard/data';
+import { getAppEvents } from '@metrics-dashboard/runtime';
 
 const appEvents = getAppEvents();
 appEvents.publish({

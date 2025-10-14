@@ -5,7 +5,7 @@ import { BigValue } from './BigValue';
 
 # BigValue
 
-Component for showing a value based on a [DisplayValue](https://github.com/grafana/grafana/blob/main/packages/grafana-data/src/types/displayValue.ts#L5).
+Component for showing a value based on a [DisplayValue](https://github.com/metrics-dashboard/metrics-dashboard/blob/main/packages/metrics-dashboard-data/src/types/displayValue.ts#L5).
 
 ### Display properties
 
@@ -38,10 +38,10 @@ There are four variants to render text:
 
 ### Example usage
 
-An example usage is in the [Stat panel](https://grafana.com/docs/grafana/latest/panels/visualizations/stat-panel/).
+An example usage is in the [Stat panel](https://metrics-dashboard.com/docs/metrics-dashboard/latest/panels/visualizations/stat-panel/).
 
 ```tsx
-import { DisplayValue } from '@grafana/data';
+import { DisplayValue } from '@metrics-dashboard/data';
 import {
   BigValue,
   BigValueColorMode,
@@ -49,7 +49,7 @@ import {
   BigValueJustifyMode,
   BigValueTextMode,
   useTheme,
-} from '@grafana/ui';
+} from '@metrics-dashboard/ui';
 
 const bigValue: DisplayValue = {
   color: 'red',

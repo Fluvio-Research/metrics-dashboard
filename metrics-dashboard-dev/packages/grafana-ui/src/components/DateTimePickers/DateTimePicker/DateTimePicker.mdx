@@ -9,8 +9,8 @@ A component for selecting a date _and_ time.
 
 ```tsx
 import { useState } from 'react';
-import { DateTime, dateTime } from '@grafana/data';
-import { DateTimePicker } from '@grafana/ui';
+import { DateTime, dateTime } from '@metrics-dashboard/data';
+import { DateTimePicker } from '@metrics-dashboard/ui';
 
 const [date, setDate] = useState<DateTime>(dateTime('2021-05-05 12:00:00'));
 return <DateTimePicker label="Date" date={date} onChange={setDate} />;
@@ -20,8 +20,8 @@ return <DateTimePicker label="Date" date={date} onChange={setDate} />;
 
 ```tsx
 import { useState } from 'react';
-import { DateTime, dateTime } from '@grafana/data';
-import { DateTimePicker } from '@grafana/ui';
+import { DateTime, dateTime } from '@metrics-dashboard/data';
+import { DateTimePicker } from '@metrics-dashboard/ui';
 
 const [date, setDate] = useState<DateTime>(dateTime('2021-05-05 12:00:00'));
 return (

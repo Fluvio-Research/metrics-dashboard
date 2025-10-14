@@ -28,11 +28,11 @@ Each dataframe also supports using the following custom property under `datafram
 
 ## Table rendering
 
-Table component only works in conjunction with the applyFieldOverrides function from the @grafana/data package otherwise data will not render.
+Table component only works in conjunction with the applyFieldOverrides function from the @metrics-dashboard/data package otherwise data will not render.
 
 ```javascript
-import { DataFrame, applyFieldOverrides, GrafanaTheme2 } from '@grafana/data';
-import { Table, useTheme2 } from '@grafana/ui';
+import { DataFrame, applyFieldOverrides, Metrics DashboardTheme2 } from '@metrics-dashboard/data';
+import { Table, useTheme2 } from '@metrics-dashboard/ui';
 
 const TableComponent = (dataFrame: DataFrame) => {
   const theme = useTheme2();
