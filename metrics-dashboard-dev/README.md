@@ -1,44 +1,193 @@
-![Metrics Dashboard Logo (Light)](docs/logo-horizontal.png#gh-light-mode-only)
-![Metrics Dashboard Logo (Dark)](docs/logo-horizontal-dark.png#gh-dark-mode-only)
+# Metrics Dashboard Development Environment
 
-The open-source platform for monitoring and observability
+This repository provides multiple ways to set up Metrics Dashboard for development and testing purposes.
 
-[![License](https://img.shields.io/github/license/Fluvio-Research/metrics-dashboard)](LICENSE)
-[![Go Report Card](https://goreportcard.com/badge/github.com/Fluvio-Research/metrics-dashboard)](https://goreportcard.com/report/github.com/Fluvio-Research/metrics-dashboard)
+## 🚀 Quick Start Options
 
-Metrics Dashboard allows you to query, visualize, alert on and understand your metrics no matter where they are stored. Create, explore, and share dashboards with your team and foster a data-driven culture:
+### Option 1: Docker (Recommended for testing)
 
-- **Visualizations:** Fast and flexible client side graphs with a multitude of options. Panel plugins offer many different ways to visualize metrics and logs.
-- **Dynamic Dashboards:** Create dynamic & reusable dashboards with template variables that appear as dropdowns at the top of the dashboard.
-- **Explore Metrics:** Explore your data through ad-hoc queries and dynamic drilldown. Split view and compare different time ranges, queries and data sources side by side.
-- **Explore Logs:** Experience the magic of switching from metrics to logs with preserved label filters. Quickly search through all your logs or streaming them live.
-- **Alerting:** Visually define alert rules for your most important metrics. Metrics Dashboard will continuously evaluate and send notifications to systems like Slack, PagerDuty, VictorOps, OpsGenie.
-- **Mixed Data Sources:** Mix different data sources in the same graph! You can specify a data source on a per-query basis. This works for even custom datasources.
+**Prerequisites:**
+- Docker and Docker Compose installed
+- Port 3000 available on your machine
 
-## Get started
+**Setup Instructions:**
 
-- [Get Metrics Dashboard](https://github.com/Fluvio-Research/metrics-dashboard)
-- [Installation guides](https://github.com/Fluvio-Research/metrics-dashboard#installation)
+1. **Start Metrics Dashboard:**
+   ```bash
+   docker-compose up -d
+   ```
 
-## Documentation
+2. **Access Metrics Dashboard:**
+   - Open your browser and go to: http://localhost:3000
+   - Login with:
+     - Username: `admin`
+     - Password: `admin`
 
-The Metrics Dashboard documentation is available in the [repository](https://github.com/Fluvio-Research/metrics-dashboard).
+3. **Stop Metrics Dashboard:**
+   ```bash
+   docker-compose down
+   ```
 
-## Contributing
+4. **View logs:**
+   ```bash
+   docker-compose logs -f metrics-dashboard
+   ```
 
-If you're interested in contributing to the Metrics Dashboard project:
+#### Building Docker Image from Source
 
-- Start by reading the [Contributing guide](https://github.com/Fluvio-Research/metrics-dashboard/blob/HEAD/CONTRIBUTING.md).
-- Learn how to set up your local environment, in our [Developer guide](https://github.com/Fluvio-Research/metrics-dashboard/blob/HEAD/contribute/developer-guide.md).
-- Explore our [issues](https://github.com/Fluvio-Research/metrics-dashboard/issues).
+To build a custom Docker image from the Metrics Dashboard source code:
 
-## Get involved
+```bash
+# Navigate to metrics-dashboard-dev directory
+cd metrics-dashboard-dev
 
-- Check out our [GitHub repository](https://github.com/Fluvio-Research/metrics-dashboard) for the latest updates.
-- For questions and discussions, use [GitHub Issues](https://github.com/Fluvio-Research/metrics-dashboard/issues).
+# Build for your platform (linux/amd64, linux/arm64, etc.)
+docker build --target final -t metrics-dashboard-custom .
 
-This project is tested with [BrowserStack](https://www.browserstack.com/).
+# Or build with specific build arguments
+docker build \
+  --target final \
+  --build-arg GO_BUILD_TAGS="oss" \
+  --build-arg COMMIT_SHA="$(git rev-parse HEAD)" \
+  --build-arg BUILD_BRANCH="$(git branch --show-current)" \
+  -t metrics-dashboard-custom .
 
-## License
+# Run your custom image
+docker run -d -p 3000:3000 --name metrics-dashboard-custom metrics-dashboard-custom
+```
 
-Metrics Dashboard is distributed under [AGPL-3.0-only](LICENSE). For Apache-2.0 exceptions, see [LICENSING.md](https://github.com/Fluvio-Research/metrics-dashboard/blob/HEAD/LICENSING.md).
+**Common Build Arguments:**
+- `GO_BUILD_TAGS`: Build tags (default: "oss")
+- `COMMIT_SHA`: Git commit hash for version info
+- `BUILD_BRANCH`: Git branch name for version info
+- `MD_UID`: Metrics Dashboard user ID (default: 472)
+- `MD_GID`: Metrics Dashboard group ID (default: 0)
+
+### Option 2: Development Environment (For contributors)
+
+**Prerequisites:**
+- Go (1.21+), Node.js (22.x), Yarn (4.9.2+), Make, Git
+
+**Setup Instructions:**
+
+1. **Install dependencies and build:**
+   ```bash
+   ./dev.sh deps
+   ./dev.sh build
+   ```
+
+2. **Start development server:**
+   ```bash
+   ./dev.sh start
+   ```
+
+3. **Access Metrics Dashboard:**
+   - URL: http://localhost:3000
+   - Credentials: admin/admin
+
+4. **Development workflow:**
+   ```bash
+   # Start frontend dev server with hot reload
+   ./dev.sh dev
+
+   # View logs
+   ./dev.sh logs
+
+   # Run tests
+   ./dev.sh test
+   ```
+
+📖 **[Detailed Development Guide →](DEVELOPMENT-README.md)**
+
+## Configuration
+
+### Docker Setup
+- **Port:** 3000
+- **Database:** SQLite (stored in Docker volume)
+- **Admin credentials:** admin/admin
+- **Sign-up disabled:** For security in development
+- **Unified Alerting:** Enabled
+
+### Development Setup
+- **Backend:** Built from source in `metrics-dashboard-dev/`
+- **Frontend:** Webpack dev server with hot reload
+- **Database:** SQLite in `data/metrics-dashboard.db`
+- **Configuration:** `metrics-dashboard-dev/conf/dev.ini`
+
+## Development Features
+
+### Docker Environment
+- Persistent storage using Docker volumes
+- Custom configuration via `metrics-dashboard.ini`
+- Latest Metrics Dashboard Community Edition
+- Easy to start/stop/restart
+
+### Development Environment
+- Full source code access for contributions
+- Hot reload for frontend changes
+- Backend debugging capabilities
+- Comprehensive test suite
+- Plugin development support
+
+## Data Sources
+
+After starting Metrics Dashboard, you can add data sources through the web interface:
+1. Go to Configuration → Data Sources
+2. Add your preferred data sources (Prometheus, InfluxDB, etc.)
+
+## Plugins
+
+### Docker Installation
+To install additional plugins:
+
+1. **Using pre-built image:**
+   - Use the Metrics Dashboard web interface (Configuration → Plugins)
+   - Or modify the Docker Compose file to include plugin installation
+
+2. **When building custom Docker image:**
+   ```bash
+   # Copy your custom plugins to the plugins directory
+   mkdir -p packaging/docker/custom/plugins
+   # Add your plugins...
+
+   # Build with plugins included
+   docker build \
+     --target final \
+     -t metrics-dashboard-with-plugins \
+     --build-arg MD_INSTALL_PLUGINS="plugin1,plugin2" \
+     .
+   ```
+
+### Development Environment
+Plugin development is supported with:
+- Build system for custom plugins
+- Hot reload during development
+- Access to all Metrics Dashboard packages
+
+## Troubleshooting
+
+### Docker Issues
+- If port 3000 is in use, modify the port mapping in `docker-compose.yml`
+- Check logs with `docker-compose logs metrics-dashboard`
+- Reset data by running `docker-compose down -v` (this will delete all data)
+
+### Docker Build Issues
+- **Build fails on ARM64:** Use `JS_PLATFORM=linux/arm64` build argument
+- **Out of memory:** Increase Docker memory limit or use `--memory` flag
+- **Slow builds:** Enable BuildKit with `DOCKER_BUILDKIT=1` environment variable
+- **Missing dependencies:** Ensure all build dependencies are installed (Go, Node.js, Make)
+
+### Development Issues
+- Check the [detailed development guide](DEVELOPMENT-README.md)
+- View logs: `./dev.sh logs`
+- Check status: `./dev.sh status`
+- Clean and rebuild: `./dev.sh clean && ./dev.sh deps && ./dev.sh build`
+
+## Getting Help
+
+- **Development Guide:** [DEVELOPMENT-README.md](DEVELOPMENT-README.md)
+- **Docker Issues:** Check Docker logs and container status
+- **Development Issues:** Use `./dev.sh logs` for detailed error information
+- **Community:** [Metrics Dashboard Community Forums](https://community.metrics-dashboard.com/) 
+
+# metrics-dashboard
