@@ -54,19 +54,6 @@ export function DashboardCard({ dashboard, onClick }: DashboardCardProps) {
           <div className={styles.title}>
             {dashboard.title}
           </div>
-          
-          {dashboard.tags && dashboard.tags.length > 0 && (
-            <div className={styles.tags}>
-              {dashboard.tags.slice(0, 3).map((tag, index) => (
-                <span key={index} className={`${styles.tag} tag`}>
-                  {tag}
-                </span>
-              ))}
-              {dashboard.tags.length > 3 && (
-                <span className={styles.tagMore}>+{dashboard.tags.length - 3}</span>
-              )}
-            </div>
-          )}
         </div>
         
         <div className={styles.actions}>

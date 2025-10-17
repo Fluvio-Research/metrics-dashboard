@@ -21,7 +21,6 @@ import { buildBreadcrumbs } from '../../Breadcrumbs/utils';
 
 import { MegaMenuHeader } from './MegaMenuHeader';
 import { MegaMenuItem } from './MegaMenuItem';
-import { UserTypeDisplay } from './UserTypeDisplay';
 import { DashboardCardsSection } from './DashboardCardsSection';
 import { ControlsSection } from './ControlsSection';
 import { usePinnedItems } from './hooks';
@@ -55,12 +54,9 @@ export const MegaMenu = memo(
     const homeNav = navIndex[HOME_NAV_ID];
     const breadcrumbs = buildBreadcrumbs(state.sectionNav.node, state.pageNav, homeNav);
     
-    // Get profile node for non-admin users
-    const profileNode = navIndex['profile'];
-    
     // Fetch dashboards for non-admin users
     const { dashboards } = useDashboardList({ 
-      limit: 8, // Show 8 dashboards in a 2x4 grid
+      limit: 50, // Fetch more dashboards to categorize by tags
       enabled: isRestrictedUser // Only fetch for users without elevated admin permissions
     });
 
@@ -84,6 +80,17 @@ export const MegaMenu = memo(
           }
           // Remove the home section
           if (item.id === 'home') {
+            return false;
+          }
+          // Remove administration sections
+          if (item.id === 'cfg' || item.id === 'admin') {
+            return false;
+          }
+          // Remove administration sub-sections
+          if (item.id === 'datasources' || item.id === 'users' || item.id === 'teams' || 
+              item.id === 'plugins' || item.id === 'org-settings' || item.id === 'apikeys' || 
+              item.id === 'serviceaccounts' || item.id === 'global-users' || item.id === 'global-orgs' ||
+              item.id === 'server-settings' || item.id === 'admin-plugins' || item.id === 'upgrading') {
             return false;
           }
         }
@@ -167,17 +174,6 @@ export const MegaMenu = memo(
         <nav className={styles.content}>
           <div className={styles.scrollableContent}>
             <ScrollContainer height="100%" overflowX="hidden" showScrollIndicators>
-              {/* Controls Section for non-admin users */}
-              {isRestrictedUser && (
-                <div className={styles.controlsWrapper}>
-                  <ControlsSection 
-                    breadcrumbs={breadcrumbs} 
-                    profileNode={profileNode}
-                    onToggleKioskMode={chrome.onToggleKioskMode}
-                  />
-                </div>
-              )}
-              
               {/* Dashboard Cards Section for non-admin users */}
               {isRestrictedUser && dashboards.length > 0 && (
                 <DashboardCardsSection 
@@ -200,12 +196,22 @@ export const MegaMenu = memo(
               </ul>
             </ScrollContainer>
           </div>
+          
+          {/* Controls Section at bottom for non-admin users */}
+          {isRestrictedUser && (
+            <div className={styles.controlsWrapper}>
+              <ControlsSection 
+                breadcrumbs={breadcrumbs}
+                onToggleKioskMode={chrome.onToggleKioskMode}
+              />
+            </div>
+          )}
+          
           {shouldRenderInviteUserButton && (
             <div className={styles.inviteNewMemberButton}>
               <InviteUserButton />
             </div>
           )}
-          <UserTypeDisplay />
         </nav>
       </div>
     );
@@ -227,18 +233,6 @@ const getStyles = (theme: GrafanaTheme2) => {
       height: '100%',
       backgroundColor: isDarkTheme ? theme.colors.background.primary : theme.colors.background.canvas,
       borderRight: `1px solid ${theme.colors.border.weak}`,
-      
-      // Modern sidebar styling
-      '&::before': {
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        height: '4px',
-        background: theme.colors.gradients.brandVertical,
-        zIndex: 1,
-      },
     }),
     mobileHeader: css({
       display: 'flex',
@@ -324,8 +318,12 @@ const getStyles = (theme: GrafanaTheme2) => {
       flexDirection: 'column',
     }),
     controlsWrapper: css({
-      padding: theme.spacing(2, 1.5),
-      borderBottom: `1px solid ${isDarkTheme ? 'rgba(148, 163, 184, 0.1)' : 'rgba(15, 23, 42, 0.06)'}`,
+      padding: theme.spacing(0.75, 0.75),
+      borderTop: `1px solid ${isDarkTheme ? 'rgba(148, 163, 184, 0.1)' : 'rgba(15, 23, 42, 0.06)'}`,
+      position: 'relative',
+      overflow: 'visible',
+      marginTop: 'auto',
+      flexShrink: 0,
     }),
     dockMenuButton: css({
       display: 'none',

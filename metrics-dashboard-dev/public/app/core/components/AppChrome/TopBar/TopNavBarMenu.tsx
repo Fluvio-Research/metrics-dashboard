@@ -9,15 +9,21 @@ import { enrichWithInteractionTracking } from '../MegaMenu/utils';
 export interface TopNavBarMenuProps {
   node: NavModelItem;
   children?: React.ReactNode;
+  onMenuItemClick?: () => void;
 }
 
-export function TopNavBarMenu({ node: nodePlain, children }: TopNavBarMenuProps) {
+export function TopNavBarMenu({ node: nodePlain, children, onMenuItemClick }: TopNavBarMenuProps) {
   const styles = useStyles2(getStyles);
   const node = enrichWithInteractionTracking(cloneDeep(nodePlain), false);
 
   if (!node) {
     return null;
   }
+
+  const handleItemSelection = (item?: NavModelItem) => {
+    item?.onClick?.();
+    onMenuItemClick?.();
+  };
 
   return (
     <Menu
@@ -32,10 +38,18 @@ export function TopNavBarMenu({ node: nodePlain, children }: TopNavBarMenuProps)
       }
     >
       {node.children?.map((item) => {
+        const onClick = () => handleItemSelection(item);
         return item.url ? (
-          <MenuItem url={item.url} label={item.text} icon={item.icon} target={item.target} key={item.id} />
+          <MenuItem
+            url={item.url}
+            label={item.text}
+            icon={item.icon}
+            target={item.target}
+            key={item.id}
+            onClick={onClick}
+          />
         ) : (
-          <MenuItem icon={item.icon} onClick={item.onClick} label={item.text} key={item.id} />
+          <MenuItem icon={item.icon} onClick={onClick} label={item.text} key={item.id} />
         );
       })}
       {children}

@@ -89,24 +89,20 @@ export const AdvancedToolPitFieldsEditor = ({ value, onChange, context }: Props)
         return undefined;
       }
 
-      if (entry.fieldKey) {
-        const byKey = fieldOptions.find((opt) => opt.value === entry.fieldKey);
-        if (byKey) {
-          return byKey;
-        }
-      }
-
-      if (entry.frameRefId && entry.fieldName) {
-        const byRef = fieldOptions.find((opt) => {
-          const data = opt.data as AdvancedToolPitFieldOptionData | undefined;
-          return data?.frameRefId === entry.frameRefId && data?.fieldName === entry.fieldName;
-        });
-        if (byRef) {
-          return byRef;
-        }
-      }
-
+      // Priority 1: Try by fieldName first (most stable identifier)
       if (entry.fieldName) {
+        // First try with frameRefId if available
+        if (entry.frameRefId) {
+          const byNameAndRef = fieldOptions.find((opt) => {
+            const data = opt.data as AdvancedToolPitFieldOptionData | undefined;
+            return data?.frameRefId === entry.frameRefId && data?.fieldName === entry.fieldName;
+          });
+          if (byNameAndRef) {
+            return byNameAndRef;
+          }
+        }
+        
+        // Then try by fieldName alone (in case frameRefId changed)
         const byFieldName = fieldOptions.find((opt) => {
           const data = opt.data as AdvancedToolPitFieldOptionData | undefined;
           return data?.fieldName === entry.fieldName;
@@ -116,6 +112,15 @@ export const AdvancedToolPitFieldsEditor = ({ value, onChange, context }: Props)
         }
       }
 
+      // Priority 2: Try by fieldKey (frame:field index) only if fieldName didn't work
+      if (entry.fieldKey) {
+        const byKey = fieldOptions.find((opt) => opt.value === entry.fieldKey);
+        if (byKey) {
+          return byKey;
+        }
+      }
+
+      // Priority 3: Fallback to legacy field label
       if (entry.field) {
         const byLabel = fieldOptions.find((opt) => opt.label === entry.field);
         if (byLabel) {
@@ -139,37 +144,45 @@ export const AdvancedToolPitFieldsEditor = ({ value, onChange, context }: Props)
         return entry;
       }
 
-      let option = resolveOptionForEntry(entry);
-      if (!option && !entry.fieldKey && !entry.field && !entry.fieldName && fieldOptions[0]) {
-        option = fieldOptions[0];
+      // Only auto-resolve if the entry is completely empty (no field reference at all)
+      const hasValidReference = entry.fieldKey || entry.fieldName || entry.field;
+      if (!hasValidReference && fieldOptions[0]) {
+        // Auto-fill completely empty field entries with the first available field
+        const option = fieldOptions[0];
+        const data = option.data as AdvancedToolPitFieldOptionData | undefined;
+        mutated = true;
+        return {
+          ...entry,
+          fieldKey: option.value,
+          field: option.label,
+          fieldName: data?.fieldName,
+          frameRefId: data?.frameRefId,
+        };
       }
 
-      if (!option) {
+      // Try to resolve the entry to check if the field still exists
+      const option = resolveOptionForEntry(entry);
+      if (option) {
+        // Field still exists - update fieldKey (index can change) but preserve the display label
+        // Only update if fieldKey changed (field index changed due to reordering)
+        if (entry.fieldKey !== option.value) {
+          mutated = true;
+          return {
+            ...entry,
+            fieldKey: option.value, // Update the index
+            // Keep entry.field (custom label) as-is
+            // Keep entry.fieldName (database name) as-is
+            // Keep entry.frameRefId as-is
+          };
+        }
+        
+        // Everything matches, no changes needed
         return entry;
       }
 
-      const data = option.data as AdvancedToolPitFieldOptionData | undefined;
-      if (!data) {
-        return entry;
-      }
-
-      if (
-        entry.fieldKey === option.value &&
-        entry.field === option.label &&
-        entry.fieldName === data.fieldName &&
-        entry.frameRefId === data.frameRefId
-      ) {
-        return entry;
-      }
-
-      mutated = true;
-      return {
-        ...entry,
-        fieldKey: option.value,
-        field: option.label,
-        fieldName: data.fieldName,
-        frameRefId: data.frameRefId,
-      };
+      // Field no longer exists in current data - keep entry as-is
+      // The user will see it as "not found" and can manually update
+      return entry;
     });
 
     if (mutated) {
@@ -352,8 +365,12 @@ export const AdvancedToolPitFieldsEditor = ({ value, onChange, context }: Props)
                       options={fieldOptions}
                       value={
                         resolveOptionForEntry(entry) ??
-                        (entry.field
-                          ? { label: entry.field, value: entry.field }
+                        (entry.fieldName || entry.field
+                          ? { 
+                              label: `${entry.label || entry.field || entry.fieldName} (not found)`, 
+                              value: entry.fieldName || entry.field || '',
+                              description: 'Field not found in current data'
+                            }
                           : undefined)
                       }
                       onChange={(selection) => {

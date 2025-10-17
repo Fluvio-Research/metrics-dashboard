@@ -17,9 +17,10 @@ import { TopNavBarMenu } from './TopNavBarMenu';
 export interface Props {
   profileNode: NavModelItem;
   onToggleKioskMode: () => void;
+  onMenuItemClick?: () => void;
 }
 
-export function ProfileButton({ profileNode, onToggleKioskMode }: Props) {
+export function ProfileButton({ profileNode, onToggleKioskMode, onMenuItemClick }: Props) {
   const theme = useTheme2();
   const styles = useStyles2(getStyles);
   const node = enrichWithInteractionTracking(cloneDeep(profileNode), false);
@@ -30,8 +31,21 @@ export function ProfileButton({ profileNode, onToggleKioskMode }: Props) {
     return null;
   }
 
+  const notifyMenuItemClick = () => {
+    onMenuItemClick?.();
+  };
+
+  const handleKioskToggle = () => {
+    onToggleKioskMode();
+    notifyMenuItemClick();
+  };
+
+  const handleSignOutClick = () => {
+    notifyMenuItemClick();
+  };
+
   const renderMenu = () => (
-    <TopNavBarMenu node={profileNode}>
+    <TopNavBarMenu node={node} onMenuItemClick={notifyMenuItemClick}>
       <>
         {config.featureToggles.grafanaconThemes && (
           <MenuItem 
@@ -42,7 +56,7 @@ export function ProfileButton({ profileNode, onToggleKioskMode }: Props) {
         )}
         <Menu.Item
           icon="monitor"
-          onClick={onToggleKioskMode}
+          onClick={handleKioskToggle}
           label={t('profile.enable-kiosk-mode', 'Enable kiosk mode')}
         />
         {config.newsFeedEnabled && (
@@ -59,6 +73,7 @@ export function ProfileButton({ profileNode, onToggleKioskMode }: Props) {
             label={t('nav.sign-out.title', 'Sign out')}
             icon="arrow-from-right"
             target={'_self'}
+            onClick={handleSignOutClick}
           />
         )}
       </>

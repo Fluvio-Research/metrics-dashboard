@@ -90,7 +90,8 @@ const getStyles = (theme: GrafanaTheme2) => {
     }),
     header: css({
       alignItems: 'center',
-      borderBottom: `1px solid ${theme.colors.border.weak}`,
+      borderBottom: 'none',
+      borderRight: `1px solid ${isDarkTheme ? 'rgba(148, 163, 184, 0.32)' : 'rgba(15, 23, 42, 0.08)'}`,
       display: 'flex',
       gap: theme.spacing(1),
       justifyContent: 'space-between',
@@ -98,13 +99,12 @@ const getStyles = (theme: GrafanaTheme2) => {
       height: getChromeHeaderLevelHeight(),
       flexShrink: 0,
       backgroundColor: isDarkTheme 
-        ? theme.colors.background.secondary 
-        : theme.colors.background.primary,
+        ? 'rgba(20, 30, 48, 0.92)' 
+        : '#FFFFFF',
+      backdropFilter: 'blur(14px)',
       
-      // Add subtle shadow for depth
-      boxShadow: isDarkTheme 
-        ? '0 2px 4px rgba(0, 0, 0, 0.3)' 
-        : '0 1px 3px rgba(0, 0, 0, 0.1)',
+      // No shadow - seamless with top bar
+      boxShadow: 'none',
       
       // Modern gradient accent
       position: 'relative',
@@ -114,7 +114,7 @@ const getStyles = (theme: GrafanaTheme2) => {
         bottom: 0,
         left: 0,
         right: 0,
-        height: '2px',
+        height: '3px',
         background: theme.colors.gradients.brandVertical,
       },
     }),

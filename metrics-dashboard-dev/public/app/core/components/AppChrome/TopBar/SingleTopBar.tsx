@@ -92,15 +92,11 @@ export const SingleTopBar = memo(function SingleTopBar({
                 <Icon size="lg" name="bars" />
               </ToolbarButton>
             )}
-            <Branding.MenuLogo className={styles.mapsLogo} />
           </div>
 
           {/* Organization Name in Center */}
           <div className={styles.mapsCenterSection}>
-            <div className={styles.orgNameContainer}>
-              <Icon name="building" size="sm" className={styles.orgIcon} />
-              <span className={styles.orgName}>{orgName}</span>
-            </div>
+            <span className={styles.orgName}>{orgName}</span>
           </div>
 
           <div className={styles.mapsRightGroup}>
@@ -122,12 +118,9 @@ export const SingleTopBar = memo(function SingleTopBar({
               id={MEGA_MENU_TOGGLE_ID}
               onClick={onToggleMegaMenu}
               tooltip={t('navigation.megamenu.open', 'Open menu')}
-            >
-              <Stack gap={0} alignItems="center">
-                <Branding.MenuLogo className={styles.img} />
-                <Icon size="sm" name="angle-down" />
-              </Stack>
-            </ToolbarButton>
+              iconOnly
+              icon="bars"
+            />
           )}
           <Breadcrumbs breadcrumbs={breadcrumbs} className={styles.breadcrumbsWrapper} />
           {!showToolbarLevel && breadcrumbActions}
@@ -547,12 +540,12 @@ const getStyles = (
     }),
     
     orgName: css({
-      fontSize: theme.typography.body.fontSize,
+      fontSize: '18px',
       fontWeight: 600,
       color: isDarkMode ? 'rgba(226, 232, 240, 0.95)' : 'rgba(15, 23, 42, 0.9)',
       letterSpacing: '0.015em',
       whiteSpace: 'nowrap',
-      maxWidth: '300px',
+      maxWidth: '500px',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
     }),

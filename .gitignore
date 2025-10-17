@@ -36,3 +36,7 @@ node_modules
 # Large plugin files
 *.tar.gz
 
+# backup folder
+Backup/
+*/Backup/
+**/Backup/

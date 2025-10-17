@@ -3,7 +3,8 @@ import { PanelProps } from '@grafana/data';
 import { getDataSourceSrv } from '@grafana/runtime';
 import { Alert, Button, CodeEditor, HorizontalGroup, InlineField, InlineFieldRow, Input, RadioButtonGroup, Select, Spinner, TextArea } from '@grafana/ui';
 import { css } from '@emotion/css';
-import { UploadPanelOptions, UploadPresetSummary, UploadPreviewResponse, UploadExecuteResponse, UploadField } from '../types';
+import { UploadPanelOptions, UploadPresetSummary, UploadPreviewResponse, UploadExecuteResponse, UploadField, UploadInputMode } from '../types';
+import { resolveFieldType } from '../utils/dynamoTypes';
 
 type Props = PanelProps<UploadPanelOptions>;
 
@@ -12,7 +13,7 @@ export const UploadPanel: React.FC<Props> = ({ options, width, height }) => {
   const [loadingPresets, setLoadingPresets] = useState(false);
   const [presetError, setPresetError] = useState<string | undefined>();
   const [selectedPresetId, setSelectedPresetId] = useState(options.presetId ?? '');
-  const [inputMode, setInputMode] = useState<'form' | 'json'>(options.inputMode ?? 'form');
+  const [inputMode, setInputMode] = useState<UploadInputMode>(options.inputMode ?? 'form');
 
   const [formValues, setFormValues] = useState<Record<string, string>>({});
   const [extraFieldsJson, setExtraFieldsJson] = useState<string>('');
@@ -33,7 +34,7 @@ export const UploadPanel: React.FC<Props> = ({ options, width, height }) => {
     }
   }, [options.inputMode]);
 
-  const selectedDatasourceKey = options.datasource?.uid ?? options.datasource?.name;
+  const selectedDatasourceKey = options.datasource?.uid;
 
   const fetchPresets = useCallback(async () => {
     if (!selectedDatasourceKey) {
@@ -259,7 +260,7 @@ export const UploadPanel: React.FC<Props> = ({ options, width, height }) => {
               { label: 'JSON', value: 'json' },
             ]}
             value={inputMode}
-            onChange={(value) => setInputMode(value!)}
+            onChange={(value) => setInputMode(value as UploadInputMode)}
           />
         </InlineField>
       </InlineFieldRow>
@@ -324,7 +325,6 @@ export const UploadPanel: React.FC<Props> = ({ options, width, height }) => {
               value={jsonPayload}
               onChange={(value) => setJsonPayload(value ?? '')}
               showMiniMap={false}
-              placeholder="Enter a JSON object or an array of JSON objects to upload"
             />
           )}
 
@@ -427,12 +427,10 @@ function extractErrorMessage(error: unknown): string {
 
 function coerceFormValue(field: UploadField, raw: string): unknown {
   const trimmed = raw.trim();
-  if (!field.type || field.type === 'string') {
-    return trimmed;
-  }
-  switch (field.type) {
-    case 'number':
-    case 'numeric':
+  const effectiveType = resolveFieldType(field);
+
+  switch (effectiveType) {
+    case 'number': {
       if (trimmed === '') {
         return undefined;
       }
@@ -441,15 +439,14 @@ function coerceFormValue(field: UploadField, raw: string): unknown {
         throw new Error(`Field "${field.name}" must be a valid number`);
       }
       return numeric;
-    case 'boolean':
-    case 'bool':
+    }
+    case 'boolean': {
       if (['true', 'false'].includes(trimmed.toLowerCase())) {
         return trimmed.toLowerCase() === 'true';
       }
       throw new Error(`Field "${field.name}" must be true or false`);
-    case 'json':
-    case 'map':
-    case 'object':
+    }
+    case 'json': {
       if (!trimmed) {
         return undefined;
       }
@@ -458,6 +455,8 @@ function coerceFormValue(field: UploadField, raw: string): unknown {
       } catch (error) {
         throw new Error(`Field "${field.name}" must contain valid JSON`);
       }
+    }
+    case 'string':
     default:
       return trimmed;
   }

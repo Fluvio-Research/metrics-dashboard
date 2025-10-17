@@ -424,11 +424,27 @@ func (d *Datasource) CheckHealth(ctx context.Context, req *backend.CheckHealthRe
 func (d *Datasource) CallResource(ctx context.Context, req *backend.CallResourceRequest, sender backend.CallResourceResponseSender) error {
 	backend.Logger.Debug("CallResource", "path", req.Path, "method", req.Method)
 
+	// Handle preset management routes
+	if strings.HasPrefix(req.Path, "presets/") {
+		presetID := strings.TrimPrefix(req.Path, "presets/")
+		if req.Method == "GET" {
+			return d.handleGetPreset(ctx, req, sender, presetID)
+		} else if req.Method == "DELETE" {
+			return d.handleDeletePreset(ctx, req, sender, presetID)
+		}
+	}
+
 	switch req.Path {
 	case "tables":
 		return d.handleListTables(ctx, req, sender)
 	case "table-attributes":
 		return d.handleTableAttributes(ctx, req, sender)
+	case "presets":
+		if req.Method == "GET" {
+			return d.handleListPresets(ctx, req, sender)
+		} else if req.Method == "POST" || req.Method == "PUT" {
+			return d.handleSavePreset(ctx, req, sender)
+		}
 	case "upload/presets", "upload/preview", "upload/execute", "upload/schema":
 		return d.handleUploadResource(ctx, req, sender)
 	default:
@@ -437,6 +453,11 @@ func (d *Datasource) CallResource(ctx context.Context, req *backend.CallResource
 			Body:   []byte(`{"error": "endpoint not found"}`),
 		})
 	}
+
+	return sender.Send(&backend.CallResourceResponse{
+		Status: http.StatusMethodNotAllowed,
+		Body:   []byte(`{"error": "method not allowed"}`),
+	})
 }
 
 // handleListTables returns a list of DynamoDB tables
@@ -551,8 +572,18 @@ func (d *Datasource) handleTableAttributes(ctx context.Context, req *backend.Cal
 		})
 	}
 
-	// Extract attribute names from table schema
+	// Extract attribute names and types from table schema
 	var attributes []string
+	attributeTypes := make(map[string]string)
+
+	// Build type map from attribute definitions
+	backend.Logger.Info("Building type map from AttributeDefinitions", "table", tableName, "count", len(describeOutput.Table.AttributeDefinitions))
+	for _, attrDef := range describeOutput.Table.AttributeDefinitions {
+		if attrDef.AttributeName != nil && attrDef.AttributeType != nil {
+			backend.Logger.Info("Type from AttributeDefinition", "name", *attrDef.AttributeName, "type", *attrDef.AttributeType)
+			attributeTypes[*attrDef.AttributeName] = *attrDef.AttributeType
+		}
+	}
 
 	// Add key schema attributes (partition key and sort key)
 	for _, keyElement := range describeOutput.Table.KeySchema {
@@ -578,8 +609,7 @@ func (d *Datasource) handleTableAttributes(ctx context.Context, req *backend.Cal
 		}
 	}
 
-	// Also scan a few items to discover additional attributes not in the schema
-	// (DynamoDB is schemaless, so items can have attributes not defined in key schema)
+	// Also scan a few items to discover additional attributes and their types
 	scanInput := &dynamodb.ScanInput{
 		TableName: aws.String(tableName),
 		Limit:     aws.Int64(5), // Just scan a few items to discover attributes
@@ -587,7 +617,7 @@ func (d *Datasource) handleTableAttributes(ctx context.Context, req *backend.Cal
 
 	scanOutput, err := client.ScanWithContext(ctx, scanInput)
 	if err == nil && len(scanOutput.Items) > 0 {
-		// Extract attribute names from actual items
+		// Extract attribute names and types from actual items
 		attributeSet := make(map[string]bool)
 
 		// Add existing attributes to set
@@ -597,22 +627,31 @@ func (d *Datasource) handleTableAttributes(ctx context.Context, req *backend.Cal
 
 		// Discover new attributes from items
 		for _, item := range scanOutput.Items {
-			for attrName := range item {
+			for attrName, attrValue := range item {
 				if !attributeSet[attrName] {
 					attributes = append(attributes, attrName)
 					attributeSet[attrName] = true
+					// Detect type from value
+					if _, exists := attributeTypes[attrName]; !exists {
+						detectedType := detectAttributeType(attrValue)
+						backend.Logger.Info("Type detected from scan", "name", attrName, "type", detectedType)
+						attributeTypes[attrName] = detectedType
+					}
 				}
 			}
 		}
 	}
 
-	backend.Logger.Info("Discovered table attributes", "table", tableName, "attributes", attributes)
+	backend.Logger.Info("Final discovered table attributes", "table", tableName, "attributes", attributes)
+	backend.Logger.Info("Final type map", "table", tableName, "types", attributeTypes)
 
-	// Return as JSON
+	// Return as JSON with types
 	response := struct {
-		Attributes []string `json:"attributes"`
+		Attributes []string          `json:"attributes"`
+		Types      map[string]string `json:"types"`
 	}{
 		Attributes: attributes,
+		Types:      attributeTypes,
 	}
 
 	responseJSON, err := json.Marshal(response)
@@ -627,6 +666,44 @@ func (d *Datasource) handleTableAttributes(ctx context.Context, req *backend.Cal
 		Status: http.StatusOK,
 		Body:   responseJSON,
 	})
+}
+
+// detectAttributeType detects the DynamoDB type from an AttributeValue
+func detectAttributeType(attr *dynamodb.AttributeValue) string {
+	if attr == nil {
+		return "S"
+	}
+	if attr.S != nil {
+		return "S"
+	}
+	if attr.N != nil {
+		return "N"
+	}
+	if attr.BOOL != nil {
+		return "BOOL"
+	}
+	if attr.M != nil {
+		return "M"
+	}
+	if attr.L != nil {
+		return "L"
+	}
+	if attr.SS != nil {
+		return "SS"
+	}
+	if attr.NS != nil {
+		return "NS"
+	}
+	if attr.BS != nil {
+		return "BS"
+	}
+	if attr.B != nil {
+		return "B"
+	}
+	if attr.NULL != nil {
+		return "NULL"
+	}
+	return "S"
 }
 
 // sortItems sorts DynamoDB items by a specified field

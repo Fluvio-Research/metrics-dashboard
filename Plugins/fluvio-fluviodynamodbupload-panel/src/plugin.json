@@ -4,8 +4,8 @@
   "name": "Fluvio DynamoDB Upload",
   "id": "fluvio-fluviodynamodbupload-panel",
   "info": {
-    "keywords": ["panel"],
-    "description": "",
+    "keywords": ["panel", "dynamodb", "aws", "upload"],
+    "description": "Controlled DynamoDB uploads powered by Fluvio Connect presets.",
     "author": {
       "name": "Fluvio"
     },

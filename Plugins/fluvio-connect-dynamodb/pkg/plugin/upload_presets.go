@@ -25,6 +25,8 @@ type uploadPresetSummary struct {
 	MaxPayloadKB     int64           `json:"maxPayloadKB,omitempty"`
 	PartiQLTemplate  string          `json:"partiqlTemplate,omitempty"`
 	ResponsePreview  bool            `json:"responsePreview,omitempty"`
+	HelpText         string          `json:"helpText,omitempty"`
+	Category         string          `json:"category,omitempty"`
 }
 
 type uploadExecuteRequest struct {
@@ -99,6 +101,8 @@ func (p UploadPreset) summarize() uploadPresetSummary {
 		MaxPayloadKB:     p.MaxPayloadKB,
 		PartiQLTemplate:  p.PartiQLTemplate,
 		ResponsePreview:  p.ResponsePreview,
+		HelpText:         p.HelpText,
+		Category:         p.Category,
 	}
 }
 
@@ -198,36 +202,12 @@ func buildStatementForItem(p UploadPreset, item map[string]interface{}) (string,
 	switch p.Operation {
 	case UploadOperationInsert:
 		return buildInsertStatement(p, item)
-	case UploadOperationSelect, UploadOperationUpdate, UploadOperationDelete:
-		if strings.TrimSpace(p.PartiQLTemplate) == "" {
-			return "", nil, "", errors.New("partiqlTemplate is required for this operation")
-		}
-		if len(p.Schema) == 0 {
-			return "", nil, "", errors.New("schema definition is required to build statement parameters")
-		}
-		params := make([]*dynamodb.AttributeValue, 0, len(p.Schema))
-		for _, field := range p.Schema {
-			val, ok := item[field.Name]
-			if !ok {
-				if field.Required {
-					return "", nil, "", fmt.Errorf("required field %q missing", field.Name)
-				}
-				params = append(params, &dynamodb.AttributeValue{NULL: aws.Bool(true)})
-				continue
-			}
-			av, err := convertValueToAttributeValue(field, val)
-			if err != nil {
-				return "", nil, "", fmt.Errorf("field %q: %w", field.Name, err)
-			}
-			params = append(params, av)
-		}
-
-		placeholderCount := strings.Count(p.PartiQLTemplate, "?")
-		if placeholderCount > 0 && placeholderCount != len(params) {
-			return "", nil, "", fmt.Errorf("partiqlTemplate expects %d parameters but schema supplied %d", placeholderCount, len(params))
-		}
-
-		return p.PartiQLTemplate, params, fmt.Sprintf("%s -- params: %d", p.PartiQLTemplate, len(params)), nil
+	case UploadOperationUpdate:
+		return buildUpdateStatement(p, item)
+	case UploadOperationDelete:
+		return buildDeleteStatement(p, item)
+	case UploadOperationSelect:
+		return buildSelectStatement(p, item)
 	default:
 		return "", nil, "", fmt.Errorf("operation %q not supported", p.Operation)
 	}
@@ -237,17 +217,246 @@ func buildInsertStatement(p UploadPreset, item map[string]interface{}) (string, 
 	if len(item) == 0 {
 		return "", nil, "", errors.New("payload is empty")
 	}
-	marshaled, err := dynamodbattribute.MarshalMap(item)
-	if err != nil {
-		return "", nil, "", fmt.Errorf("failed to marshal item: %w", err)
+
+	// Build the field list and parameter placeholders
+	keys := sortedKeys(item)
+	var fieldPlaceholders []string
+	params := make([]*dynamodb.AttributeValue, 0, len(keys))
+
+	for _, key := range keys {
+		fieldPlaceholders = append(fieldPlaceholders, fmt.Sprintf("'%s': ?", key))
+
+		// Marshal the value to DynamoDB AttributeValue
+		val := item[key]
+		av, err := dynamodbattribute.Marshal(val)
+		if err != nil {
+			return "", nil, "", fmt.Errorf("failed to marshal field %q: %w", key, err)
+		}
+		params = append(params, av)
 	}
 
-	statement := fmt.Sprintf("INSERT INTO %s VALUE ?", quoteIdentifier(p.Table))
-	params := []*dynamodb.AttributeValue{
-		{M: marshaled},
+	// Build the INSERT statement with struct format: INSERT INTO table VALUE {'field1': ?, 'field2': ?}
+	statement := fmt.Sprintf("INSERT INTO %s VALUE {%s}", quoteIdentifier(p.Table), strings.Join(fieldPlaceholders, ", "))
+
+	// Build a preview with actual values for display
+	preview := buildPreviewWithValues(statement, item, keys)
+
+	return statement, params, preview, nil
+}
+
+func buildUpdateStatement(p UploadPreset, item map[string]interface{}) (string, []*dynamodb.AttributeValue, string, error) {
+	// If a custom template is provided, use it
+	if strings.TrimSpace(p.PartiQLTemplate) != "" {
+		return buildTemplatedStatement(p, item)
 	}
 
-	return statement, params, fmt.Sprintf("%s -- item keys: %v", statement, sortedKeys(item)), nil
+	if len(item) == 0 {
+		return "", nil, "", errors.New("payload is empty")
+	}
+
+	// Separate key fields and update fields
+	keyFields := make(map[string]interface{})
+	updateFields := make(map[string]interface{})
+
+	for key, value := range item {
+		// Check if this field is defined in schema
+		isKeyField := false
+		for _, field := range p.Schema {
+			if field.Name == key {
+				// Check if it's a key field (you might want to add a flag in UploadField for this)
+				// For now, assume PK and SK are key fields
+				if key == "PK" || key == "SK" || field.Required {
+					isKeyField = true
+				}
+				break
+			}
+		}
+		if isKeyField {
+			keyFields[key] = value
+		} else {
+			updateFields[key] = value
+		}
+	}
+
+	if len(keyFields) == 0 {
+		return "", nil, "", errors.New("no key fields found for UPDATE (PK/SK required)")
+	}
+	if len(updateFields) == 0 {
+		return "", nil, "", errors.New("no fields to update")
+	}
+
+	// Build SET clause: SET 'field1'=?, 'field2'=?
+	var setClause []string
+	var params []*dynamodb.AttributeValue
+
+	updateKeys := sortedKeys(updateFields)
+	for _, key := range updateKeys {
+		setClause = append(setClause, fmt.Sprintf("'%s'=?", key))
+		av, err := dynamodbattribute.Marshal(updateFields[key])
+		if err != nil {
+			return "", nil, "", fmt.Errorf("failed to marshal field %q: %w", key, err)
+		}
+		params = append(params, av)
+	}
+
+	// Build WHERE clause: WHERE 'PK'=? AND 'SK'=?
+	var whereClause []string
+	keyKeys := sortedKeys(keyFields)
+	for _, key := range keyKeys {
+		whereClause = append(whereClause, fmt.Sprintf("'%s'=?", key))
+		av, err := dynamodbattribute.Marshal(keyFields[key])
+		if err != nil {
+			return "", nil, "", fmt.Errorf("failed to marshal key field %q: %w", key, err)
+		}
+		params = append(params, av)
+	}
+
+	statement := fmt.Sprintf("UPDATE %s SET %s WHERE %s",
+		quoteIdentifier(p.Table),
+		strings.Join(setClause, ", "),
+		strings.Join(whereClause, " AND "))
+
+	// Build preview with actual values
+	preview := buildUpdatePreview(statement, updateFields, keyFields, updateKeys, keyKeys)
+
+	return statement, params, preview, nil
+}
+
+func buildDeleteStatement(p UploadPreset, item map[string]interface{}) (string, []*dynamodb.AttributeValue, string, error) {
+	// If a custom template is provided, use it
+	if strings.TrimSpace(p.PartiQLTemplate) != "" {
+		return buildTemplatedStatement(p, item)
+	}
+
+	if len(item) == 0 {
+		return "", nil, "", errors.New("payload is empty")
+	}
+
+	// Build WHERE clause from item (should contain key fields)
+	var whereClause []string
+	var params []*dynamodb.AttributeValue
+
+	keys := sortedKeys(item)
+	for _, key := range keys {
+		whereClause = append(whereClause, fmt.Sprintf("'%s'=?", key))
+		av, err := dynamodbattribute.Marshal(item[key])
+		if err != nil {
+			return "", nil, "", fmt.Errorf("failed to marshal field %q: %w", key, err)
+		}
+		params = append(params, av)
+	}
+
+	if len(whereClause) == 0 {
+		return "", nil, "", errors.New("no key fields provided for DELETE")
+	}
+
+	statement := fmt.Sprintf("DELETE FROM %s WHERE %s",
+		quoteIdentifier(p.Table),
+		strings.Join(whereClause, " AND "))
+
+	// Build preview with actual values
+	preview := buildDeletePreview(statement, item, keys)
+
+	return statement, params, preview, nil
+}
+
+func buildSelectStatement(p UploadPreset, item map[string]interface{}) (string, []*dynamodb.AttributeValue, string, error) {
+	// If a custom template is provided, use it
+	if strings.TrimSpace(p.PartiQLTemplate) != "" {
+		return buildTemplatedStatement(p, item)
+	}
+
+	// Build WHERE clause from item
+	var whereClause []string
+	var params []*dynamodb.AttributeValue
+
+	keys := sortedKeys(item)
+	for _, key := range keys {
+		whereClause = append(whereClause, fmt.Sprintf("'%s'=?", key))
+		av, err := dynamodbattribute.Marshal(item[key])
+		if err != nil {
+			return "", nil, "", fmt.Errorf("failed to marshal field %q: %w", key, err)
+		}
+		params = append(params, av)
+	}
+
+	whereSQL := ""
+	if len(whereClause) > 0 {
+		whereSQL = " WHERE " + strings.Join(whereClause, " AND ")
+	}
+
+	statement := fmt.Sprintf("SELECT * FROM %s%s", quoteIdentifier(p.Table), whereSQL)
+
+	// Build preview with actual values
+	preview := buildSelectPreview(statement, item, keys)
+
+	return statement, params, preview, nil
+}
+
+func buildTemplatedStatement(p UploadPreset, item map[string]interface{}) (string, []*dynamodb.AttributeValue, string, error) {
+	// Use custom PartiQL template with schema-based parameters
+	if len(p.Schema) == 0 {
+		return "", nil, "", errors.New("schema definition is required to build statement parameters")
+	}
+
+	params := make([]*dynamodb.AttributeValue, 0, len(p.Schema))
+	for _, field := range p.Schema {
+		val, ok := item[field.Name]
+		if !ok {
+			if field.Required {
+				return "", nil, "", fmt.Errorf("required field %q missing", field.Name)
+			}
+			params = append(params, &dynamodb.AttributeValue{NULL: aws.Bool(true)})
+			continue
+		}
+		av, err := convertValueToAttributeValue(field, val)
+		if err != nil {
+			return "", nil, "", fmt.Errorf("field %q: %w", field.Name, err)
+		}
+		params = append(params, av)
+	}
+
+	placeholderCount := strings.Count(p.PartiQLTemplate, "?")
+	if placeholderCount > 0 && placeholderCount != len(params) {
+		return "", nil, "", fmt.Errorf("partiqlTemplate expects %d parameters but schema supplied %d", placeholderCount, len(params))
+	}
+
+	return p.PartiQLTemplate, params, fmt.Sprintf("%s -- params: %d", p.PartiQLTemplate, len(params)), nil
+}
+
+func resolveUploadFieldType(field UploadField) string {
+	configured := strings.ToLower(strings.TrimSpace(field.Type))
+	switch configured {
+	case "string":
+		return "string"
+	case "number", "numeric":
+		return "number"
+	case "boolean", "bool":
+		return "boolean"
+	case "json", "map", "object":
+		return "json"
+	case "", "auto", "any":
+		// Fall through to Dynamo type detection.
+	default:
+		return configured
+	}
+
+	if field.DynamoType != "" {
+		switch strings.ToUpper(strings.TrimSpace(field.DynamoType)) {
+		case "N", "NUMBER":
+			return "number"
+		case "BOOL", "BOOLEAN":
+			return "boolean"
+		case "M", "MAP", "L", "LIST", "SS", "NS", "BS":
+			return "json"
+		case "B", "BINARY", "NULL":
+			return "string"
+		case "S", "STRING":
+			return "string"
+		}
+	}
+
+	return "auto"
 }
 
 func convertValueToAttributeValue(field UploadField, value interface{}) (*dynamodb.AttributeValue, error) {
@@ -255,28 +464,26 @@ func convertValueToAttributeValue(field UploadField, value interface{}) (*dynamo
 		return &dynamodb.AttributeValue{NULL: aws.Bool(true)}, nil
 	}
 
-	switch field.Type {
-	case "", "auto", "any":
-		return dynamodbattribute.Marshal(value)
+	switch resolveUploadFieldType(field) {
 	case "string":
 		str, err := toString(value)
 		if err != nil {
 			return nil, err
 		}
 		return &dynamodb.AttributeValue{S: aws.String(str)}, nil
-	case "number", "numeric":
+	case "number":
 		num, err := toNumberString(value)
 		if err != nil {
 			return nil, err
 		}
 		return &dynamodb.AttributeValue{N: aws.String(num)}, nil
-	case "boolean", "bool":
+	case "boolean":
 		b, err := toBool(value)
 		if err != nil {
 			return nil, err
 		}
 		return &dynamodb.AttributeValue{BOOL: aws.Bool(b)}, nil
-	case "json", "map", "object":
+	case "json":
 		switch v := value.(type) {
 		case string:
 			if strings.TrimSpace(v) == "" {
@@ -387,6 +594,134 @@ func trimTrailingZeros(val float64) string {
 		return "0"
 	}
 	return s
+}
+
+// buildPreviewWithValues creates a human-readable preview showing actual values instead of ? placeholders
+func buildPreviewWithValues(statement string, item map[string]interface{}, keys []string) string {
+	// Build field assignments with actual values for preview
+	var fieldValues []string
+	for _, key := range keys {
+		val := item[key]
+		valueStr := formatValueForPreview(val)
+		fieldValues = append(fieldValues, fmt.Sprintf("'%s': %s", key, valueStr))
+	}
+
+	// Extract the table name and rebuild the statement with actual values
+	// Format: INSERT INTO table VALUE {'field': value, ...}
+	parts := strings.Split(statement, "VALUE {")
+	if len(parts) == 2 {
+		tablepart := parts[0]
+		return fmt.Sprintf("%sVALUE {%s}", tablepart, strings.Join(fieldValues, ", "))
+	}
+
+	// Fallback: just show the field count
+	return fmt.Sprintf("%s -- %d fields", statement, len(keys))
+}
+
+// formatValueForPreview formats a value for display in the preview
+func formatValueForPreview(val interface{}) string {
+	if val == nil {
+		return "null"
+	}
+
+	switch v := val.(type) {
+	case string:
+		// Escape quotes and limit length for preview
+		escaped := strings.ReplaceAll(v, "'", "\\'")
+		if len(escaped) > 50 {
+			escaped = escaped[:47] + "..."
+		}
+		return fmt.Sprintf("'%s'", escaped)
+	case bool:
+		if v {
+			return "true"
+		}
+		return "false"
+	case float64:
+		return trimTrailingZeros(v)
+	case float32:
+		return trimTrailingZeros(float64(v))
+	case int, int64, int32, int16, int8:
+		return fmt.Sprintf("%d", v)
+	case uint, uint64, uint32, uint16, uint8:
+		return fmt.Sprintf("%d", v)
+	default:
+		// For complex types, try JSON marshal
+		if b, err := json.Marshal(v); err == nil {
+			s := string(b)
+			if len(s) > 50 {
+				s = s[:47] + "..."
+			}
+			return s
+		}
+		return fmt.Sprintf("%v", v)
+	}
+}
+
+// buildUpdatePreview creates a preview for UPDATE statements with actual values
+func buildUpdatePreview(statement string, updateFields, keyFields map[string]interface{}, updateKeys, keyKeys []string) string {
+	// Replace SET placeholders with actual values
+	var setParts []string
+	for _, key := range updateKeys {
+		val := updateFields[key]
+		setParts = append(setParts, fmt.Sprintf("'%s'=%s", key, formatValueForPreview(val)))
+	}
+
+	// Replace WHERE placeholders with actual values
+	var whereParts []string
+	for _, key := range keyKeys {
+		val := keyFields[key]
+		whereParts = append(whereParts, fmt.Sprintf("'%s'=%s", key, formatValueForPreview(val)))
+	}
+
+	// Find table name
+	parts := strings.Split(statement, " SET ")
+	if len(parts) == 2 {
+		tablePart := parts[0] // "UPDATE table"
+		return fmt.Sprintf("%s SET %s WHERE %s", tablePart, strings.Join(setParts, ", "), strings.Join(whereParts, " AND "))
+	}
+
+	return statement
+}
+
+// buildDeletePreview creates a preview for DELETE statements with actual values
+func buildDeletePreview(statement string, item map[string]interface{}, keys []string) string {
+	var whereParts []string
+	for _, key := range keys {
+		val := item[key]
+		whereParts = append(whereParts, fmt.Sprintf("'%s'=%s", key, formatValueForPreview(val)))
+	}
+
+	// Find table name
+	parts := strings.Split(statement, " WHERE ")
+	if len(parts) == 2 {
+		tablePart := parts[0] // "DELETE FROM table"
+		return fmt.Sprintf("%s WHERE %s", tablePart, strings.Join(whereParts, " AND "))
+	}
+
+	return statement
+}
+
+// buildSelectPreview creates a preview for SELECT statements with actual values
+func buildSelectPreview(statement string, item map[string]interface{}, keys []string) string {
+	if len(keys) == 0 {
+		return statement // No WHERE clause
+	}
+
+	var whereParts []string
+	for _, key := range keys {
+		val := item[key]
+		whereParts = append(whereParts, fmt.Sprintf("'%s'=%s", key, formatValueForPreview(val)))
+	}
+
+	// Find table name
+	parts := strings.Split(statement, " WHERE ")
+	if len(parts) == 2 {
+		tablePart := parts[0] // "SELECT * FROM table"
+		return fmt.Sprintf("%s WHERE %s", tablePart, strings.Join(whereParts, " AND "))
+	}
+
+	return statement
 }
 
 func aggregateConsumedCapacity(outputs []*dynamodb.ConsumedCapacity) []consumedCapacitySummary {

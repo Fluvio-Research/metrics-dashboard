@@ -20,7 +20,7 @@ const LOGO_CONFIG = {
   
   // App branding & titles
   appTitle: 'Fluvio Cascade',
-  loginTitle: 'Welcome to Fluvio Cascade',
+  loginTitle: '',
   
   // Icon files for favicon, apple-touch-icon, etc.
   iconFiles: {

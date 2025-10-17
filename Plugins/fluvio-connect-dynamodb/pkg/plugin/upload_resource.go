@@ -291,8 +291,20 @@ func (d *Datasource) prepareUploadPlan(ctx context.Context, req *backend.CallRes
 		return extraSettings, nil, nil, uploadExecuteRequest{}, fmt.Errorf("request body is required")
 	}
 
+	// Sanitize the request body to remove control characters
+	sanitizedBody := sanitizeJSON(req.Body)
+
+	// Log the raw body for debugging
+	backend.Logger.Debug("Received request body", "bodyLength", len(sanitizedBody), "originalLength", len(req.Body))
+
 	var request uploadExecuteRequest
-	if err := json.Unmarshal(req.Body, &request); err != nil {
+	if err := json.Unmarshal(sanitizedBody, &request); err != nil {
+		// Log the error with context
+		previewLen := 500
+		if len(sanitizedBody) < previewLen {
+			previewLen = len(sanitizedBody)
+		}
+		backend.Logger.Error("Failed to unmarshal request body", "error", err.Error(), "bodyPreview", string(sanitizedBody[:previewLen]))
 		return extraSettings, nil, nil, uploadExecuteRequest{}, fmt.Errorf("invalid request payload: %w", err)
 	}
 
@@ -300,10 +312,19 @@ func (d *Datasource) prepareUploadPlan(ctx context.Context, req *backend.CallRes
 		return extraSettings, nil, nil, uploadExecuteRequest{}, fmt.Errorf("presetId is required")
 	}
 
-	preset, err := extraSettings.findPresetByID(request.PresetID)
+	// Try to load preset from file storage first
+	backend.Logger.Info("Loading preset for upload", "presetId", request.PresetID)
+	preset, err := loadPresetFromFile(request.PresetID)
 	if err != nil {
-		return extraSettings, nil, nil, uploadExecuteRequest{}, err
+		backend.Logger.Warn("Preset not found in file storage, trying datasource config", "presetId", request.PresetID, "error", err.Error())
+		// Fallback to datasource config for backwards compatibility
+		preset, err = extraSettings.findPresetByID(request.PresetID)
+		if err != nil {
+			return extraSettings, nil, nil, uploadExecuteRequest{}, fmt.Errorf("preset not found: %w", err)
+		}
 	}
+
+	backend.Logger.Info("Preset loaded successfully", "presetId", preset.ID, "table", preset.Table, "operation", preset.Operation)
 
 	plan, err := buildUploadPlan(*preset, extraSettings.MaxUploadPayloadKB, request.Items)
 	if err != nil {
@@ -318,4 +339,17 @@ func sanitizeError(err error) string {
 		return ""
 	}
 	return strings.ReplaceAll(err.Error(), `"`, "'")
+}
+
+// sanitizeJSON removes control characters from JSON bytes to prevent parsing errors
+func sanitizeJSON(data []byte) []byte {
+	result := make([]byte, 0, len(data))
+	for _, b := range data {
+		// Allow: tab (0x09), newline (0x0A), carriage return (0x0D), and printable characters (>= 0x20)
+		// Remove: all other control characters (0x00-0x08, 0x0B-0x0C, 0x0E-0x1F, 0x7F)
+		if b == 0x09 || b == 0x0A || b == 0x0D || b >= 0x20 {
+			result = append(result, b)
+		}
+	}
+	return result
 }

@@ -51,6 +51,30 @@ export const AdvancedToolPitHeaderEditor = ({ value, onChange, context }: Props)
       return undefined;
     }
 
+    // Priority 1: Try by fieldName first (most stable identifier)
+    if (header.fieldName) {
+      // First try with frameRefId if available
+      if (header.frameRefId) {
+        const byNameAndRef = fieldOptions.find((opt) => {
+          const data = opt.data as AdvancedToolPitFieldOptionData | undefined;
+          return data?.frameRefId === header.frameRefId && data?.fieldName === header.fieldName;
+        });
+        if (byNameAndRef) {
+          return byNameAndRef;
+        }
+      }
+      
+      // Then try by fieldName alone (in case frameRefId changed)
+      const byField = fieldOptions.find((opt) => {
+        const data = opt.data as AdvancedToolPitFieldOptionData | undefined;
+        return data?.fieldName === header.fieldName;
+      });
+      if (byField) {
+        return byField;
+      }
+    }
+
+    // Priority 2: Try by fieldKey (frame:field index)
     if (header.fieldKey) {
       const byKey = fieldOptions.find((opt) => opt.value === header.fieldKey);
       if (byKey) {
@@ -58,24 +82,14 @@ export const AdvancedToolPitHeaderEditor = ({ value, onChange, context }: Props)
       }
     }
 
-    if (header.frameRefId && header.fieldName) {
-      const byRef = fieldOptions.find((opt) => {
-        const data = opt.data as AdvancedToolPitFieldOptionData | undefined;
-        return data?.frameRefId === header.frameRefId && data?.fieldName === header.fieldName;
-      });
-      if (byRef) {
-        return byRef;
-      }
-    }
-
+    // If we have a saved fieldName but couldn't find it, create a placeholder option
+    // This prevents the Select component from breaking
     if (header.fieldName) {
-      const byField = fieldOptions.find((opt) => {
-        const data = opt.data as AdvancedToolPitFieldOptionData | undefined;
-        return data?.fieldName === header.fieldName || opt.label === header.fieldName;
-      });
-      if (byField) {
-        return byField;
-      }
+      return {
+        label: `${header.fieldName} (not found)`,
+        value: header.fieldName,
+        description: 'Field not found in current data',
+      };
     }
 
     return undefined;

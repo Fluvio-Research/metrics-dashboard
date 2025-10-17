@@ -59,6 +59,8 @@ type UploadPreset struct {
 	AllowDryRun      bool            `json:"allowDryRun,omitempty"`
 	MaxPayloadKB     int64           `json:"maxPayloadKB,omitempty"`
 	ResponsePreview  bool            `json:"responsePreview,omitempty"`
+	HelpText         string          `json:"helpText,omitempty"`
+	Category         string          `json:"category,omitempty"`
 }
 
 type UploadOperation string
@@ -70,9 +72,27 @@ const (
 	UploadOperationSelect UploadOperation = "select"
 )
 
+type FieldValidation struct {
+	Pattern       string `json:"pattern,omitempty"`
+	MinLength     *int   `json:"minLength,omitempty"`
+	MaxLength     *int   `json:"maxLength,omitempty"`
+	Min           *int   `json:"min,omitempty"`
+	Max           *int   `json:"max,omitempty"`
+	CustomMessage string `json:"customMessage,omitempty"`
+}
+
+type FieldTransformation struct {
+	Type   string            `json:"type"`
+	Params map[string]string `json:"params,omitempty"`
+}
+
 type UploadField struct {
-	Name        string `json:"name"`
-	Type        string `json:"type"`
-	Required    bool   `json:"required,omitempty"`
-	Description string `json:"description,omitempty"`
+	Name           string               `json:"name"`
+	Type           string               `json:"type"`
+	Required       bool                 `json:"required,omitempty"`
+	Description    string               `json:"description,omitempty"`
+	DefaultValue   string               `json:"defaultValue,omitempty"`
+	Validation     *FieldValidation     `json:"validation,omitempty"`
+	Transformation *FieldTransformation `json:"transformation,omitempty"`
+	DynamoType     string               `json:"dynamoType,omitempty"`
 }

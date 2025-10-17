@@ -1,117 +1,53 @@
-# Metrics Dashboard panel plugin template
+# Fluvio DynamoDB Upload panel
 
-This template is a starting point for building a panel plugin for Metrics Dashboard.
+Guided uploads for Amazon DynamoDB directly from Metrics Dashboard dashboards. This panel consumes the upload presets defined in the **Fluvio Connect DynamoDB** datasource and provides a safe UI for inserts, updates, deletes, and read-back previews.
 
-## What are Metrics Dashboard panel plugins?
+## Highlights
+- Fetch presets from the datasource and keep administrators in control of allowed operations.
+- Auto-generate form fields from preset schemas or switch to raw JSON input for more complex payloads.
+- Preview statements before they run (when the preset allows dry runs) and review DynamoDB consumed capacity after execution.
+- Supports PartiQL templates, parameter validation, payload-size limits, and optional result rendering for `select` operations.
 
-Panel plugins allow you to add new types of visualizations to your dashboard, such as maps, clocks, pie charts, lists, and more.
+## Requirements
+- Metrics Dashboard 10.4.0 or later.
+- The **fluvio-connect-dynamodb** datasource must be installed, configured, and populated with at least one upload preset.
+- Panel users need access to dashboards and the datasource (no AWS credentials are exposed in the browser).
 
-Use panel plugins when you want to do things like visualize data returned by data source queries, navigate between dashboards, or control external systems (such as smart home devices).
+## Using the panel
+1. Add the panel to a dashboard and pick the Fluvio Connect DynamoDB datasource.
+2. Choose the upload preset to expose (the list is retrieved from the datasource).
+3. Enter payload data using the generated form or the raw JSON editor.
+4. Click **Preview** to review the PartiQL statements that will run, or **Upload** to execute them.
+5. Inspect the success banner for consumed capacity, warnings, and select results.
 
-## Getting started
+## Development
 
-### Frontend
+Install dependencies and start the plugin in watch mode:
 
-1. Install dependencies
+```bash
+yarn install
+yarn run dev
+```
 
-   ```bash
-   yarn install
-   ```
+Build a production bundle:
 
-2. Build plugin in development mode and run in watch mode
+```bash
+yarn run build
+```
 
-   ```bash
-   yarn run dev
-   ```
+Start the local Metrics Dashboard instance provided by the scaffold (Docker required):
 
-3. Build plugin in production mode
+```bash
+yarn run server
+```
 
-   ```bash
-   yarn run build
-   ```
+Lint and format:
 
-4. Run the tests (using Jest)
+```bash
+yarn run lint
+yarn run lint:fix
+```
 
-   ```bash
-   # Runs the tests and watches for changes, requires git init first
-   yarn run test
+## Signing & publishing
 
-   # Exits after running all the tests
-   yarn run test:ci
-   ```
-
-5. Spin up a Metrics Dashboard instance and run the plugin inside it (using Docker)
-
-   ```bash
-   yarn run server
-   ```
-
-6. Run the E2E tests (using Playwright)
-
-   ```bash
-   # Spins up a Metrics Dashboard instance first that we tests against
-   yarn run server
-
-   # If you wish to start a certain Metrics Dashboard version. If not specified will use latest by default
-   METRICS_DASHBOARD_VERSION=11.3.0 yarn run server
-
-   # Starts the tests
-   yarn run e2e
-   ```
-
-7. Run the linter
-
-   ```bash
-   yarn run lint
-
-   # or
-
-   yarn run lint:fix
-   ```
-
-# Distributing your plugin
-
-When distributing a Metrics Dashboard plugin either within the community or privately the plugin must be signed so the Metrics Dashboard application can verify its authenticity. This can be done with the `@metrics-dashboard/sign-plugin` package.
-
-_Note: It's not necessary to sign a plugin during development. The docker development environment that is scaffolded with `@metrics-dashboard/create-plugin` caters for running the plugin without a signature._
-
-## Initial steps
-
-Before signing a plugin please read the Metrics Dashboard [plugin publishing and signing criteria](https://metrics-dashboard.com/legal/plugins/#plugin-publishing-and-signing-criteria) documentation carefully.
-
-`@metrics-dashboard/create-plugin` has added the necessary commands and workflows to make signing and distributing a plugin via the metrics-dashboard plugins catalog as straightforward as possible.
-
-Before signing a plugin for the first time please consult the Metrics Dashboard [plugin signature levels](https://metrics-dashboard.com/legal/plugins/#what-are-the-different-classifications-of-plugins) documentation to understand the differences between the types of signature level.
-
-1. Create a [Metrics Dashboard Cloud account](https://metrics-dashboard.com/signup).
-2. Make sure that the first part of the plugin ID matches the slug of your Metrics Dashboard Cloud account.
-   - _You can find the plugin ID in the `plugin.json` file inside your plugin directory. For example, if your account slug is `acmecorp`, you need to prefix the plugin ID with `acmecorp-`._
-3. Create a Metrics Dashboard Cloud API key with the `PluginPublisher` role.
-4. Keep a record of this API key as it will be required for signing a plugin
-
-## Signing a plugin
-
-### Using Github actions release workflow
-
-If the plugin is using the github actions supplied with `@metrics-dashboard/create-plugin` signing a plugin is included out of the box. The [release workflow](./.github/workflows/release.yml) can prepare everything to make submitting your plugin to Metrics Dashboard as easy as possible. Before being able to sign the plugin however a secret needs adding to the Github repository.
-
-1. Please navigate to "settings > secrets > actions" within your repo to create secrets.
-2. Click "New repository secret"
-3. Name the secret "METRICS_DASHBOARD_API_KEY"
-4. Paste your Metrics Dashboard Cloud API key in the Secret field
-5. Click "Add secret"
-
-#### Push a version tag
-
-To trigger the workflow we need to push a version tag to github. This can be achieved with the following steps:
-
-1. Run `npm version <major|minor|patch>`
-2. Run `git push origin main --follow-tags`
-
-## Learn more
-
-Below you can find source code for existing app plugins and other related documentation.
-
-- [Basic panel plugin example](https://github.com/metrics-dashboard/metrics-dashboard-plugin-examples/tree/master/examples/panel-basic#readme)
-- [`plugin.json` documentation](https://metrics-dashboard.com/developers/plugin-tools/reference/plugin-json)
-- [How to sign a plugin?](https://metrics-dashboard.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin)
+The scaffold includes GitHub Actions and npm scripts for signing the plugin with Metrics Dashboard Cloud. See the `@metrics-dashboard/create-plugin` documentation if you plan to distribute this panel outside of development environments.

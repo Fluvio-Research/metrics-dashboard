@@ -48,11 +48,29 @@ export interface DynamoDBVariableQuery {
 
 export type UploadOperation = 'insert' | 'update' | 'delete' | 'select';
 
+export interface FieldValidation {
+  pattern?: string;
+  minLength?: number;
+  maxLength?: number;
+  min?: number;
+  max?: number;
+  customMessage?: string;
+}
+
+export interface FieldTransformation {
+  type: 'uppercase' | 'lowercase' | 'trim' | 'date_format' | 'regex_replace' | 'custom';
+  params?: Record<string, string>;
+}
+
 export interface UploadField {
   name: string;
   type?: string;
   required?: boolean;
   description?: string;
+  defaultValue?: string;
+  validation?: FieldValidation;
+  transformation?: FieldTransformation;
+  dynamoType?: string;
 }
 
 export interface UploadPreset {
@@ -68,4 +86,6 @@ export interface UploadPreset {
   allowDryRun?: boolean;
   maxPayloadKB?: number;
   responsePreview?: boolean;
+  helpText?: string;
+  category?: string;
 }

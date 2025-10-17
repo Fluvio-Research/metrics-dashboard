@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { ConnectionConfig } from "@grafana/aws-sdk";
 import { DataSourcePluginOptionsEditorProps } from "@grafana/data";
 import { DynamoDBDataSourceOptions, DynamoDBDataSourceSecureJsonData, UploadPreset } from "../types";
-import { CodeEditor, Field, Input, TextArea } from "@grafana/ui";
+import { CodeEditor, Field, Input, TextArea, RadioButtonGroup } from "@grafana/ui";
+import { PresetManager } from "./admin/PresetManager";
 
 interface Props extends DataSourcePluginOptionsEditorProps<DynamoDBDataSourceOptions, DynamoDBDataSourceSecureJsonData> { }
 
@@ -38,6 +39,7 @@ const standardRegions = [
 export function ConfigEditor(props: Props) {
   const [presetDraft, setPresetDraft] = useState<string>(() => formatPresets(props.options.jsonData.uploadPresets));
   const [presetError, setPresetError] = useState<string | undefined>(undefined);
+  const [editorMode, setEditorMode] = useState<'visual' | 'json'>('visual');
 
   const onTestTableChange: React.FormEventHandler<HTMLInputElement> = e => {
     props.onOptionsChange({
@@ -97,6 +99,16 @@ export function ConfigEditor(props: Props) {
     setPresetDraft(formatPresets(props.options.jsonData.uploadPresets));
   }, [props.options.jsonData.uploadPresets]);
 
+  const handlePresetsChange = (presets: UploadPreset[]) => {
+    props.onOptionsChange({
+      ...props.options,
+      jsonData: {
+        ...props.options.jsonData,
+        uploadPresets: presets,
+      }
+    });
+  };
+
   return (
     <div className="width-40">
       <ConnectionConfig {...props} standardRegions={standardRegions} />
@@ -112,29 +124,53 @@ export function ConfigEditor(props: Props) {
           aria-label="Max upload payload KB"
         />
       </Field>
+      
       <Field
-        label="Upload presets"
-        description="Define reusable upload presets as JSON. Each preset controls allowed operations for end-user uploads."
-        error={presetError}
+        label="Upload presets editor"
+        description="Define upload presets using visual editor or JSON"
       >
-        <CodeEditor
-          value={presetDraft}
-          language="json"
-          height={200}
-          showLineNumbers
-          onBlur={onPresetBlur}
-          onChange={value => setPresetDraft(value ?? "")}
+        <RadioButtonGroup
+          options={[
+            { label: 'Visual Editor', value: 'visual' },
+            { label: 'JSON Editor', value: 'json' },
+          ]}
+          value={editorMode}
+          onChange={(value) => setEditorMode(value as 'visual' | 'json')}
         />
       </Field>
-      <Field label="Notes">
-        <TextArea
-          value={
-            "Example preset:\n[\n  {\n    \"id\": \"insertTelemetry\",\n    \"name\": \"Insert telemetry row\",\n    \"table\": \"TelemetryTable\",\n    \"operation\": \"insert\",\n    \"schema\": [\n      { \"name\": \"PK\", \"type\": \"string\", \"required\": true },\n      { \"name\": \"SK\", \"type\": \"string\", \"required\": true }\n    ],\n    \"allowDryRun\": true\n  }\n]"
-          }
-          rows={6}
-          readOnly
+
+      {editorMode === 'visual' ? (
+        <PresetManager
+          presets={props.options.jsonData.uploadPresets || []}
+          onChange={handlePresetsChange}
         />
-      </Field>
+      ) : (
+        <>
+          <Field
+            label="Upload presets (JSON)"
+            description="Define reusable upload presets as JSON. Each preset controls allowed operations for end-user uploads."
+            error={presetError}
+          >
+            <CodeEditor
+              value={presetDraft}
+              language="json"
+              height={200}
+              showLineNumbers
+              onBlur={onPresetBlur}
+              onChange={value => setPresetDraft(value ?? "")}
+            />
+          </Field>
+          <Field label="Example">
+            <TextArea
+              value={
+                "[\n  {\n    \"id\": \"insertTelemetry\",\n    \"name\": \"Insert telemetry row\",\n    \"table\": \"TelemetryTable\",\n    \"operation\": \"insert\",\n    \"schema\": [\n      { \"name\": \"PK\", \"type\": \"string\", \"required\": true },\n      { \"name\": \"SK\", \"type\": \"string\", \"required\": true }\n    ],\n    \"allowDryRun\": true\n  }\n]"
+              }
+              rows={6}
+              readOnly
+            />
+          </Field>
+        </>
+      )}
     </div>
   );
 };

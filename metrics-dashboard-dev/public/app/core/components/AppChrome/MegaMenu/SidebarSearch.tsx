@@ -67,15 +67,10 @@ export function SidebarSearch() {
           className={styles.searchButton}
         >
           <div className={styles.searchContent}>
-            <Icon name="search" size="lg" />
-            <div className={styles.searchText}>
-              <span className={styles.searchLabel}>
-                {t('nav.search.labelModern', 'Search')}
-              </span>
-              <span className={styles.searchHint}>
-                {t('nav.search.placeholderModern', 'Dashboards, data, and destinations')}
-              </span>
-            </div>
+            <Icon name="search" size="sm" />
+            <span className={styles.searchLabel}>
+              {t('nav.search.labelModern', 'Search')}
+            </span>
             <Icon name="angle-down" size="sm" />
           </div>
         </button>
@@ -152,7 +147,7 @@ const getStyles = (theme: GrafanaTheme2) => {
 
     searchButton: css({
       width: '100%',
-      padding: theme.spacing(1.25),
+      padding: `${theme.spacing(0.5)} ${theme.spacing(0.75)}`,
       border: `1px solid ${isDark ? 'rgba(77, 172, 255, 0.2)' : 'rgba(77, 172, 255, 0.18)'}`,
       borderRadius: theme.shape.radius.default,
       background: isDark 
@@ -181,32 +176,16 @@ const getStyles = (theme: GrafanaTheme2) => {
     searchContent: css({
       display: 'flex',
       alignItems: 'center',
-      gap: theme.spacing(1.25),
-    }),
-
-    searchText: css({
-      flex: 1,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      textAlign: 'left',
-      minWidth: 0,
+      gap: theme.spacing(0.75),
+      justifyContent: 'space-between',
     }),
 
     searchLabel: css({
-      fontSize: theme.typography.body.fontSize,
+      fontSize: '11px',
       fontWeight: 500,
       color: isDark ? 'rgba(226, 232, 240, 0.9)' : 'rgba(15, 23, 42, 0.85)',
-    }),
-
-    searchHint: css({
-      fontSize: '11px',
-      color: isDark ? 'rgba(148, 163, 184, 0.65)' : 'rgba(100, 116, 139, 0.6)',
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      width: '100%',
-      marginTop: '1px',
+      flex: 1,
+      textAlign: 'left',
     }),
 
     expandedSearch: css({

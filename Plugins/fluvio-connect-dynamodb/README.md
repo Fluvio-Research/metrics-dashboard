@@ -17,6 +17,7 @@ Query your Amazon DynamoDB using PartiQL and visualize the results in your Metri
 - Discover schema details quickly: API resources expose available tables and sample attribute names for dropdowns and editors.
 - Drive template variables—variable queries are executed through the same backend, returning unique values ready for dashboards.
 - Built-in health check (`DescribeTable`) verifies AWS credentials and DynamoDB reachability from the datasource settings page.
+- Configure guarded upload presets and pair them with the **Fluvio DynamoDB Upload** panel for controlled inserts, updates, deletes, and previews directly from dashboards.
 
 ## Get started
 ### Quick start
@@ -33,6 +34,14 @@ Visit your Metrics Dashboard at http://localhost:3000 and configure the data sou
    - Ensure the plugin binaries (`dynamodb-datasource/gpx_dynamodb_datasource_*`) have execute permissions (`chmod +x`).
 ### Data source Configuration
 The plugin uses [metrics-dashboard-aws-sdk-react](https://github.com/metrics-dashboard/metrics-dashboard-aws-sdk-react) in the configuration page, a common package used for all AWS-related plugins(including plugins made by Metrics Dashboard Lab). In addition, to test the connection, the plugin requires a "test table", to which the plugin makes a [DescribeTable](https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_DescribeTable.html) request.
+
+#### Upload presets & dashboard uploads
+1. Populate the **Upload presets** editor with JSON definitions that describe the table/index, verb (`insert`, `update`, `delete`, or `select`), required attributes, optional PartiQL template, and per-preset payload limit.
+2. (Optional) Adjust the datasource-level `maxUploadPayloadKB` default that applies when a preset omits its own `maxPayloadKB`.
+3. Place the **Fluvio DynamoDB Upload** panel on a dashboard, select this datasource and the target preset, and choose *Form* or *JSON* mode for contributors.
+4. Editors can dry-run (when permitted) or execute uploads; the backend validates payload size, schema, and operator before calling DynamoDB via the datasource credentials.
+
+Preset JSON stays alongside the datasource configuration, so administrators keep tight control over which write paths are exposed.
 
 ### Query data
 The plugin currently supports query via [PartiQL](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ql-reference.html). The plugin performs [ExecuteStatement](https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_ExecuteStatement.html) on the PartiQL statement that user enters.

@@ -8,6 +8,7 @@ import appEvents from 'app/core/app_events';
 import store from 'app/core/store';
 import { isShallowEqual } from 'app/core/utils/isShallowEqual';
 import { KioskMode } from 'app/types/dashboard';
+import { contextSrv } from 'app/core/services/context_srv';
 
 import { RouteDescriptor } from '../../navigation/types';
 import { buildBreadcrumbs } from '../Breadcrumbs/utils';
@@ -41,9 +42,16 @@ export class AppChromeService {
   private currentRoute?: RouteDescriptor;
   private routeChangeHandled = true;
 
+  // Check if user is non-admin (restricted user)
+  private isRestrictedUser = () => {
+    const isSuperAdmin = Boolean((contextSrv.user as any).isSuperAdmin ?? contextSrv.user.isGrafanaAdmin);
+    const isOrgAdmin = contextSrv.hasRole('Admin');
+    return !isOrgAdmin && !isSuperAdmin;
+  };
+
   private megaMenuDocked = Boolean(
     window.innerWidth >= config.theme2.breakpoints.values.xl &&
-      store.getBool(DOCKED_LOCAL_STORAGE_KEY, false) // Default to false - sidebar closed on first load
+      (this.isRestrictedUser() ? true : store.getBool(DOCKED_LOCAL_STORAGE_KEY, false)) // Auto-dock for non-admin users
   );
 
   private sessionStorageData = window.sessionStorage.getItem('returnToPrevious');
@@ -52,7 +60,7 @@ export class AppChromeService {
   readonly state = new BehaviorSubject<AppChromeState>({
     chromeless: true, // start out hidden to not flash it on pages without chrome
     sectionNav: { node: { text: t('nav.home.title', 'Home') }, main: { text: '' } },
-    megaMenuOpen: this.megaMenuDocked && store.getBool(DOCKED_MENU_OPEN_LOCAL_STORAGE_KEY, false), // Default to false - closed
+    megaMenuOpen: this.megaMenuDocked && (this.isRestrictedUser() ? true : store.getBool(DOCKED_MENU_OPEN_LOCAL_STORAGE_KEY, false)), // Auto-open for non-admin users
     megaMenuDocked: this.megaMenuDocked,
     kioskMode: null,
     layout: PageLayoutType.Canvas,

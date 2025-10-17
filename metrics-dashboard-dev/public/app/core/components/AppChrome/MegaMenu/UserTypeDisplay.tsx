@@ -1,6 +1,8 @@
 import { css } from '@emotion/css';
 import { GrafanaTheme2 } from '@grafana/data';
-import { useStyles2 } from '@grafana/ui';
+import { t } from '@grafana/i18n';
+import { config } from '@grafana/runtime';
+import { Button, useStyles2 } from '@grafana/ui';
 import { contextSrv } from 'app/core/services/context_srv';
 
 export function UserTypeDisplay() {
@@ -35,6 +37,21 @@ export function UserTypeDisplay() {
         <div className={styles.userName}>{user.name || user.login}</div>
         <div className={styles.userType}>{getUserTypeDisplay()}</div>
       </div>
+      {!config.auth.disableSignoutMenu && (
+        <Button
+          size="sm"
+          variant="secondary"
+          icon="arrow-from-right"
+          onClick={() => {
+            if (typeof window !== 'undefined') {
+              window.location.assign(`${config.appSubUrl}/logout`);
+            }
+          }}
+          className={styles.logoutButton}
+        >
+          {t('nav.sign-out.title', 'Sign out')}
+        </Button>
+      )}
     </div>
   );
 }
@@ -50,6 +67,7 @@ const getStyles = (theme: GrafanaTheme2) => {
       borderTop: `1px solid ${theme.colors.border.weak}`,
       backgroundColor: theme.colors.background.secondary,
       marginTop: 'auto',
+      gap: theme.spacing(1),
       
       ...(isDarkTheme && {
         backgroundColor: theme.colors.background.primary,
@@ -88,6 +106,9 @@ const getStyles = (theme: GrafanaTheme2) => {
         backgroundColor: theme.colors.background.secondary,
         border: `1px solid ${theme.colors.border.medium}`,
       }),
+    }),
+    logoutButton: css({
+      flexShrink: 0,
     }),
   };
 };

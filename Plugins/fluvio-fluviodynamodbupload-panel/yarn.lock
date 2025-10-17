@@ -651,9 +651,9 @@
     react-i18next "^15.0.0"
 
 "@grafana/plugin-e2e@^2.2.0":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@grafana/plugin-e2e/-/plugin-e2e-2.2.1.tgz#7545513462cf35f6631137f5929c4e58050fc0fd"
-  integrity sha512-LQOawJC3JUjdznlb+lJEEpH11lt0COrbMkiEsPzUPRD8dCAxevYoD4w+2o9KYBe61y1AS0Xyu4vQoElVbLo0Xg==
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@grafana/plugin-e2e/-/plugin-e2e-2.2.2.tgz#a57011130d44e4cdff66f192c0cfa2f23a8797e3"
+  integrity sha512-mUvh/I2HyFYjLQkdGHSJ+leUcGa/92z8J+juD3b2+deerEUk6nmCpxTqkE91EcWhGxwhDH05E4oOhVeg/6Nd4Q==
   dependencies:
     "@grafana/e2e-selectors" "^12.2.0-255920"
     semver "^7.5.4"
@@ -1908,6 +1908,13 @@
   dependencies:
     undici-types "~6.21.0"
 
+"@types/papaparse@^5.3.14":
+  version "5.3.16"
+  resolved "https://registry.yarnpkg.com/@types/papaparse/-/papaparse-5.3.16.tgz#320c8f6b8c9be898fe2d0c1b21aee51448bf9dca"
+  integrity sha512-T3VuKMC2H0lgsjI9buTB3uuKj3EMD2eap1MOuEQuBQ44EnDx/IkGhU6EwiTf9zG3za4SKlmwKAImdDKdNnCsXg==
+  dependencies:
+    "@types/node" "*"
+
 "@types/parse-json@^4.0.0":
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.2.tgz#5950e50960793055845e956c427fc2b0d70c5239"
@@ -2805,9 +2812,9 @@ co@^4.6.0:
   integrity sha512-QVb0dM5HvG+uaxitm8wONl7jltx8dqhfU33DcqtOZcLSVIKSDDLDi7+0LbAKiyI8hD9u42m2YxXSkMGWThaecQ==
 
 collect-v8-coverage@^1.0.0:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/collect-v8-coverage/-/collect-v8-coverage-1.0.2.tgz#c0b29bcd33bcd0779a1344c2136051e6afd3d9e9"
-  integrity sha512-lHl4d5/ONEbLlJvaJNtsF/Lz+WvB07u2ycqTYbdrq7UypDXailES4valYb2eWiJFxZlVmpGekfqoxQhzyFdT4Q==
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/collect-v8-coverage/-/collect-v8-coverage-1.0.3.tgz#cc1f01eb8d02298cbc9a437c74c70ab4e5210b80"
+  integrity sha512-1L5aqIkwPfiodaMgQunkF1zRhNqifHBmtbbbxcr6yVxxBnliw4TDOW6NxpO8DJLgJ16OT+Y4ztZqP6p/FtXnAw==
 
 color-convert@^2.0.1:
   version "2.0.1"
@@ -3482,9 +3489,9 @@ eastasianwidth@^0.2.0:
   integrity sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==
 
 electron-to-chromium@^1.5.227:
-  version "1.5.235"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.235.tgz#778dac70537ed9e9e0abf25a49cc94b5a23aaa0e"
-  integrity sha512-i/7ntLFwOdoHY7sgjlTIDo4Sl8EdoTjWIaKinYOVfC6bOp71bmwenyZthWHcasxgHDNWbWxvG9M3Ia116zIaYQ==
+  version "1.5.237"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.237.tgz#eacf61cef3f6345d0069ab427585c5a04d7084f0"
+  integrity sha512-icUt1NvfhGLar5lSWH3tHNzablaA5js3HVHacQimfP8ViEBOQv+L7DKEuHdbTZ0SKCO1ogTJTIL1Gwk9S6Qvcg==
 
 emittery@^0.13.1:
   version "0.13.1"
@@ -5852,9 +5859,9 @@ node-int64@^0.4.0:
   integrity sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==
 
 node-releases@^2.0.21:
-  version "2.0.23"
-  resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-2.0.23.tgz#2ecf3d7ba571ece05c67c77e5b7b1b6fb9e18cea"
-  integrity sha512-cCmFDMSm26S6tQSDpBCg/NR8NENrVPhAJSf+XbxBG4rPFaaonlEoE9wHQmun+cls499TQGSb7ZyPBRlzgKfpeg==
+  version "2.0.25"
+  resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-2.0.25.tgz#95479437bd409231e03981c1f6abee67f5e962df"
+  integrity sha512-4auku8B/vw5psvTiiN9j1dAOsXvMoGqJuKJcR+dTdqiXEK20mMTk1UEo3HS16LeGQsVG6+qKTPM9u/qQ2LqATA==
 
 normalize-path@^3.0.0, normalize-path@~3.0.0:
   version "3.0.0"
@@ -6027,7 +6034,7 @@ pako@^2.0.4:
   resolved "https://registry.yarnpkg.com/pako/-/pako-2.1.0.tgz#266cc37f98c7d883545d11335c00fbd4062c9a86"
   integrity sha512-w+eufiZ1WuJYgPXbV/PO3NCMEc3xqylkKHzp8bxp1uW4qaSNQUkwmLLEc3kKsfz8lpV1F8Ht3U1Cm+9Srog2ug==
 
-papaparse@5.5.3:
+papaparse@5.5.3, papaparse@^5.4.1:
   version "5.5.3"
   resolved "https://registry.yarnpkg.com/papaparse/-/papaparse-5.5.3.tgz#07f8994dec516c6dab266e952bed68e1de59fa9a"
   integrity sha512-5QvjGxYVjxO59MGU2lHVYpRWBBtKHnlIAcSe1uNFCkkptUh63NFRj0FJQm7nR67puEruUci/ZkjmEFrjCAyP4A==
@@ -6542,7 +6549,7 @@ react-custom-scrollbars-2@4.5.0:
     prop-types "^15.5.10"
     raf "^3.1.0"
 
-"react-data-grid@github:grafana/react-data-grid#a922856b5ede21d55db3fdffb6d38dc76bdc7c58":
+react-data-grid@grafana/react-data-grid#a922856b5ede21d55db3fdffb6d38dc76bdc7c58:
   version "7.0.0-beta.56"
   resolved "https://codeload.github.com/grafana/react-data-grid/tar.gz/a922856b5ede21d55db3fdffb6d38dc76bdc7c58"
   dependencies:
