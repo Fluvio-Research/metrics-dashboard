@@ -1,0 +1,89 @@
+version: 0.2
+
+# AWS CodeBuild specification for Grafana + Custom Plugins
+# Compute: general1.medium (7GB RAM, 4 vCPUs)
+# Target: Amazon Linux 2023 EC2 (linux/amd64)
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 20
+      golang: 1.24
+    commands:
+      - echo "Installing build dependencies..."
+      - npm install -g yarn@1.22.22
+      - node --version
+      - yarn --version
+      - go version
+      
+  pre_build:
+    commands:
+      - echo "Pre-build phase started"
+      - echo "Current directory:" && pwd
+      - echo "Available memory:" && free -h
+      
+  build:
+    commands:
+      - echo "===== Building Main Grafana Application ====="
+      - cd metrics-dashboard-dev
+      - echo "Installing Grafana dependencies..."
+      - yarn install --frozen-lockfile --network-timeout 300000
+      - echo "Building Grafana frontend..."
+      - yarn build
+      - echo "Grafana build completed"
+      - cd ..
+      
+      - echo "===== Building DynamoDB Datasource Plugin ====="
+      - cd Plugins/fluvio-connect-dynamodb
+      - echo "Installing plugin dependencies..."
+      - npm install
+      - echo "Building backend (Go)..."
+      - GOOS=linux GOARCH=amd64 go build -o gpx_dynamodb_datasource_linux_amd64 -v ./pkg
+      - echo "Building frontend..."
+      - npm run build
+      - echo "DynamoDB datasource plugin build completed"
+      - cd ../..
+      
+      - echo "===== Building Upload Panel Plugin ====="
+      - cd Plugins/fluvio-fluviodynamodbupload-panel
+      - echo "Installing panel dependencies..."
+      - yarn install --frozen-lockfile --network-timeout 300000
+      - echo "Building panel..."
+      - yarn build
+      - echo "Upload panel plugin build completed"
+      - cd ../..
+      
+      - echo "===== Copying Plugins to Grafana ====="
+      - mkdir -p metrics-dashboard-dev/data/plugins
+      - echo "Copying DynamoDB datasource..."
+      - cp -r Plugins/fluvio-connect-dynamodb/dist metrics-dashboard-dev/data/plugins/fluvio-connect-dynamodb
+      - cp Plugins/fluvio-connect-dynamodb/gpx_dynamodb_datasource_linux_amd64 metrics-dashboard-dev/data/plugins/fluvio-connect-dynamodb/
+      - echo "Copying Upload panel..."
+      - cp -r Plugins/fluvio-fluviodynamodbupload-panel/dist metrics-dashboard-dev/data/plugins/fluvio-fluviodynamodbupload-panel
+      
+  post_build:
+    commands:
+      - echo "===== Build Summary ====="
+      - echo "Build completed successfully at $(date)"
+      - echo "Grafana version:" && cat metrics-dashboard-dev/package.json | grep version | head -1
+      - echo "Installed plugins:"
+      - ls -lh metrics-dashboard-dev/data/plugins/
+      - echo "DynamoDB plugin contents:"
+      - ls -lh metrics-dashboard-dev/data/plugins/fluvio-connect-dynamodb/
+      - echo "Upload panel contents:"
+      - ls -lh metrics-dashboard-dev/data/plugins/fluvio-fluviodynamodbupload-panel/
+      - echo "===== Preparing artifacts ====="
+
+artifacts:
+  files:
+    - '**/*'
+  base-directory: '.'
+  name: metrics-dashboard-$(date +%Y%m%d-%H%M%S)
+
+cache:
+  paths:
+    - 'metrics-dashboard-dev/node_modules/**/*'
+    - 'Plugins/fluvio-connect-dynamodb/node_modules/**/*'
+    - 'Plugins/fluvio-fluviodynamodbupload-panel/node_modules/**/*'
+    - '/root/.cache/go-build/**/*'
+

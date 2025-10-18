@@ -1,0 +1,46 @@
+version: 0.0
+os: linux
+
+# AWS CodeDeploy specification for Grafana deployment
+# Target: Amazon Linux 2023 EC2 (t2.medium)
+# Deployment path: /home/ec2-user/metrics-dashboard
+
+files:
+  - source: /
+    destination: /home/ec2-user/metrics-dashboard
+
+permissions:
+  - object: /home/ec2-user/metrics-dashboard
+    owner: ec2-user
+    group: ec2-user
+    mode: 755
+    type:
+      - directory
+      - file
+
+hooks:
+  BeforeInstall:
+    - location: scripts/before_install.sh
+      timeout: 300
+      runas: ec2-user
+      
+  AfterInstall:
+    - location: scripts/after_install.sh
+      timeout: 300
+      runas: ec2-user
+      
+  ApplicationStop:
+    - location: scripts/stop_application.sh
+      timeout: 300
+      runas: ec2-user
+      
+  ApplicationStart:
+    - location: scripts/start_application.sh
+      timeout: 300
+      runas: ec2-user
+      
+  ValidateService:
+    - location: scripts/validate_service.sh
+      timeout: 300
+      runas: ec2-user
+
