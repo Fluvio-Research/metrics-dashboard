@@ -8,11 +8,11 @@ phases:
   install:
     runtime-versions:
       nodejs: 20
-      golang: 1.24
+      golang: 1.22
     commands:
       - echo "Installing build dependencies..."
-      - echo "Installing system build tools for Grafana backend (Ubuntu)..."
-      - apt-get update && apt-get install -y gcc g++ make git fontconfig pkg-config libfontconfig1-dev
+      - echo "Installing system build tools for Grafana backend (Amazon Linux 2023)..."
+      - dnf install -y gcc gcc-c++ make git fontconfig fontconfig-devel pkgconf-pkg-config
       - npm install -g yarn@1.22.22
       - echo "Verifying installed tools..."
       - node --version
@@ -59,11 +59,12 @@ phases:
       - echo "===== Building DynamoDB Datasource Plugin ====="
       - cd Plugins/fluvio-connect-dynamodb
       - echo "Installing plugin dependencies..."
-      - npm install
+      - if [ -f package-lock.json ]; then npm ci --no-audit --no-fund; else npm install --no-audit --no-fund; fi
       - echo "Building backend (Go)..."
       - GOOS=linux GOARCH=amd64 go build -o gpx_dynamodb_datasource_linux_amd64 -v ./pkg
       - echo "Building frontend..."
       - npm run build
+      - test -d dist || (echo "Missing dist/ output for DynamoDB datasource" && exit 1)
       - echo "DynamoDB datasource plugin build completed"
       - cd ../..
       
@@ -73,15 +74,18 @@ phases:
       - yarn install --frozen-lockfile --network-timeout 300000
       - echo "Building panel..."
       - yarn build
+      - test -d dist || (echo "Missing dist/ output for upload panel" && exit 1)
       - echo "Upload panel plugin build completed"
       - cd ../..
       
       - echo "===== Copying Plugins to Grafana ====="
       - mkdir -p metrics-dashboard-dev/data/plugins
       - echo "Copying DynamoDB datasource..."
+      - rm -rf metrics-dashboard-dev/data/plugins/fluvio-connect-dynamodb
       - cp -r Plugins/fluvio-connect-dynamodb/dist metrics-dashboard-dev/data/plugins/fluvio-connect-dynamodb
       - cp Plugins/fluvio-connect-dynamodb/gpx_dynamodb_datasource_linux_amd64 metrics-dashboard-dev/data/plugins/fluvio-connect-dynamodb/
       - echo "Copying Upload panel..."
+      - rm -rf metrics-dashboard-dev/data/plugins/fluvio-fluviodynamodbupload-panel
       - cp -r Plugins/fluvio-fluviodynamodbupload-panel/dist metrics-dashboard-dev/data/plugins/fluvio-fluviodynamodbupload-panel
       
   post_build:
@@ -109,4 +113,3 @@ cache:
     - 'Plugins/fluvio-connect-dynamodb/node_modules/**/*'
     - 'Plugins/fluvio-fluviodynamodbupload-panel/node_modules/**/*'
     - '/root/.cache/go-build/**/*'
-
