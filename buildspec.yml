@@ -21,6 +21,8 @@ phases:
       - echo "Pre-build phase started"
       - echo "Current directory:" && pwd
       - echo "Available memory:" && free -h
+      - echo "Unsetting NODE_OPTIONS to avoid --experimental-strip-types error"
+      - unset NODE_OPTIONS
       
   build:
     commands:
