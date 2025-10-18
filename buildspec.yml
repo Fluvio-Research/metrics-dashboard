@@ -44,26 +44,25 @@ phases:
     commands:
       - echo "===== Building Main Grafana Application ====="
       - cd metrics-dashboard-dev
-      
       # Build Grafana Backend Binaries
       - echo "Downloading Go dependencies..."
       - go mod download
       - echo "Building Grafana backend binaries for linux/amd64..."
       - mkdir -p bin/linux-amd64
       - echo "Building grafana-server..."
-      - GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -v -o bin/linux-amd64/grafana-server ./pkg/cmd/grafana-server 2>&1 || (echo "grafana-server build failed" && exit 1)
+      - GOMAXPROCS=2 GOGC=off GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -v -o bin/linux-amd64/grafana-server ./pkg/cmd/grafana-server 2>&1 || (echo "grafana-server build failed" && exit 1)
       - echo "Building grafana-cli..."
-      - GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -v -o bin/linux-amd64/grafana-cli ./pkg/cmd/grafana-cli 2>&1 || (echo "grafana-cli build failed" && exit 1)
+      - GOMAXPROCS=2 GOGC=off GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -v -o bin/linux-amd64/grafana-cli ./pkg/cmd/grafana-cli 2>&1 || (echo "grafana-cli build failed" && exit 1)
       - echo "Building grafana..."
-      - GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -v -o bin/linux-amd64/grafana ./pkg/cmd/grafana 2>&1 || (echo "grafana build failed" && exit 1)
+      - GOMAXPROCS=2 GOGC=off GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -v -o bin/linux-amd64/grafana ./pkg/cmd/grafana 2>&1 || (echo "grafana build failed" && exit 1)
       - ls -lh bin/linux-amd64/
       - echo "✓ Backend binaries built successfully"
       
       # Build Grafana Frontend
       - echo "Installing Grafana dependencies..."
-      - yarn install --frozen-lockfile --network-timeout 300000
+      - YARN_ENABLE_GLOBAL_CACHE=0 yarn install --frozen-lockfile --network-timeout 300000
       - echo "Building Grafana frontend..."
-      - yarn build
+      - YARN_ENABLE_GLOBAL_CACHE=0 yarn build
       - echo "✓ Grafana frontend completed"
       - cd ..
       
@@ -72,7 +71,7 @@ phases:
       - echo "Installing plugin dependencies..."
       - if [ -f package-lock.json ]; then npm ci --no-audit --no-fund; else npm install --no-audit --no-fund; fi
       - echo "Building backend (Go)..."
-      - GOOS=linux GOARCH=amd64 go build -o gpx_dynamodb_datasource_linux_amd64 -v ./pkg
+      - GOMAXPROCS=2 GOGC=off GOOS=linux GOARCH=amd64 go build -o gpx_dynamodb_datasource_linux_amd64 -v ./pkg
       - echo "Building frontend..."
       - npm run build
       - test -d dist || (echo "Missing dist/ output for DynamoDB datasource" && exit 1)
@@ -82,9 +81,9 @@ phases:
       - echo "===== Building Upload Panel Plugin ====="
       - cd Plugins/fluvio-fluviodynamodbupload-panel
       - echo "Installing panel dependencies..."
-      - yarn install --frozen-lockfile --network-timeout 300000
+      - YARN_ENABLE_GLOBAL_CACHE=0 yarn install --frozen-lockfile --network-timeout 300000
       - echo "Building panel..."
-      - yarn build
+      - YARN_ENABLE_GLOBAL_CACHE=0 yarn build
       - test -d dist || (echo "Missing dist/ output for upload panel" && exit 1)
       - echo "Upload panel plugin build completed"
       - cd ../..
