@@ -90,14 +90,14 @@ phases:
       - cd ../..
       
       - echo "===== Copying Plugins to Grafana ====="
-      - mkdir -p metrics-dashboard-dev/data/plugins
+      - PLUGIN_DIR="${CODEBUILD_SRC_DIR:-$PWD}/metrics-dashboard-dev/data/plugins" && mkdir -p "$PLUGIN_DIR"
       - echo "Copying DynamoDB datasource..."
-      - rm -rf metrics-dashboard-dev/data/plugins/fluvio-connect-dynamodb
-      - cp -r Plugins/fluvio-connect-dynamodb/dist metrics-dashboard-dev/data/plugins/fluvio-connect-dynamodb
-      - cp Plugins/fluvio-connect-dynamodb/gpx_dynamodb_datasource_linux_amd64 metrics-dashboard-dev/data/plugins/fluvio-connect-dynamodb/
+      - rm -rf "$PLUGIN_DIR/fluvio-connect-dynamodb"
+      - cp -r Plugins/fluvio-connect-dynamodb/dist "$PLUGIN_DIR/fluvio-connect-dynamodb"
+      - cp Plugins/fluvio-connect-dynamodb/gpx_dynamodb_datasource_linux_amd64 "$PLUGIN_DIR/fluvio-connect-dynamodb/"
       - echo "Copying Upload panel..."
-      - rm -rf metrics-dashboard-dev/data/plugins/fluvio-fluviodynamodbupload-panel
-      - cp -r Plugins/fluvio-fluviodynamodbupload-panel/dist metrics-dashboard-dev/data/plugins/fluvio-fluviodynamodbupload-panel
+      - rm -rf "$PLUGIN_DIR/fluvio-fluviodynamodbupload-panel"
+      - cp -r Plugins/fluvio-fluviodynamodbupload-panel/dist "$PLUGIN_DIR/fluvio-fluviodynamodbupload-panel"
       
   post_build:
     commands:
@@ -105,11 +105,11 @@ phases:
       - echo "Build completed successfully at $(date)"
       - echo "Grafana version:" && cat metrics-dashboard-dev/package.json | grep version | head -1
       - echo "Installed plugins:"
-      - ls -lh metrics-dashboard-dev/data/plugins/
+      - PLUGIN_DIR="${CODEBUILD_SRC_DIR:-$PWD}/metrics-dashboard-dev/data/plugins" && if [ -d "$PLUGIN_DIR" ]; then ls -lh "$PLUGIN_DIR/"; else echo "No plugins copied; directory missing at $PLUGIN_DIR"; fi
       - echo "DynamoDB plugin contents:"
-      - ls -lh metrics-dashboard-dev/data/plugins/fluvio-connect-dynamodb/
+      - PLUGIN_DIR="${CODEBUILD_SRC_DIR:-$PWD}/metrics-dashboard-dev/data/plugins" && if [ -d "$PLUGIN_DIR/fluvio-connect-dynamodb" ]; then ls -lh "$PLUGIN_DIR/fluvio-connect-dynamodb/"; else echo "DynamoDB plugin directory missing at $PLUGIN_DIR/fluvio-connect-dynamodb"; fi
       - echo "Upload panel contents:"
-      - ls -lh metrics-dashboard-dev/data/plugins/fluvio-fluviodynamodbupload-panel/
+      - PLUGIN_DIR="${CODEBUILD_SRC_DIR:-$PWD}/metrics-dashboard-dev/data/plugins" && if [ -d "$PLUGIN_DIR/fluvio-fluviodynamodbupload-panel" ]; then ls -lh "$PLUGIN_DIR/fluvio-fluviodynamodbupload-panel/"; else echo "Upload panel directory missing at $PLUGIN_DIR/fluvio-fluviodynamodbupload-panel"; fi
       - echo "===== Preparing artifacts ====="
 
 artifacts:
