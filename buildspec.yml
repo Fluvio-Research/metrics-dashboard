@@ -35,13 +35,18 @@ phases:
       - cd metrics-dashboard-dev
       
       # Build Grafana Backend Binaries
+      - echo "Downloading Go dependencies..."
+      - go mod download
       - echo "Building Grafana backend binaries for linux/amd64..."
       - mkdir -p bin/linux-amd64
-      - GOOS=linux GOARCH=amd64 go build -o bin/linux-amd64/grafana-server ./pkg/cmd/grafana-server
-      - GOOS=linux GOARCH=amd64 go build -o bin/linux-amd64/grafana-cli ./pkg/cmd/grafana-cli
-      - GOOS=linux GOARCH=amd64 go build -o bin/linux-amd64/grafana ./pkg/cmd/grafana
+      - echo "Building grafana-server..."
+      - GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -v -o bin/linux-amd64/grafana-server ./pkg/cmd/grafana-server 2>&1 || (echo "grafana-server build failed" && exit 1)
+      - echo "Building grafana-cli..."
+      - GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -v -o bin/linux-amd64/grafana-cli ./pkg/cmd/grafana-cli 2>&1 || (echo "grafana-cli build failed" && exit 1)
+      - echo "Building grafana..."
+      - GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -v -o bin/linux-amd64/grafana ./pkg/cmd/grafana 2>&1 || (echo "grafana build failed" && exit 1)
       - ls -lh bin/linux-amd64/
-      - echo "✓ Backend binaries built"
+      - echo "✓ Backend binaries built successfully"
       
       # Build Grafana Frontend
       - echo "Installing Grafana dependencies..."
