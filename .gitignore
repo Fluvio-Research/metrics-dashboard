@@ -9,6 +9,16 @@ data/
 */data/
 **/data/
 
+# Keep embedded assets needed for backend build
+!metrics-dashboard-dev/pkg/tsdb/grafana-testdata-datasource/data/
+!metrics-dashboard-dev/pkg/tsdb/grafana-testdata-datasource/data/**
+!metrics-dashboard-dev/pkg/storage/unified/sql/data/
+!metrics-dashboard-dev/pkg/storage/unified/sql/data/**
+!metrics-dashboard-dev/pkg/storage/secret/encryption/data/
+!metrics-dashboard-dev/pkg/storage/secret/encryption/data/**
+!metrics-dashboard-dev/pkg/storage/secret/metadata/data/
+!metrics-dashboard-dev/pkg/storage/secret/metadata/data/**
+
 # Environment files
 .env
 
