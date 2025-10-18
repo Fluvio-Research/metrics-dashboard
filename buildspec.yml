@@ -11,13 +11,15 @@ phases:
       golang: 1.24
     commands:
       - echo "Installing build dependencies..."
-      - echo "Installing system build tools for Grafana backend..."
-      - yum install -y gcc gcc-c++ make git fontconfig
+      - echo "Installing system build tools for Grafana backend (Ubuntu)..."
+      - apt-get update && apt-get install -y gcc g++ make git fontconfig pkg-config libfontconfig1-dev
       - npm install -g yarn@1.22.22
+      - echo "Verifying installed tools..."
       - node --version
       - yarn --version
       - go version
       - gcc --version
+      - make --version
       
   pre_build:
     commands:
