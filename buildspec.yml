@@ -14,12 +14,12 @@ phases:
       - echo "Installing system build tools for Grafana backend (auto-detecting package manager)..."
       - |
         if command -v dnf >/dev/null 2>&1; then
-          dnf install -y gcc gcc-c++ make git fontconfig fontconfig-devel pkgconf-pkg-config
+          dnf install -y gcc gcc-c++ make git fontconfig fontconfig-devel pkgconf-pkg-config sqlite-devel pam-devel
         elif command -v yum >/dev/null 2>&1; then
-          yum install -y gcc gcc-c++ make git fontconfig fontconfig-devel pkgconfig
+          yum install -y gcc gcc-c++ make git fontconfig fontconfig-devel pkgconfig sqlite-devel pam-devel
         elif command -v apt-get >/dev/null 2>&1; then
           apt-get update -y
-          apt-get install -y gcc g++ make git fontconfig libfontconfig1-dev pkg-config
+          apt-get install -y gcc g++ make git fontconfig libfontconfig1-dev pkg-config libsqlite3-dev libpam0g-dev
         else
           echo "Unsupported build image: no known package manager found" >&2
           exit 1
