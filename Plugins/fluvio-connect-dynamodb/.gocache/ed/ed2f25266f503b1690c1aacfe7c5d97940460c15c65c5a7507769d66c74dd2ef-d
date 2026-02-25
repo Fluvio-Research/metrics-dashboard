@@ -1,7 +1,0 @@
-./attribute.go
-./dataframe.go
-./datasource.go
-./types.go
-./upload_presets.go
-./upload_resource.go
-./utils.go

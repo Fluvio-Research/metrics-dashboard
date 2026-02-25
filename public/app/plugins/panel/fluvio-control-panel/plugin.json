@@ -1,0 +1,67 @@
+{
+  "type": "panel",
+  "name": "Control Panel",
+  "id": "fluvio-control-panel",
+
+  "skipDataQuery": true,
+
+  "info": {
+    "description": "A fancy time picker and variable filter panel that can be placed anywhere on the dashboard",
+    "author": {
+      "name": "Fluvio",
+      "url": "https://fluvio.io"
+    },
+    "keywords": ["time", "picker", "filter", "variable", "control"],
+    "logos": {
+      "small": "img/icon-control-panel.svg",
+      "large": "img/icon-control-panel.svg"
+    },
+    "links": [
+      { "name": "Documentation", "url": "https://grafana.com/docs" }
+    ]
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

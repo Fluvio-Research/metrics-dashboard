@@ -1,8 +1,0 @@
-./client_metrics.go
-./client_options.go
-./constants.go
-./doc.go
-./options.go
-./reporter.go
-./server_metrics.go
-./server_options.go

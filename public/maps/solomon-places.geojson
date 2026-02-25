@@ -1,0 +1,7257 @@
+{
+  "type": "FeatureCollection",
+  "generator": "overpass-turbo",
+  "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+  "timestamp": "2025-12-13T16:04:00Z",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/339678145",
+        "capital": "4",
+        "name": "Auki",
+        "name:ja": "アウキ",
+        "place": "town",
+        "population": "7785",
+        "wikidata": "Q538476",
+        "wikipedia": "en:Auki"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.6992655,
+          -8.7706074
+        ]
+      },
+      "id": "node/339678145"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/339681618",
+        "capital": "4",
+        "name": "Kirakira",
+        "name:ja": "キラキラ",
+        "place": "village",
+        "wikidata": "Q713152"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.9201736,
+          -10.4568963
+        ]
+      },
+      "id": "node/339681618"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/339760989",
+        "alt_name": "Makira",
+        "is_in": "Solomon Islands",
+        "name": "San Cristobal",
+        "place": "island"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.848234,
+          -10.6341509
+        ]
+      },
+      "id": "node/339760989"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/552313626",
+        "alt_name": "Treasury Island",
+        "name": "Mono Island",
+        "place": "island"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          155.5603326,
+          -7.3624926
+        ]
+      },
+      "id": "node/552313626"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/790807049",
+        "admin_level": "2",
+        "capital": "yes",
+        "name": "Honiara",
+        "name:am": "ሆኒያራ",
+        "name:ar": "هونيارا",
+        "name:be": "Ханіяра",
+        "name:be-tarask": "Ханіяра",
+        "name:bg": "Хониара",
+        "name:bn": "হনিয়ারা",
+        "name:bo": "ཧོ་ཉི་ཡ་ར།",
+        "name:ca": "Honiara",
+        "name:de": "Honiara",
+        "name:el": "Ονιάρα",
+        "name:en": "Honiara",
+        "name:eo": "Honiaro",
+        "name:es": "Honiara",
+        "name:fa": "هونیارا",
+        "name:fr": "Honiara",
+        "name:ga": "Hóiniára",
+        "name:he": "הוניארה",
+        "name:hi": "होनिअरा",
+        "name:hr": "Honiara",
+        "name:ht": "Onyara",
+        "name:hu": "Honiara",
+        "name:hy": "Հոնիարա",
+        "name:id": "Honiara",
+        "name:is": "Honíara",
+        "name:ja": "ホニアラ",
+        "name:ka": "ჰონიარა",
+        "name:kk": "Хониара",
+        "name:ko": "호니아라",
+        "name:lt": "Honiara",
+        "name:mk": "Хонијара",
+        "name:ml": "ഹോണിയറ",
+        "name:mr": "होनियारा",
+        "name:nl": "Honiara",
+        "name:no": "Honiara",
+        "name:oc": "Honiara",
+        "name:pa": "ਹੋਨੀਆਰਾ",
+        "name:pl": "Honiara",
+        "name:ps": "هونیارا",
+        "name:ru": "Хониара",
+        "name:sah": "Хониара",
+        "name:sr": "Хонијара",
+        "name:sv": "Honiara",
+        "name:ta": "ஓனியாரா",
+        "name:tg": "Хониара",
+        "name:th": "โฮนีอารา",
+        "name:to": "Honiala",
+        "name:tr": "Honiara",
+        "name:tt": "Һониара",
+        "name:uk": "Хоніара",
+        "name:ur": "ہونیارا",
+        "name:uz": "Xoniara",
+        "name:zh": "霍尼亚拉",
+        "name:zh-Hans": "霍尼亚拉",
+        "name:zh-Hant": "荷尼阿拉",
+        "place": "city",
+        "population": "54600",
+        "source:name:oc": "Lo Congrès",
+        "source:population": "wikipedia",
+        "wikidata": "Q40921",
+        "wikipedia": "en:Honiara"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.9552552,
+          -9.4310769
+        ]
+      },
+      "id": "node/790807049"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/790807065",
+        "capital": "4",
+        "name": "Tulagi",
+        "place": "town",
+        "wikidata": "Q864870"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.1501398,
+          -9.1015203
+        ]
+      },
+      "id": "node/790807065"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/922668884",
+        "name": "Ndokendoke Island",
+        "place": "island",
+        "wikidata": "Q49662024"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.4992275,
+          -8.3385104
+        ]
+      },
+      "id": "node/922668884"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1737958127",
+        "name": "Koleasi",
+        "place": "hamlet",
+        "source": "survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.2351448,
+          -9.5602725
+        ]
+      },
+      "id": "node/1737958127"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1737963691",
+        "name": "Aola",
+        "name:ja": "アオラ",
+        "place": "town",
+        "source": "survey",
+        "wikidata": "Q192767"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.4824982,
+          -9.5300605
+        ]
+      },
+      "id": "node/1737963691"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1912234000",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          155.887348,
+          -7.0969896
+        ]
+      },
+      "id": "node/1912234000"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1912234001",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.5561486,
+          -7.818129
+        ]
+      },
+      "id": "node/1912234001"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1912234002",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.561406,
+          -7.8286668
+        ]
+      },
+      "id": "node/1912234002"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1958083366",
+        "alt_name": "Habere",
+        "name": "Habere",
+        "place": "village",
+        "source": "Ground survey - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9474393,
+          -8.0137355
+        ]
+      },
+      "id": "node/1958083366"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1958084170",
+        "name": "Iriri",
+        "place": "village",
+        "source": "Ground survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9587588,
+          -8.0381701
+        ]
+      },
+      "id": "node/1958084170"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1958085586",
+        "name": "Vavanga",
+        "place": "village",
+        "source": "Ground survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9690745,
+          -8.061456
+        ]
+      },
+      "id": "node/1958085586"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1958085588",
+        "alt_name": "Gatere",
+        "name": "Ghatere",
+        "place": "village",
+        "source": "Ground survey"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9826572,
+          -8.0778095
+        ]
+      },
+      "id": "node/1958085588"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1958086738",
+        "name": "Votuana",
+        "place": "hamlet",
+        "source": "Ground survey - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9890677,
+          -8.0840846
+        ]
+      },
+      "id": "node/1958086738"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1958087409",
+        "name": "Pine",
+        "place": "hamlet",
+        "source": "Ground survey - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.995784,
+          -8.0872368
+        ]
+      },
+      "id": "node/1958087409"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1958087933",
+        "alt_name": "Huda",
+        "name": "Hunda",
+        "place": "village",
+        "source": "Ground survey - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0093061,
+          -8.0988726
+        ]
+      },
+      "id": "node/1958087933"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1958091297",
+        "alt_name": "Kuji",
+        "name": "Kuzi",
+        "place": "village",
+        "source": "Ground survey - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0461703,
+          -8.1139129
+        ]
+      },
+      "id": "node/1958091297"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1958091299",
+        "alt_name": "Sagarugobe",
+        "name": "Sagharughobe",
+        "place": "hamlet",
+        "source": "Ground survey - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0294334,
+          -8.1109813
+        ]
+      },
+      "id": "node/1958091299"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1958091300",
+        "name": "Kena",
+        "place": "village",
+        "source": "Ground survey - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0117844,
+          -8.0920635
+        ]
+      },
+      "id": "node/1958091300"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1958091301",
+        "name": "Ireke",
+        "place": "hamlet",
+        "source": "Ground survey - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0122082,
+          -8.0981501
+        ]
+      },
+      "id": "node/1958091301"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1958106184",
+        "alt_name": "Ghizo",
+        "capital": "4",
+        "name": "Gizo",
+        "name:ja": "ギゾ",
+        "name:ru": "Гизо",
+        "place": "town",
+        "source": "Ground survey - IAS",
+        "wikidata": "Q1236908"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.8413618,
+          -8.1054656
+        ]
+      },
+      "id": "node/1958106184"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2145558279",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Akamboi",
+        "place": "village",
+        "population": "235",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1337241,
+          -10.7190085
+        ]
+      },
+      "id": "node/2145558279"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2146484097",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.5219955,
+          -11.2140385
+        ]
+      },
+      "id": "node/2146484097"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2146486385",
+        "name": "Puma",
+        "place": "village",
+        "source": "bing, wikipedia",
+        "wikidata": "Q7259766",
+        "wikipedia": "en:Puma (village)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.9689104,
+          -11.6135206
+        ]
+      },
+      "id": "node/2146486385"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2154339397",
+        "is_in": "Nevenema Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Menaglirkipalaku",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7633218,
+          -10.749904
+        ]
+      },
+      "id": "node/2154339397"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2154392653",
+        "is_in": "Nuva Station Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Nela",
+        "place": "village",
+        "population": "210",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7869848,
+          -10.7248533
+        ]
+      },
+      "id": "node/2154392653"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2154421906",
+        "is_in": "Nevenema Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Venga",
+        "place": "village",
+        "population": "353"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.777468,
+          -10.7334586
+        ]
+      },
+      "id": "node/2154421906"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2154481075",
+        "is_in": "Nevenema Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Nemba",
+        "place": "village",
+        "population": "414",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7528273,
+          -10.785773
+        ]
+      },
+      "id": "node/2154481075"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2154481165",
+        "is_in": "Nevenema Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Manoputi",
+        "place": "village",
+        "population": "329",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7582776,
+          -10.8072194
+        ]
+      },
+      "id": "node/2154481165"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2154487929",
+        "is_in": "Nea/Noole Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Bania",
+        "place": "village",
+        "population": "100",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7681197,
+          -10.8242669
+        ]
+      },
+      "id": "node/2154487929"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2154519180",
+        "is_in": "Nea/Noole Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Bwuang",
+        "place": "village",
+        "population": "42",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8317431,
+          -10.8153918
+        ]
+      },
+      "id": "node/2154519180"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2154519181",
+        "is_in": "Nea/Noole Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Owa",
+        "place": "village",
+        "population": "56"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8286577,
+          -10.8182254
+        ]
+      },
+      "id": "node/2154519181"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2154519182",
+        "is_in": "Nea/Noole Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Nea",
+        "place": "village",
+        "population": "169",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8251205,
+          -10.8221634
+        ]
+      },
+      "id": "node/2154519182"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2154559402",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Nabalue",
+        "place": "village",
+        "population": "38",
+        "source": "Bing;Bing;Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8774233,
+          -10.8304253
+        ]
+      },
+      "id": "node/2154559402"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2154613129",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Nanggu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0490907,
+          -10.7850778
+        ]
+      },
+      "id": "node/2154613129"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2154647811",
+        "name": "Masoko",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.9641383,
+          -10.7501055
+        ]
+      },
+      "id": "node/2154647811"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2154766122",
+        "is_in": "Nibang Noi Island;Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Metemi",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0488126,
+          -10.8006205
+        ]
+      },
+      "id": "node/2154766122"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2154771610",
+        "is_in": "Nibang Noi Island;Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Banoiba",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0448769,
+          -10.8018789
+        ]
+      },
+      "id": "node/2154771610"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2154774278",
+        "is_in": "Nibang Noi Island;Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Bamoi",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0702736,
+          -10.7869852
+        ]
+      },
+      "id": "node/2154774278"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2154775546",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Bonate",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0674077,
+          -10.7884497
+        ]
+      },
+      "id": "node/2154775546"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2154777245",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Lunelo",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0614487,
+          -10.7912777
+        ]
+      },
+      "id": "node/2154777245"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2155061940",
+        "is_in": "Luva Station Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:iso_3166_2": "SB-TE",
+        "is_in:state": "Temotu",
+        "name": "Lata",
+        "name:fr": "Lata",
+        "name:ja": "ラタ",
+        "place": "town",
+        "source": "Bing",
+        "wikidata": "Q646756",
+        "wikipedia": "en:Lata, Solomon Islands"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7977641,
+          -10.7241726
+        ]
+      },
+      "id": "node/2155061940"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2155252285",
+        "is_in": "Nibang Noi Island;Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Mbimbe",
+        "place": "village",
+        "source": "Bing;Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0365167,
+          -10.8051869
+        ]
+      },
+      "id": "node/2155252285"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2157172668",
+        "is_in": "Luva Station Ward; Nendo; Temotu; Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Luava",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8014263,
+          -10.7104418
+        ]
+      },
+      "id": "node/2157172668"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2157445468",
+        "is_in": "NE Santa Ward;Nendo;temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Kala",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0597105,
+          -10.6557087
+        ]
+      },
+      "id": "node/2157445468"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2157495788",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Nooka",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.9893511,
+          -10.6614233
+        ]
+      },
+      "id": "node/2157495788"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2164432338",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Birlao",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7640374,
+          -10.7450635
+        ]
+      },
+      "id": "node/2164432338"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2164442219",
+        "is_in": "Nevenema Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Baenga",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7572128,
+          -10.7539469
+        ]
+      },
+      "id": "node/2164442219"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2165128229",
+        "is_in": "Nevenema Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Mali",
+        "place": "village",
+        "population": "124",
+        "source": "Bing;Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7531584,
+          -10.7819217
+        ]
+      },
+      "id": "node/2165128229"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2166825741",
+        "is_in": "Nevenema Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Melvu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7553041,
+          -10.8018623
+        ]
+      },
+      "id": "node/2166825741"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2166825746",
+        "is_in": "Nevenema Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "landuse": "residential",
+        "name": "Matedapa",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7647467,
+          -10.8155665
+        ]
+      },
+      "id": "node/2166825746"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2166908302",
+        "is_in": "Nea/Noole Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Nonia",
+        "place": "village",
+        "population": "238",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8616511,
+          -10.862888
+        ]
+      },
+      "id": "node/2166908302"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2166932348",
+        "is_in": "Nea/Noole Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Banwawa",
+        "place": "village",
+        "population": "262"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8750544,
+          -10.8276233
+        ]
+      },
+      "id": "node/2166932348"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2166954268",
+        "is_in": "Nea/Noole Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Jericho",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8636179,
+          -10.826156
+        ]
+      },
+      "id": "node/2166954268"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2170258943",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Notenodir",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8552733,
+          -10.6810529
+        ]
+      },
+      "id": "node/2170258943"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2170329241",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0616684,
+          -10.6564401
+        ]
+      },
+      "id": "node/2170329241"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2170329250",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Laki",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.061297,
+          -10.6596311
+        ]
+      },
+      "id": "node/2170329250"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2170329259",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Lueni",
+        "place": "village",
+        "population": "50",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0674214,
+          -10.6590531
+        ]
+      },
+      "id": "node/2170329259"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2170331856",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Noavi",
+        "place": "village",
+        "population": "34",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0806782,
+          -10.6624592
+        ]
+      },
+      "id": "node/2170331856"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2170773760",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Manoda",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1377589,
+          -10.6837802
+        ]
+      },
+      "id": "node/2170773760"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2170773761",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Nowi",
+        "place": "village",
+        "population": "19",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1379121,
+          -10.6700784
+        ]
+      },
+      "id": "node/2170773761"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2170778195",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Gaito",
+        "place": "village",
+        "population": "148",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1344815,
+          -10.7039169
+        ]
+      },
+      "id": "node/2170778195"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2170891920",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Potega",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0407374,
+          -10.6561658
+        ]
+      },
+      "id": "node/2170891920"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2170895436",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Gua ?",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0124168,
+          -10.6593208
+        ]
+      },
+      "id": "node/2170895436"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2170895437",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Maleu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0182328,
+          -10.6558227
+        ]
+      },
+      "id": "node/2170895437"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178114731",
+        "is_in": "Nea/Noole Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Manidu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7779743,
+          -10.8292868
+        ]
+      },
+      "id": "node/2178114731"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178115173",
+        "is_in": "Nea/Noole Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Manewa",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7954994,
+          -10.8232577
+        ]
+      },
+      "id": "node/2178115173"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178115174",
+        "is_in": "Nea/Noole Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Noipa",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7922307,
+          -10.8208144
+        ]
+      },
+      "id": "node/2178115174"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178116691",
+        "is_in": "Nea/Noole Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Toa",
+        "place": "village",
+        "source": "spc"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7920536,
+          -10.8076942
+        ]
+      },
+      "id": "node/2178116691"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178122515",
+        "is_in": "Nea/Noole Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Noole",
+        "place": "village",
+        "population": "57",
+        "source": "Bing;Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8540265,
+          -10.8540813
+        ]
+      },
+      "id": "node/2178122515"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178126196",
+        "is_in": "Nea/Noole Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Nembono- Nemboi?",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8589366,
+          -10.8634547
+        ]
+      },
+      "id": "node/2178126196"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178126197",
+        "is_in": "Nea/Noole Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8584186,
+          -10.8647093
+        ]
+      },
+      "id": "node/2178126197"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178141286",
+        "FIXME": "name",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8598201,
+          -10.8224934
+        ]
+      },
+      "id": "node/2178141286"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178141287",
+        "FIXME": "name",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8600467,
+          -10.8212121
+        ]
+      },
+      "id": "node/2178141287"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178141297",
+        "FIXME": "name",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8597426,
+          -10.8157216
+        ]
+      },
+      "id": "node/2178141297"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178141315",
+        "is_in": "Nea/Noole Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Dueboi",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8548144,
+          -10.8077102
+        ]
+      },
+      "id": "node/2178141315"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178141316",
+        "is_in": "Nea/Noole Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Muni",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8574547,
+          -10.8105139
+        ]
+      },
+      "id": "node/2178141316"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178143781",
+        "is_in": "Nea/Noole Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8490276,
+          -10.8032057
+        ]
+      },
+      "id": "node/2178143781"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178143796",
+        "fixme": "please add name",
+        "is_in": "Nea/Noole Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.840081,
+          -10.8018139
+        ]
+      },
+      "id": "node/2178143796"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178165983",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0541964,
+          -10.7797267
+        ]
+      },
+      "id": "node/2178165983"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178165984",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0580124,
+          -10.7793261
+        ]
+      },
+      "id": "node/2178165984"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178168997",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0018925,
+          -10.7731469
+        ]
+      },
+      "id": "node/2178168997"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178191973",
+        "is_in": "Nibang Noi Island;Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0798187,
+          -10.8091436
+        ]
+      },
+      "id": "node/2178191973"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178191977",
+        "is_in": "Nibang Noi Island;Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.078888,
+          -10.810787
+        ]
+      },
+      "id": "node/2178191977"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178206966",
+        "is_in": "Nibang Noi Island;Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0758308,
+          -10.8145753
+        ]
+      },
+      "id": "node/2178206966"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178206967",
+        "is_in": "Nibang Noi Island;Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.073768,
+          -10.8158288
+        ]
+      },
+      "id": "node/2178206967"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178206968",
+        "is_in": "Nibang Noi Island;Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0665912,
+          -10.8211505
+        ]
+      },
+      "id": "node/2178206968"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178206969",
+        "is_in": "Nibang Noi Island;Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0650012,
+          -10.8223538
+        ]
+      },
+      "id": "node/2178206969"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178206970",
+        "is_in": "Nibang Noi Island;Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0628811,
+          -10.8231488
+        ]
+      },
+      "id": "node/2178206970"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178206971",
+        "is_in": "Nibang Noi Island;Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0579246,
+          -10.823994
+        ]
+      },
+      "id": "node/2178206971"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178206972",
+        "is_in": "Nibang Noi Island;Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0544293,
+          -10.8229811
+        ]
+      },
+      "id": "node/2178206972"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178207522",
+        "is_in": "Nibang Noi Island;Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.047497,
+          -10.8244731
+        ]
+      },
+      "id": "node/2178207522"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178207523",
+        "is_in": "Nibang Noi Island;Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0536448,
+          -10.8255149
+        ]
+      },
+      "id": "node/2178207523"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178207524",
+        "is_in": "Nibang Noi Island;Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0487703,
+          -10.8277785
+        ]
+      },
+      "id": "node/2178207524"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178215444",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-22",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.098808,
+          -10.7579882
+        ]
+      },
+      "id": "node/2178215444"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178215445",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-21",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1002619,
+          -10.7605541
+        ]
+      },
+      "id": "node/2178215445"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178215446",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "L-15",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1142859,
+          -10.7237187
+        ]
+      },
+      "id": "node/2178215446"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178215447",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-23",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.101353,
+          -10.7554398
+        ]
+      },
+      "id": "node/2178215447"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178215448",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-27",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1218325,
+          -10.7386833
+        ]
+      },
+      "id": "node/2178215448"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178215449",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-25",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1204404,
+          -10.7428518
+        ]
+      },
+      "id": "node/2178215449"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178241634",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1203855,
+          -10.7326095
+        ]
+      },
+      "id": "node/2178241634"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178241640",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-17",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1128561,
+          -10.7273462
+        ]
+      },
+      "id": "node/2178241640"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178241643",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-18",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1115904,
+          -10.7278612
+        ]
+      },
+      "id": "node/2178241643"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178241647",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-19",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1094876,
+          -10.7312354
+        ]
+      },
+      "id": "node/2178241647"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178241651",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-20",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1116848,
+          -10.7328069
+        ]
+      },
+      "id": "node/2178241651"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178241668",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-14",
+        "place": "village",
+        "source": "Bing;Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1136849,
+          -10.7199402
+        ]
+      },
+      "id": "node/2178241668"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178241673",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-12",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1206746,
+          -10.7190481
+        ]
+      },
+      "id": "node/2178241673"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178241677",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-11",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1200803,
+          -10.716854
+        ]
+      },
+      "id": "node/2178241677"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178241688",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-13",
+        "place": "village",
+        "source": "Bing;Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1187482,
+          -10.7180163
+        ]
+      },
+      "id": "node/2178241688"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178241692",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-16",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1143052,
+          -10.7251633
+        ]
+      },
+      "id": "node/2178241692"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178241705",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-08",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1251611,
+          -10.7109918
+        ]
+      },
+      "id": "node/2178241705"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178241710",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-09",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1262636,
+          -10.7124968
+        ]
+      },
+      "id": "node/2178241710"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178241714",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-10",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1247235,
+          -10.7146582
+        ]
+      },
+      "id": "node/2178241714"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178241732",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-07",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1221503,
+          -10.7072459
+        ]
+      },
+      "id": "node/2178241732"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178241735",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-05",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1314688,
+          -10.7063392
+        ]
+      },
+      "id": "node/2178241735"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178241739",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-04",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1363937,
+          -10.705964
+        ]
+      },
+      "id": "node/2178241739"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178241743",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-06",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1280683,
+          -10.7056122
+        ]
+      },
+      "id": "node/2178241743"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178241764",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-03?",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1372612,
+          -10.7002249
+        ]
+      },
+      "id": "node/2178241764"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178241769",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-01?",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1433919,
+          -10.6905877
+        ]
+      },
+      "id": "node/2178241769"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178241772",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-02?",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1411331,
+          -10.6982322
+        ]
+      },
+      "id": "node/2178241772"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178257755",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "ne01?",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0715372,
+          -10.6584465
+        ]
+      },
+      "id": "node/2178257755"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178271102",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "LH-26",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1230665,
+          -10.7421337
+        ]
+      },
+      "id": "node/2178271102"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178299292",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Mau",
+        "place": "village",
+        "population": "100",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1089324,
+          -10.7545359
+        ]
+      },
+      "id": "node/2178299292"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178336333",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0319083,
+          -10.6510797
+        ]
+      },
+      "id": "node/2178336333"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178336334",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0018443,
+          -10.6597985
+        ]
+      },
+      "id": "node/2178336334"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178339518",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.9708896,
+          -10.6613287
+        ]
+      },
+      "id": "node/2178339518"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178345707",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Nganubo",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.9663659,
+          -10.6615377
+        ]
+      },
+      "id": "node/2178345707"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178345886",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Nuela",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.9600724,
+          -10.6618359
+        ]
+      },
+      "id": "node/2178345886"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178355599",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Lueselemba",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.9376542,
+          -10.6585884
+        ]
+      },
+      "id": "node/2178355599"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178355600",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Pia",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.9199589,
+          -10.6572315
+        ]
+      },
+      "id": "node/2178355600"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178355601",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.9265367,
+          -10.6553808
+        ]
+      },
+      "id": "node/2178355601"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178355602",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Menelu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.9132696,
+          -10.6608437
+        ]
+      },
+      "id": "node/2178355602"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178355603",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Mane",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.901987,
+          -10.6568524
+        ]
+      },
+      "id": "node/2178355603"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178355604",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "New Matema",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.9055546,
+          -10.6588592
+        ]
+      },
+      "id": "node/2178355604"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178355605",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Naban",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.9071266,
+          -10.661992
+        ]
+      },
+      "id": "node/2178355605"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178370131",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Nepia",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8958956,
+          -10.6577884
+        ]
+      },
+      "id": "node/2178370131"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178406471",
+        "is_in": "Graciosa Bay Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Namo",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.842987,
+          -10.6995507
+        ]
+      },
+      "id": "node/2178406471"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178406472",
+        "is_in": "Graciosa Bay Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "GC-02",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.84138,
+          -10.7057929
+        ]
+      },
+      "id": "node/2178406472"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178429497",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Otomongi",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.934543,
+          -10.6567825
+        ]
+      },
+      "id": "node/2178429497"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178429499",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Ngapali",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.9345788,
+          -10.6643498
+        ]
+      },
+      "id": "node/2178429499"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178429509",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Ngapali 2",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.9371736,
+          -10.6636807
+        ]
+      },
+      "id": "node/2178429509"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178429524",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Matela",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.945333,
+          -10.6597211
+        ]
+      },
+      "id": "node/2178429524"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178442491",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Manoba",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.9640112,
+          -10.6646684
+        ]
+      },
+      "id": "node/2178442491"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178448348",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Mangir",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.9808717,
+          -10.6620776
+        ]
+      },
+      "id": "node/2178448348"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178448349",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Taipe",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.974155,
+          -10.6618922
+        ]
+      },
+      "id": "node/2178448349"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178448356",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Gua ?",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.9927431,
+          -10.6617595
+        ]
+      },
+      "id": "node/2178448356"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2178458951",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Uta",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8641458,
+          -10.6764282
+        ]
+      },
+      "id": "node/2178458951"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2181025315",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.9179441,
+          -10.7989673
+        ]
+      },
+      "id": "node/2181025315"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2181025333",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0075849,
+          -10.7781847
+        ]
+      },
+      "id": "node/2181025333"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2181025361",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.03188,
+          -10.7825321
+        ]
+      },
+      "id": "node/2181025361"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2181039886",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.9600884,
+          -10.6597084
+        ]
+      },
+      "id": "node/2181039886"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2181039887",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.9553808,
+          -10.6610547
+        ]
+      },
+      "id": "node/2181039887"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2181039888",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1350838,
+          -10.6686306
+        ]
+      },
+      "id": "node/2181039888"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2181039889",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.1465186,
+          -10.6782924
+        ]
+      },
+      "id": "node/2181039889"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2183834719",
+        "is_in": "Nea/Noole Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8699638,
+          -10.8531331
+        ]
+      },
+      "id": "node/2183834719"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2183862394",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "unknown",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0847772,
+          -10.7509459
+        ]
+      },
+      "id": "node/2183862394"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2183862403",
+        "is_in": "Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "noname",
+        "place": "village",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0875392,
+          -10.7400619
+        ]
+      },
+      "id": "node/2183862403"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2183876242",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8982419,
+          -10.6563327
+        ]
+      },
+      "id": "node/2183876242"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2183882205",
+        "is_in": "NE Santa Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8920159,
+          -10.6570947
+        ]
+      },
+      "id": "node/2183882205"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2183890343",
+        "is_in": "Nibang Noi Island;Nanggu/Lord Howe Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.0727773,
+          -10.7850431
+        ]
+      },
+      "id": "node/2183890343"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2193768524",
+        "is_in": "Luva Station Ward; Nendo; Temotu; Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Luelta",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.801204,
+          -10.722588
+        ]
+      },
+      "id": "node/2193768524"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2207233780",
+        "is_in": "Tömotu Neo Island; Nendo; Temotu; Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Neo",
+        "place": "village",
+        "source": "Secretariat of the Pacific Community (spc.int)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.80473,
+          -10.652814
+        ]
+      },
+      "id": "node/2207233780"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2207233782",
+        "is_in": "Tömotu Neo Island; Nendo; Temotu; Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Mamineo Sch.",
+        "place": "village",
+        "source": "Secretariat of the Pacific Community (spc.int)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.812176,
+          -10.656371
+        ]
+      },
+      "id": "node/2207233782"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2207240110",
+        "is_in": "Tömotu Neo Island; Nendo; Temotu; Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Nemba",
+        "place": "village",
+        "source": "Secretariat of the Pacific Community (spc.int)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.813968,
+          -10.658129
+        ]
+      },
+      "id": "node/2207240110"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2210085853",
+        "is_in": "Nevenema Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Manda",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7656718,
+          -10.7443958
+        ]
+      },
+      "id": "node/2210085853"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2210085859",
+        "is_in": "Nevenema Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Luenuirkir",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7632098,
+          -10.7485777
+        ]
+      },
+      "id": "node/2210085859"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2210087953",
+        "is_in": "Nevenema Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Mbaenga",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7591482,
+          -10.7577131
+        ]
+      },
+      "id": "node/2210087953"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2210095545",
+        "is_in": "Nevenema Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Birlamna",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7527022,
+          -10.781009
+        ]
+      },
+      "id": "node/2210095545"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2210113333",
+        "is_in": "Nevenema Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Nioli",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7529171,
+          -10.7919851
+        ]
+      },
+      "id": "node/2210113333"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2210113334",
+        "is_in": "Nevenema Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Meatuir",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7571893,
+          -10.8040775
+        ]
+      },
+      "id": "node/2210113334"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2210125569",
+        "is_in": "Nea/Noole Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Meplala",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7685254,
+          -10.8252802
+        ]
+      },
+      "id": "node/2210125569"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2210125570",
+        "is_in": "Nea/Noole Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Mbanyo / Maumgelu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7682543,
+          -10.8230585
+        ]
+      },
+      "id": "node/2210125570"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2210127633",
+        "is_in": "Nea/Noole Ward;Nendo;Temotu;Solomon Islands",
+        "is_in:country": "Solomon Islands",
+        "is_in:state": "Temotu",
+        "name": "Nimepu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.7816605,
+          -10.8315437
+        ]
+      },
+      "id": "node/2210127633"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2393547297",
+        "name": "Not Known",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.1119298,
+          -9.6681711
+        ]
+      },
+      "id": "node/2393547297"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2393551970",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.173722,
+          -9.6339864
+        ]
+      },
+      "id": "node/2393551970"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2393552038",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.2620629,
+          -9.5847553
+        ]
+      },
+      "id": "node/2393552038"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2393552110",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.1488686,
+          -9.6554369
+        ]
+      },
+      "id": "node/2393552110"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2393552325",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.2646864,
+          -9.5947417
+        ]
+      },
+      "id": "node/2393552325"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2393552410",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.1286984,
+          -9.6650408
+        ]
+      },
+      "id": "node/2393552410"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2393560096",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.4102067,
+          -9.5060702
+        ]
+      },
+      "id": "node/2393560096"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2524301750",
+        "alt_name": "Mbonala",
+        "name": "Bonala",
+        "place": "village",
+        "population": "413"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.830691,
+          -9.1154885
+        ]
+      },
+      "id": "node/2524301750"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2524301760",
+        "name": "Kuila",
+        "place": "village",
+        "population": "312"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.7876837,
+          -9.1185906
+        ]
+      },
+      "id": "node/2524301760"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2524301762",
+        "name": "Leboni",
+        "place": "village",
+        "population": "105"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.8345856,
+          -9.1198566
+        ]
+      },
+      "id": "node/2524301762"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2524301768",
+        "name": "Reko",
+        "place": "village",
+        "population": "292",
+        "wikidata": "Q7310634"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.8087522,
+          -9.1620694
+        ]
+      },
+      "id": "node/2524301768"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2528362926",
+        "name": "Davalaka",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.7981915,
+          -9.1076399
+        ]
+      },
+      "id": "node/2528362926"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2528362927",
+        "name": "Paibeta",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.83826,
+          -9.1273056
+        ]
+      },
+      "id": "node/2528362927"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2528362929",
+        "name": "Raja",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.7978701,
+          -9.1077769
+        ]
+      },
+      "id": "node/2528362929"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2528362931",
+        "name": "Sapeka",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.8381993,
+          -9.127996
+        ]
+      },
+      "id": "node/2528362931"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2528362934",
+        "name": "Sisiaka",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.8021041,
+          -9.1060527
+        ]
+      },
+      "id": "node/2528362934"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2528362937",
+        "name": "Tanakidi",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.804022,
+          -9.1058868
+        ]
+      },
+      "id": "node/2528362937"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2528379951",
+        "name": "Birasu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.8373584,
+          -9.1411525
+        ]
+      },
+      "id": "node/2528379951"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2528379955",
+        "name": "Bulai",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.837744,
+          -9.1324877
+        ]
+      },
+      "id": "node/2528379955"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2528379958",
+        "name": "Gareka",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.8350549,
+          -9.1452688
+        ]
+      },
+      "id": "node/2528379958"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2528379961",
+        "name": "Kaogele",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.8359096,
+          -9.1427476
+        ]
+      },
+      "id": "node/2528379961"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2528379964",
+        "name": "Koromido",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.8372021,
+          -9.1385181
+        ]
+      },
+      "id": "node/2528379964"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2528379967",
+        "name": "Niupelesi",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.8007761,
+          -9.1072393
+        ]
+      },
+      "id": "node/2528379967"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2528379970",
+        "name": "Pogholauka",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.8372542,
+          -9.1299562
+        ]
+      },
+      "id": "node/2528379970"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2528379978",
+        "name": "Sighosapa",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.7941134,
+          -9.1099191
+        ]
+      },
+      "id": "node/2528379978"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2528379979",
+        "name": "Soghoka",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.8366496,
+          -9.136851
+        ]
+      },
+      "id": "node/2528379979"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2528379980",
+        "name": "Tanavalea",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.7997939,
+          -9.1075006
+        ]
+      },
+      "id": "node/2528379980"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2528379981",
+        "name": "Verarodo",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.8049711,
+          -9.105232
+        ]
+      },
+      "id": "node/2528379981"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2528389211",
+        "name": "Riroghala",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.8368411,
+          -9.1243747
+        ]
+      },
+      "id": "node/2528389211"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2613625262",
+        "capital": "4",
+        "name": "Buala",
+        "name:ja": "ブアラ",
+        "place": "town",
+        "wikidata": "Q574769",
+        "wikipedia": "en:Buala"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.5930366,
+          -8.145546
+        ]
+      },
+      "id": "node/2613625262"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2651721333",
+        "name": "Ro'one",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.5486424,
+          -9.5788124
+        ]
+      },
+      "id": "node/2651721333"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2651721334",
+        "name": "Sa'a",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.5762353,
+          -9.6917478
+        ]
+      },
+      "id": "node/2651721334"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2651721335",
+        "name": "Walade Island",
+        "place": "island"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.5377987,
+          -9.5191715
+        ]
+      },
+      "id": "node/2651721335"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2651806775",
+        "name": "Alite'au",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.6637534,
+          -8.4692916
+        ]
+      },
+      "id": "node/2651806775"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2651806776",
+        "name": "Gwaunatafu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.7173521,
+          -8.5418686
+        ]
+      },
+      "id": "node/2651806776"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2651988254",
+        "name": "Pokilo",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.817874,
+          -9.101424
+        ]
+      },
+      "id": "node/2651988254"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2652003753",
+        "name": "Ahi'a",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.9634443,
+          -9.824899
+        ]
+      },
+      "id": "node/2652003753"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2652003754",
+        "name": "Amau",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.9883151,
+          -9.8313213
+        ]
+      },
+      "id": "node/2652003754"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2652003755",
+        "name": "Arona",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.988493,
+          -9.8563739
+        ]
+      },
+      "id": "node/2652003755"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2652003756",
+        "name": "Ha'au",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.9905396,
+          -9.8104975
+        ]
+      },
+      "id": "node/2652003756"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2652003757",
+        "name": "Hadja",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.9542094,
+          -9.7792307
+        ]
+      },
+      "id": "node/2652003757"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2652003758",
+        "name": "Hara'ina",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.9607161,
+          -9.721526
+        ]
+      },
+      "id": "node/2652003758"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2652003760",
+        "name": "Kelimei",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.982339,
+          -9.7223592
+        ]
+      },
+      "id": "node/2652003760"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2652003761",
+        "name": "Manau",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.9856314,
+          -9.7958042
+        ]
+      },
+      "id": "node/2652003761"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2652003762",
+        "name": "Moli",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.9919714,
+          -9.7268979
+        ]
+      },
+      "id": "node/2652003762"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2652003763",
+        "name": "Mouta",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.9861208,
+          -9.7821249
+        ]
+      },
+      "id": "node/2652003763"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2652003764",
+        "name": "Mwarada",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.9618307,
+          -9.8115955
+        ]
+      },
+      "id": "node/2652003764"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2652003765",
+        "name": "Parapara",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.9846081,
+          -9.777302
+        ]
+      },
+      "id": "node/2652003765"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2652003767",
+        "name": "Rjiei",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.9855869,
+          -9.7799984
+        ]
+      },
+      "id": "node/2652003767"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2652003768",
+        "name": "Rongoleiei",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.9863877,
+          -9.7542604
+        ]
+      },
+      "id": "node/2652003768"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2652003769",
+        "name": "Su'Utaluhia",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.9487039,
+          -9.7631396
+        ]
+      },
+      "id": "node/2652003769"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2652003771",
+        "name": "Su'ulopo",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.9913182,
+          -9.8138294
+        ]
+      },
+      "id": "node/2652003771"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2652003772",
+        "name": "Su'utdlaito",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.9886487,
+          -9.8032198
+        ]
+      },
+      "id": "node/2652003772"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2652003773",
+        "name": "Suholo",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          161.9859873,
+          -9.7872766
+        ]
+      },
+      "id": "node/2652003773"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2669826281",
+        "name": "Tegano",
+        "place": "village",
+        "wikidata": "Q2400282"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.4330682,
+          -11.7430683
+        ]
+      },
+      "id": "node/2669826281"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2669826284",
+        "name": "Kiakoe",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.4212718,
+          -11.6981971
+        ]
+      },
+      "id": "node/2669826284"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2669826285",
+        "name": "Lavangu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.2806137,
+          -11.6560521
+        ]
+      },
+      "id": "node/2669826285"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2669826328",
+        "name": "Kangua",
+        "name:en": "Kangua",
+        "place": "village",
+        "wikidata": "Q15233497",
+        "wikipedia": "en:Kangua"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.0098616,
+          -11.5169677
+        ]
+      },
+      "id": "node/2669826328"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2669826366",
+        "name": "Tepoogima",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.0439209,
+          -11.5225476
+        ]
+      },
+      "id": "node/2669826366"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2669827037",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.1017965,
+          -11.5853621
+        ]
+      },
+      "id": "node/2669827037"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2669827277",
+        "name": "Tahanuku",
+        "place": "village",
+        "wikidata": "Q7675405"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.1257395,
+          -11.6109165
+        ]
+      },
+      "id": "node/2669827277"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2669827491",
+        "Matangi": "Lughughi",
+        "fixme": "position",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.0947933,
+          -11.6308715
+        ]
+      },
+      "id": "node/2669827491"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2669827507",
+        "fixme": "position",
+        "name": "Lavangu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.172681,
+          -11.6310827
+        ]
+      },
+      "id": "node/2669827507"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2669828332",
+        "name": "Tebaitahe",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.4076546,
+          -11.7131246
+        ]
+      },
+      "id": "node/2669828332"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2669828336",
+        "name": "Niupani",
+        "place": "village",
+        "wikidata": "Q7041710"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.4245949,
+          -11.7293692
+        ]
+      },
+      "id": "node/2669828336"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2669828340",
+        "alt_name": "Tingoa",
+        "name": "Tigoa",
+        "place": "village",
+        "wikidata": "Q987011",
+        "wikipedia": "en:Tigoa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.0652119,
+          -11.5550605
+        ]
+      },
+      "id": "node/2669828340"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2685981693",
+        "name": "Avuavu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.6224609,
+          -9.9396066
+        ]
+      },
+      "id": "node/2685981693"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2685981694",
+        "name": "Kologhona",
+        "place": "village",
+        "wikidata": "Q6427463"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.8361799,
+          -9.7387592
+        ]
+      },
+      "id": "node/2685981694"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2685981695",
+        "name": "Kolohaumbi",
+        "place": "town",
+        "wikidata": "Q101540197"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.5506022,
+          -9.915433
+        ]
+      },
+      "id": "node/2685981695"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2685981696",
+        "name": "Kuma",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.4114259,
+          -9.8687607
+        ]
+      },
+      "id": "node/2685981696"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2685981697",
+        "name": "Marakuru",
+        "name:el": "Μαρακούρου",
+        "name:ja": "マラクル",
+        "name:ru": "Маракуру",
+        "name:th": "มา รา คูรู",
+        "name:zh-Hans": "马拉库鲁",
+        "name:zh-Hant": "馬拉庫魯",
+        "place": "town"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.5756805,
+          -9.9171492
+        ]
+      },
+      "id": "node/2685981697"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2685981698",
+        "name": "Mbabanakira",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.8174477,
+          -9.7960521
+        ]
+      },
+      "id": "node/2685981698"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2685983736",
+        "name": "Takatakati",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.7184097,
+          -9.6901711
+        ]
+      },
+      "id": "node/2685983736"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508042492",
+        "name": "Pat'paele",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9401724,
+          -7.9642787
+        ]
+      },
+      "id": "node/3508042492"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508047308",
+        "name": "Varu 2",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9468243,
+          -7.9467252
+        ]
+      },
+      "id": "node/3508047308"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508047326",
+        "name": "Varu 1",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9470389,
+          -7.943325
+        ]
+      },
+      "id": "node/3508047326"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508047555",
+        "name": "Piluzei",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9409692,
+          -7.9665326
+        ]
+      },
+      "id": "node/3508047555"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508048311",
+        "name": "Sandfly",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9400651,
+          -7.9777727
+        ]
+      },
+      "id": "node/3508048311"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508049280",
+        "name": "Poporo",
+        "place": "hamlet",
+        "source": "Local knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9412239,
+          -7.9884188
+        ]
+      },
+      "id": "node/3508049280"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508049378",
+        "name": "Qolezavanga",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9415672,
+          -7.9821926
+        ]
+      },
+      "id": "node/3508049378"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508052126",
+        "name": "Engarano",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9400651,
+          -7.9750952
+        ]
+      },
+      "id": "node/3508052126"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508052446",
+        "name": "Padobuni",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9427259,
+          -7.9812577
+        ]
+      },
+      "id": "node/3508052446"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508052744",
+        "name": "Iriva",
+        "place": "hamlet",
+        "source": "Local knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9465775,
+          -7.9764658
+        ]
+      },
+      "id": "node/3508052744"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508056394",
+        "name": "Peoro",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9412131,
+          -7.9686988
+        ]
+      },
+      "id": "node/3508056394"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508061030",
+        "name": "Piu",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9457733,
+          -7.9542043
+        ]
+      },
+      "id": "node/3508061030"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508061715",
+        "name": "Ove",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.946835,
+          -7.9498917
+        ]
+      },
+      "id": "node/3508061715"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508062124",
+        "name": "Nusamahiri",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9478006,
+          -7.9356636
+        ]
+      },
+      "id": "node/3508062124"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508067539",
+        "name": "Rei",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0337923,
+          -7.8551631
+        ]
+      },
+      "id": "node/3508067539"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508068405",
+        "name": "Jack Harbour",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1964629,
+          -8.0590458
+        ]
+      },
+      "id": "node/3508068405"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508068701",
+        "name": "Tuki",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0718694,
+          -7.8431207
+        ]
+      },
+      "id": "node/3508068701"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508068966",
+        "name": "Poitete",
+        "place": "town",
+        "source": "Local knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1357806,
+          -7.8824128
+        ]
+      },
+      "id": "node/3508068966"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508072174",
+        "name": "Teme",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1591265,
+          -8.1283542
+        ]
+      },
+      "id": "node/3508072174"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508073803",
+        "name": "Vila",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1432432,
+          -8.1378697
+        ]
+      },
+      "id": "node/3508073803"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508073903",
+        "name": "Bere",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1369071,
+          -8.1339939
+        ]
+      },
+      "id": "node/3508073903"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508074082",
+        "name": "Nusa Tuva",
+        "place": "hamlet",
+        "source": "Local knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1059437,
+          -8.1211212
+        ]
+      },
+      "id": "node/3508074082"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508074169",
+        "name": "Ringgi Wharf",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1136792,
+          -8.121546
+        ]
+      },
+      "id": "node/3508074169"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508075389",
+        "name": "Ringgi",
+        "place": "town",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1291716,
+          -8.1132614
+        ]
+      },
+      "id": "node/3508075389"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508075565",
+        "name": "Ilitona",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1000965,
+          -8.1177436
+        ]
+      },
+      "id": "node/3508075565"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508077358",
+        "name": "Vanikoro 2",
+        "place": "hamlet",
+        "source": "Local knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1020062,
+          -8.1256458
+        ]
+      },
+      "id": "node/3508077358"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508079977",
+        "name": "Tughagha",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0681031,
+          -8.1179985
+        ]
+      },
+      "id": "node/3508079977"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508080733",
+        "name": "Vovohe",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.093509,
+          -8.1182853
+        ]
+      },
+      "id": "node/3508080733"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508081182",
+        "name": "Kaza",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0717241,
+          -8.1142492
+        ]
+      },
+      "id": "node/3508081182"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508083432",
+        "name": "Lodughorama",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0548315,
+          -8.1104892
+        ]
+      },
+      "id": "node/3508083432"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508086323",
+        "name": "Dulo",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0523317,
+          -8.1088853
+        ]
+      },
+      "id": "node/3508086323"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508086324",
+        "name": "Korare",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.030726,
+          -8.1094376
+        ]
+      },
+      "id": "node/3508086324"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508089069",
+        "name": "Taghoapa",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9656427,
+          -8.0506218
+        ]
+      },
+      "id": "node/3508089069"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508089180",
+        "name": "Meresu",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9570382,
+          -8.0348143
+        ]
+      },
+      "id": "node/3508089180"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508089224",
+        "name": "Pepele",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9605787,
+          -8.0478173
+        ]
+      },
+      "id": "node/3508089224"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508090829",
+        "name": "Ngir'vaka",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.081557,
+          -7.8445879
+        ]
+      },
+      "id": "node/3508090829"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508091810",
+        "name": "Mumaini",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0864708,
+          -7.8455551
+        ]
+      },
+      "id": "node/3508091810"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508091822",
+        "name": "Nughusu",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1239037,
+          -7.86171
+        ]
+      },
+      "id": "node/3508091822"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508092482",
+        "name": "Sausama",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9496782,
+          -7.9316469
+        ]
+      },
+      "id": "node/3508092482"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508093134",
+        "name": "Voikedaka",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9476826,
+          -7.9967272
+        ]
+      },
+      "id": "node/3508093134"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508093207",
+        "name": "Titiana",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9464059,
+          -7.9998083
+        ]
+      },
+      "id": "node/3508093207"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508094445",
+        "name": "Tiazavanga",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.949528,
+          -7.9951601
+        ]
+      },
+      "id": "node/3508094445"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508094670",
+        "name": "Tan'huka",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9510837,
+          -7.9252393
+        ]
+      },
+      "id": "node/3508094670"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508094671",
+        "name": "Havila",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.952355,
+          -7.9217113
+        ]
+      },
+      "id": "node/3508094671"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508096050",
+        "name": "Vaikiki",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9443137,
+          -7.9904995
+        ]
+      },
+      "id": "node/3508096050"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508096641",
+        "name": "Tobulu",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9845415,
+          -7.8833002
+        ]
+      },
+      "id": "node/3508096641"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508097438",
+        "name": "Quhele",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.9909306,
+          -7.8786401
+        ]
+      },
+      "id": "node/3508097438"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508099098",
+        "name": "Kuboro",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0127208,
+          -7.8673215
+        ]
+      },
+      "id": "node/3508099098"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508100467",
+        "name": "Rapata",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0064552,
+          -7.8685969
+        ]
+      },
+      "id": "node/3508100467"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508100742",
+        "name": "Tahitu",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0232136,
+          -7.8578201
+        ]
+      },
+      "id": "node/3508100742"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508101636",
+        "name": "Win Forever",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0463128,
+          -7.8528036
+        ]
+      },
+      "id": "node/3508101636"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508101661",
+        "name": "Baur'patu",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0495744,
+          -7.8503379
+        ]
+      },
+      "id": "node/3508101661"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508101898",
+        "name": "Karata",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0398326,
+          -7.8528887
+        ]
+      },
+      "id": "node/3508101898"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508103664",
+        "name": "Ropa",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1020491,
+          -7.849934
+        ]
+      },
+      "id": "node/3508103664"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508106322",
+        "name": "Lodumoe",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0696695,
+          -7.8454489
+        ]
+      },
+      "id": "node/3508106322"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508106536",
+        "name": "Hirovido",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0737357,
+          -7.8434401
+        ]
+      },
+      "id": "node/3508106536"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508113101",
+        "name": "Pipiro",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1419926,
+          -7.8800748
+        ]
+      },
+      "id": "node/3508113101"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508113207",
+        "name": "Mamaloku",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1289141,
+          -7.87102
+        ]
+      },
+      "id": "node/3508113207"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508114048",
+        "name": "Ruqasa",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1901811,
+          -7.9812683
+        ]
+      },
+      "id": "node/3508114048"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508114104",
+        "name": "Sunset",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1772153,
+          -7.9234116
+        ]
+      },
+      "id": "node/3508114104"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508114321",
+        "name": "Pulisingau",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1673663,
+          -7.9047937
+        ]
+      },
+      "id": "node/3508114321"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508114494",
+        "name": "Hobobu",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1563585,
+          -7.8981624
+        ]
+      },
+      "id": "node/3508114494"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508114804",
+        "name": "Vao",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1762283,
+          -7.9216476
+        ]
+      },
+      "id": "node/3508114804"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508117656",
+        "name": "Kokove",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1835775,
+          -7.9522719
+        ]
+      },
+      "id": "node/3508117656"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508118281",
+        "name": "Okoko",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1823773,
+          -7.9453904
+        ]
+      },
+      "id": "node/3508118281"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508119349",
+        "name": "Sesepe",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1787925,
+          -7.942188
+        ]
+      },
+      "id": "node/3508119349"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508122365",
+        "name": "Kolwata",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1859701,
+          -8.0102839
+        ]
+      },
+      "id": "node/3508122365"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508123708",
+        "name": "Manighisi",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1843446,
+          -7.99048
+        ]
+      },
+      "id": "node/3508123708"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508123738",
+        "name": "Tututi",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1858735,
+          -8.0164777
+        ]
+      },
+      "id": "node/3508123738"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508125185",
+        "name": "Nughusu 2",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1816142,
+          -8.0228096
+        ]
+      },
+      "id": "node/3508125185"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508125817",
+        "name": "Mangana",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.182966,
+          -8.0585359
+        ]
+      },
+      "id": "node/3508125817"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508125818",
+        "name": "Bokolo",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1803052,
+          -8.0661312
+        ]
+      },
+      "id": "node/3508125818"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508126164",
+        "name": "Sulumuni",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1906532,
+          -8.038984
+        ]
+      },
+      "id": "node/3508126164"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508126789",
+        "name": "Riro",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1885959,
+          -8.0607168
+        ]
+      },
+      "id": "node/3508126789"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508127016",
+        "name": "Single Mate",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1687342,
+          -8.1119655
+        ]
+      },
+      "id": "node/3508127016"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3508129822",
+        "name": "Bibiu",
+        "place": "hamlet",
+        "source": "Local knowledge - IAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1718509,
+          -8.0762758
+        ]
+      },
+      "id": "node/3508129822"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3661149987",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.160136,
+          -9.4107096
+        ]
+      },
+      "id": "node/3661149987"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3661149997",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.1815239,
+          -9.4216431
+        ]
+      },
+      "id": "node/3661149997"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3663191501",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.4774931,
+          -11.2454129
+        ]
+      },
+      "id": "node/3663191501"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3890744262",
+        "name": "Kulavanu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.9788448,
+          -11.6776216
+        ]
+      },
+      "id": "node/3890744262"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3890744263",
+        "name": "Lale",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.8016463,
+          -11.6098664
+        ]
+      },
+      "id": "node/3890744263"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3890744264",
+        "name": "Lovoko",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.8948473,
+          -11.5941601
+        ]
+      },
+      "id": "node/3890744264"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3890744265",
+        "name": "Manieve",
+        "place": "islet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.932842,
+          -11.6609235
+        ]
+      },
+      "id": "node/3890744265"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3890744267",
+        "name": "Muie Village",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.9646206,
+          -11.6552214
+        ]
+      },
+      "id": "node/3890744267"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3890744268",
+        "name": "Murivai",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.912519,
+          -11.7162685
+        ]
+      },
+      "id": "node/3890744268"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3890744270",
+        "name": "Nomianu",
+        "place": "islet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.995069,
+          -11.6201052
+        ]
+      },
+      "id": "node/3890744270"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3890744271",
+        "name": "Paeu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.8382109,
+          -11.6873074
+        ]
+      },
+      "id": "node/3890744271"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3890744273",
+        "name": "Temuo",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.9732378,
+          -11.7083092
+        ]
+      },
+      "id": "node/3890744273"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3890744274",
+        "name": "Usili",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.9573896,
+          -11.6751709
+        ]
+      },
+      "id": "node/3890744274"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3890744275",
+        "name": "Vanu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.8207262,
+          -11.594966
+        ]
+      },
+      "id": "node/3890744275"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4246054744",
+        "name": "Hularu",
+        "place": "village",
+        "wikidata": "Q5935528"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.6415962,
+          -9.5401752
+        ]
+      },
+      "id": "node/4246054744"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4246054745",
+        "name": "Maravovo",
+        "place": "village",
+        "wikidata": "Q15246563"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.596754,
+          -9.3307491
+        ]
+      },
+      "id": "node/4246054745"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4630364662",
+        "name": "Kuma",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.1573472,
+          -9.814563
+        ]
+      },
+      "id": "node/4630364662"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4802923666",
+        "name": "Muru",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.8486144,
+          -11.6138356
+        ]
+      },
+      "id": "node/4802923666"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4802923667",
+        "name": "Mua",
+        "place": "village",
+        "population": "200"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.8510821,
+          -11.6134703
+        ]
+      },
+      "id": "node/4802923667"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5214949260",
+        "name": "Lambukasigha",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.3542752,
+          -9.7870731
+        ]
+      },
+      "id": "node/5214949260"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5471070551",
+        "capital": "4",
+        "name": "Taro Island",
+        "place": "town"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.397805,
+          -6.710342
+        ]
+      },
+      "id": "node/5471070551"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5502316269",
+        "alt_name": "Belaga",
+        "gns:id": "-1548811",
+        "name": "Mbelagha",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.3311825,
+          -9.0743613
+        ]
+      },
+      "id": "node/5502316269"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5511127296",
+        "GNS:id": "-1551560",
+        "gns:ufi": "-1551560",
+        "name": "Siota",
+        "place": "village",
+        "wikidata": "Q28224373"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.3113531,
+          -9.0612943
+        ]
+      },
+      "id": "node/5511127296"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5771912970",
+        "description": "A village in East Kwai'io located within the Uru Harbour.",
+        "name": "Ogou",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.9634232,
+          -8.8445877
+        ]
+      },
+      "id": "node/5771912970"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5840792289",
+        "name": "Hutuna",
+        "place": "village",
+        "wikidata": "Q5951136"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.4458368,
+          -11.7782097
+        ]
+      },
+      "id": "node/5840792289"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6606754484",
+        "name": "Nemu Village",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          165.8010598,
+          -10.7235208
+        ]
+      },
+      "id": "node/6606754484"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7143648231",
+        "name": "Noro",
+        "name:zh": "诺罗",
+        "place": "town",
+        "wikidata": "Q1737364"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1987537,
+          -8.2422346
+        ]
+      },
+      "id": "node/7143648231"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7926577201",
+        "name": "Sabala",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.5430897,
+          -8.0292215
+        ]
+      },
+      "id": "node/7926577201"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7926577202",
+        "name": "Modo",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.5373015,
+          -8.0370591
+        ]
+      },
+      "id": "node/7926577202"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7926577203",
+        "name": "Kudu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.5332367,
+          -8.0898223
+        ]
+      },
+      "id": "node/7926577203"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7926577204",
+        "name": "Saevuke",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.5506589,
+          -8.1112545
+        ]
+      },
+      "id": "node/7926577204"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7926577205",
+        "name": "Ngaidavala",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.5717599,
+          -8.1538152
+        ]
+      },
+      "id": "node/7926577205"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7926577206",
+        "name": "Keara",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.5618384,
+          -8.1278449
+        ]
+      },
+      "id": "node/7926577206"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7926577207",
+        "name": "Lale",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.5812951,
+          -8.1731438
+        ]
+      },
+      "id": "node/7926577207"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7926577208",
+        "name": "Kongu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.611647,
+          -8.1301696
+        ]
+      },
+      "id": "node/7926577208"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7926577209",
+        "name": "Page",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.6020769,
+          -8.1104047
+        ]
+      },
+      "id": "node/7926577209"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7926577210",
+        "name": "Suava",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.6018248,
+          -8.0914581
+        ]
+      },
+      "id": "node/7926577210"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7926577211",
+        "name": "Obobulu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.5965435,
+          -8.0603955
+        ]
+      },
+      "id": "node/7926577211"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7926577212",
+        "name": "Niami",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.5915573,
+          -8.0433216
+        ]
+      },
+      "id": "node/7926577212"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7926577213",
+        "name": "Pienuna",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.5839425,
+          -8.0264594
+        ]
+      },
+      "id": "node/7926577213"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7926577214",
+        "name": "New Bare",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.5800694,
+          -8.0109856
+        ]
+      },
+      "id": "node/7926577214"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7926577215",
+        "name": "Rava",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.5773281,
+          -7.9940531
+        ]
+      },
+      "id": "node/7926577215"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7926577223",
+        "name": "New Mala",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.566669,
+          -7.9669183
+        ]
+      },
+      "id": "node/7926577223"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7926577224",
+        "name": "Kolomali",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.5714085,
+          -7.9768727
+        ]
+      },
+      "id": "node/7926577224"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7926577225",
+        "name": "Koriovuku",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.5551195,
+          -7.945363
+        ]
+      },
+      "id": "node/7926577225"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7926577226",
+        "name": "Buri",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.5390101,
+          -7.9394789
+        ]
+      },
+      "id": "node/7926577226"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7926577229",
+        "name": "Patu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.5755861,
+          -7.9846621
+        ]
+      },
+      "id": "node/7926577229"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7992304469",
+        "name": "Ambu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.70149,
+          -8.7754981
+        ]
+      },
+      "id": "node/7992304469"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7992773553",
+        "name": "Lilisiana",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.6943124,
+          -8.7759593
+        ]
+      },
+      "id": "node/7992773553"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7993845183",
+        "name": "Gwaunaruu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.682838,
+          -8.7060351
+        ]
+      },
+      "id": "node/7993845183"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7993845184",
+        "name": "KIlusakwalo",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.7053041,
+          -8.7318897
+        ]
+      },
+      "id": "node/7993845184"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7993845185",
+        "name": "Fiu",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.706495,
+          -8.7244665
+        ]
+      },
+      "id": "node/7993845185"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8189947118",
+        "name": "Ritamala",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          158.2431951,
+          -7.4754606
+        ]
+      },
+      "id": "node/8189947118"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8189947119",
+        "name": "Kupikolo",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          158.2812849,
+          -7.4759915
+        ]
+      },
+      "id": "node/8189947119"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8189947120",
+        "name": "Tobi",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          158.4224118,
+          -7.5205822
+        ]
+      },
+      "id": "node/8189947120"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9731582169",
+        "name": "Kola'a",
+        "name:ja": "コラーア",
+        "place": "town"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.9736902,
+          -9.4399908
+        ]
+      },
+      "id": "node/9731582169"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9731582179",
+        "name": "Panatina",
+        "place": "town"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.0018676,
+          -9.4313664
+        ]
+      },
+      "id": "node/9731582179"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9731582210",
+        "name": "Mamara",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.8970322,
+          -9.4154887
+        ]
+      },
+      "id": "node/9731582210"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9731582211",
+        "name": "Kakambona",
+        "place": "village",
+        "wikidata": "Q6426894"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.9073265,
+          -9.4265139
+        ]
+      },
+      "id": "node/9731582211"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9731582729",
+        "name": "Tuvaruhu",
+        "place": "town"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.9568993,
+          -9.4543651
+        ]
+      },
+      "id": "node/9731582729"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9734785122",
+        "name": "Doma",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.8053221,
+          -9.3237905
+        ]
+      },
+      "id": "node/9734785122"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9734785123",
+        "name": "Marino",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.799332,
+          -9.3225313
+        ]
+      },
+      "id": "node/9734785123"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9734785124",
+        "name": "Taboko",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.8224664,
+          -9.3482823
+        ]
+      },
+      "id": "node/9734785124"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9734785126",
+        "name": "Bohu",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.8328255,
+          -9.3462726
+        ]
+      },
+      "id": "node/9734785126"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9734785127",
+        "name": "Vura",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.8294109,
+          -9.3668009
+        ]
+      },
+      "id": "node/9734785127"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9734785129",
+        "name": "Araveu",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.8648031,
+          -9.3710083
+        ]
+      },
+      "id": "node/9734785129"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9734785131",
+        "name": "Veramboli",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.868321,
+          -9.4273049
+        ]
+      },
+      "id": "node/9734785131"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9734785177",
+        "name": "Aruligo",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          159.761514,
+          -9.2856304
+        ]
+      },
+      "id": "node/9734785177"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12345362641",
+        "name": "Namonsao village",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          160.9046825,
+          -8.7958939
+        ]
+      },
+      "id": "node/12345362641"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12693025909",
+        "name": "Oema Atoll",
+        "place": "island"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          156.1152291,
+          -6.6471735
+        ]
+      },
+      "id": "node/12693025909"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12813983740",
+        "name": "Papautameasina Rocks",
+        "place": "island"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          155.9431279,
+          -6.9394203
+        ]
+      },
+      "id": "node/12813983740"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13088657270",
+        "name": "Munda",
+        "place": "town"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.2704171,
+          -8.3287634
+        ]
+      },
+      "id": "node/13088657270"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13088662910",
+        "name": "Falamai",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          155.5742172,
+          -7.3971529
+        ]
+      },
+      "id": "node/13088662910"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13284231350",
+        "name": "Teulu Island",
+        "place": "island"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          155.8448062,
+          -7.1019773
+        ]
+      },
+      "id": "node/13284231350"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13358536435",
+        "name": "Tangibangara",
+        "name:cy": "Tangibangara",
+        "name:en": "Tangibangara",
+        "name:pis": "Tangibangara",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1197206,
+          -7.0720485
+        ]
+      },
+      "id": "node/13358536435"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13358563016",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1172273,
+          -7.0550836
+        ]
+      },
+      "id": "node/13358563016"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13358563017",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.1094865,
+          -7.0520677
+        ]
+      },
+      "id": "node/13358563017"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13358563217",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0811167,
+          -7.0614269
+        ]
+      },
+      "id": "node/13358563217"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13358563320",
+        "place": "village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0808995,
+          -7.0666548
+        ]
+      },
+      "id": "node/13358563320"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13358563423",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0745909,
+          -7.062087
+        ]
+      },
+      "id": "node/13358563423"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13358563556",
+        "place": "hamlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          157.0915961,
+          -7.055451
+        ]
+      },
+      "id": "node/13358563556"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="cascadeGradientLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e8f4f8;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#d4e8ef;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c0dce6;stop-opacity:1" />
+    </linearGradient>
+    <pattern id="chipPatternLight" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <circle cx="20" cy="20" r="1" fill="#4a90e2" opacity="0.2"/>
+    </pattern>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#cascadeGradientLight)"/>
+  
+  <!-- Tech chip pattern overlay -->
+  <rect width="100%" height="100%" fill="url(#chipPatternLight)" opacity="0.08"/>
+  
+  <!-- Cascade waterfall steps (lighter for light theme) -->
+  <!-- Step 1 -->
+  <path d="M 0 300 Q 320 280, 640 320 Q 960 360, 1280 340 Q 1600 320, 1920 340 L 1920 1080 L 0 1080 Z" fill="#4a90e2" opacity="0.08"/>
+  
+  <!-- Step 2 -->
+  <path d="M 0 450 Q 320 430, 640 470 Q 960 510, 1280 490 Q 1600 470, 1920 490 L 1920 1080 L 0 1080 Z" fill="#5ba3f5" opacity="0.06"/>
+  
+  <!-- Step 3 -->
+  <path d="M 0 600 Q 320 580, 640 620 Q 960 660, 1280 640 Q 1600 620, 1920 640 L 1920 1080 L 0 1080 Z" fill="#6cb6ff" opacity="0.05"/>
+  
+  <!-- Step 4 -->
+  <path d="M 0 750 Q 320 730, 640 770 Q 960 810, 1280 790 Q 1600 770, 1920 790 L 1920 1080 L 0 1080 Z" fill="#7dc9ff" opacity="0.04"/>
+  
+  <!-- Step 5 -->
+  <path d="M 0 900 Q 320 880, 640 920 Q 960 960, 1280 940 Q 1600 920, 1920 940 L 1920 1080 L 0 1080 Z" fill="#8edbff" opacity="0.03"/>
+  
+  <!-- Tech circuit lines (light theme) -->
+  <g stroke="#4a90e2" stroke-width="2" fill="none" opacity="0.15">
+    <!-- Top circuits -->
+    <path d="M 200, 100 L 400, 120 M 600, 80 L 800, 100 M 1000, 120 L 1200, 140"/>
+    <path d="M 300, 180 L 500, 160 M 700, 200 L 900, 180 M 1100, 160 L 1300, 140"/>
+    
+    <!-- Mid circuits -->
+    <path d="M 150, 400 L 350, 380 M 550, 420 L 750, 400 M 950, 380 L 1150, 400"/>
+    <path d="M 250, 500 L 450, 480 M 650, 520 L 850, 500 M 1050, 480 L 1250, 500"/>
+  </g>
+  
+  <!-- Chip-like nodes -->
+  <g opacity="0.2">
+    <rect x="400" y="140" width="8" height="8" fill="#4a90e2" rx="1"/>
+    <rect x="800" y="120" width="8" height="8" fill="#4a90e2" rx="1"/>
+    <rect x="1200" y="160" width="8" height="8" fill="#4a90e2" rx="1"/>
+    <rect x="350" y="400" width="8" height="8" fill="#4a90e2" rx="1"/>
+    <rect x="750" y="420" width="8" height="8" fill="#4a90e2" rx="1"/>
+    <rect x="1150" y="440" width="8" height="8" fill="#4a90e2" rx="1"/>
+  </g>
+</svg>
+
+
+

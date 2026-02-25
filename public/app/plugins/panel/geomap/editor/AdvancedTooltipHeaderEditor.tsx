@@ -1,0 +1,207 @@
+import { css } from '@emotion/css';
+import { useMemo } from 'react';
+
+import { FieldType, GrafanaTheme2, StandardEditorProps, PanelData } from '@grafana/data';
+import { t } from '@grafana/i18n';
+import { ColorPicker, InlineField, Input, Select, Switch, useStyles2 } from '@grafana/ui';
+
+import { AdvancedTooltipFieldOptionData, buildFieldOptions } from './AdvancedTooltipFieldsEditor';
+import { IconPicker } from '../components/IconPicker';
+
+export interface AdvancedTooltipHeaderConfig {
+  fieldKey?: string;
+  fieldName?: string;
+  frameRefId?: string;
+  customText?: string;
+  icon?: string;
+  iconColor?: string;
+  hideDuplicate?: boolean;
+}
+
+type Props = StandardEditorProps<AdvancedTooltipHeaderConfig>;
+
+export const AdvancedTooltipHeaderEditor = ({ value, onChange, context }: Props) => {
+  const styles = useStyles2(getStyles);
+  const header: AdvancedTooltipHeaderConfig = { hideDuplicate: true, ...(value ?? {}) };
+  // Context.data can be either PanelData with .series property, or directly the series array
+  const frames = Array.isArray(context.data) 
+    ? context.data 
+    : (context.data as unknown as PanelData | undefined)?.series ?? [];
+
+  const allOptions = useMemo(() => buildFieldOptions(frames), [frames]);
+  
+  const allowedTypes =
+    (context.options as { config?: { fieldTypes?: FieldType[] } } | undefined)?.config?.fieldTypes;
+  const fieldOptions = useMemo(() => {
+    if (!allowedTypes || !allowedTypes.length) {
+      return allOptions;
+    }
+    return allOptions.filter((option) => {
+      const data = option.data as AdvancedTooltipFieldOptionData | undefined;
+      return data ? allowedTypes.includes(data.fieldType) : true;
+    });
+  }, [allOptions, allowedTypes]);
+
+  const update = (patch: Partial<AdvancedTooltipHeaderConfig>) => {
+    onChange({ ...header, ...patch });
+  };
+
+  const selectedOption = useMemo(() => {
+    if (!fieldOptions.length) {
+      return undefined;
+    }
+
+    // Priority 1: Try by fieldName first (most stable identifier)
+    if (header.fieldName) {
+      // First try with frameRefId if available
+      if (header.frameRefId) {
+        const byNameAndRef = fieldOptions.find((opt) => {
+          const data = opt.data as AdvancedTooltipFieldOptionData | undefined;
+          return data?.frameRefId === header.frameRefId && data?.fieldName === header.fieldName;
+        });
+        if (byNameAndRef) {
+          return byNameAndRef;
+        }
+      }
+      
+      // Then try by fieldName alone (in case frameRefId changed)
+      const byField = fieldOptions.find((opt) => {
+        const data = opt.data as AdvancedTooltipFieldOptionData | undefined;
+        return data?.fieldName === header.fieldName;
+      });
+      if (byField) {
+        return byField;
+      }
+    }
+
+    // Priority 2: Try by fieldKey (frame:field index)
+    if (header.fieldKey) {
+      const byKey = fieldOptions.find((opt) => opt.value === header.fieldKey);
+      if (byKey) {
+        return byKey;
+      }
+    }
+
+    // If we have a saved fieldName but couldn't find it, create a placeholder option
+    // This prevents the Select component from breaking
+    if (header.fieldName) {
+      return {
+        label: `${header.fieldName} (not found)`,
+        value: header.fieldName,
+        description: 'Field not found in current data',
+      };
+    }
+
+    return undefined;
+  }, [fieldOptions, header.fieldKey, header.fieldName, header.frameRefId]);
+
+  return (
+    <div className={styles.wrapper}>
+      <InlineField 
+        label={t('geomap.advanced-tooltip.header.field', 'Field')} 
+        labelWidth={18} 
+        grow
+      >
+        <Select
+          options={fieldOptions}
+          value={selectedOption}
+          placeholder={
+            fieldOptions.length === 0 
+              ? 'Run query first...' 
+              : t('geomap.advanced-tooltip.header.field-placeholder', 'Select field')
+          }
+          isClearable
+          isDisabled={!fieldOptions.length}
+          noOptionsMessage={
+            fieldOptions.length === 0 
+              ? 'Run query to load fields' 
+              : t('geomap.advanced-tooltip.header.no-options', 'No fields available')
+          }
+          menuShouldPortal
+          onChange={(selection) => {
+            if (!selection?.value) {
+              update({ 
+                fieldKey: undefined, 
+                fieldName: undefined, 
+                frameRefId: undefined
+              });
+              return;
+            }
+            const data = selection.data as AdvancedTooltipFieldOptionData | undefined;
+            update({
+              fieldKey: selection.value,
+              fieldName: data?.fieldName ?? selection.label ?? selection.value,
+              frameRefId: data?.frameRefId,
+            });
+          }}
+        />
+      </InlineField>
+
+      <InlineField
+        label={t('geomap.advanced-tooltip.header.custom-text', 'Fallback text')}
+        labelWidth={18}
+        grow
+        tooltip={t(
+          'geomap.advanced-tooltip.header.custom-text-tooltip',
+          'Used when no field is selected or the field has no value.'
+        )}
+      >
+        <Input
+          value={header.customText ?? ''}
+          onChange={(event) => update({ customText: event.currentTarget.value })}
+          placeholder={t('geomap.advanced-tooltip.header.custom-text-placeholder', 'Enter custom title')}
+        />
+      </InlineField>
+
+      <InlineField
+        label={t('geomap.advanced-tooltip.header.hide-duplicate', 'Hide duplicate')}
+        labelWidth={18}
+        tooltip={t(
+          'geomap.advanced-tooltip.header.hide-duplicate-tooltip',
+          'Hide matching detail rows that use the same field as the header.'
+        )}
+      >
+        <Switch
+          value={header.hideDuplicate !== false}
+          onChange={(e) => update({ hideDuplicate: e.currentTarget.checked })}
+        />
+      </InlineField>
+
+      <InlineField 
+        label={t('geomap.advanced-tooltip.header.icon', 'Icon')} 
+        labelWidth={18} 
+        grow
+      >
+        <IconPicker
+          value={header.icon ?? ''}
+          onChange={(icon) => update({ icon })}
+          placeholder={t('geomap.advanced-tooltip.header.icon-placeholder', 'Icon name, emoji, or URL')}
+        />
+      </InlineField>
+
+      <InlineField 
+        label={t('geomap.advanced-tooltip.header.icon-color', 'Icon color')} 
+        labelWidth={18}
+      >
+        <ColorPicker
+          color={header.iconColor ?? ''}
+          enableNamedColors
+          onChange={(color) => update({ iconColor: color && color.trim().length ? color : undefined })}
+        />
+      </InlineField>
+    </div>
+  );
+};
+
+const getStyles = (theme: GrafanaTheme2) => ({
+  wrapper: css({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1.5),
+    width: '100%',
+    maxWidth: '100%',
+    '& > *': {
+      width: '100%',
+    },
+  }),
+});

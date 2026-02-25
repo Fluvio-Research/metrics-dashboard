@@ -1,4 +1,0 @@
-./error.go
-./file.go
-./lock_unix.go
-./main.go
