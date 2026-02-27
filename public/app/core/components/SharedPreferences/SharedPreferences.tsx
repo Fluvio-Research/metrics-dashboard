@@ -394,8 +394,6 @@ function getTranslatedThemeName(theme: ThemeRegistryItem) {
       return t('shared.preferences.theme.dark-label', 'Dark');
     case 'light':
       return t('shared.preferences.theme.light-label', 'Light');
-    case 'system':
-      return t('shared.preferences.theme.system-label', 'System preference');
     default:
       return theme.name;
   }

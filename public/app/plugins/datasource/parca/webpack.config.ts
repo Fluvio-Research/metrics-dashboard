@@ -1,3 +1,3 @@
-import config from '@grafana/plugin-configs/webpack.config.ts';
+import config from '@grafana/plugin-configs/webpack.config.js';
 
 export default config;

@@ -1,4 +1,4 @@
-import config, { type Env } from '@grafana/plugin-configs/webpack.config.ts';
+import config, { type Env } from '@grafana/plugin-configs/webpack.config.js';
 
 const configWithFallback = async (env: Env) => {
   const response = await config(env);

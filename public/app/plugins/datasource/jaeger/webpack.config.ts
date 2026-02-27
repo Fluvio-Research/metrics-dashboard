@@ -1,6 +1,6 @@
 import { createRequire } from 'node:module';
 
-import config, { type Env } from '@grafana/plugin-configs/webpack.config.ts';
+import config, { type Env } from '@grafana/plugin-configs/webpack.config.js';
 
 const require = createRequire(import.meta.url);
 

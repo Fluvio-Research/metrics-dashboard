@@ -29,7 +29,7 @@ import { SignInLink } from './SignInLink';
 import { SingleTopBarActions } from './SingleTopBarActions';
 import { TopNavBarMenu } from './TopNavBarMenu';
 import { TopSearchBarCommandPaletteTrigger } from './TopSearchBarCommandPaletteTrigger';
-import { ThemeToggleButton } from './ThemeToggleButton';
+import { UserAvatarBadge } from './UserAvatarBadge';
 import { getChromeHeaderLevelHeight } from './useChromeHeaderHeight';
 
 interface Props {
@@ -100,6 +100,11 @@ export const SingleTopBar = memo(function SingleTopBar({
               <span className={styles.orgName}>{orgName}</span>
             </div>
           </div>
+
+          {/* Right Section: User Avatar */}
+          <div className={styles.mapsRightGroup}>
+            {contextSrv.user.isSignedIn && <UserAvatarBadge />}
+          </div>
         </div>
       </>
     );
@@ -141,7 +146,6 @@ export const SingleTopBar = memo(function SingleTopBar({
             </Dropdown>
           )}
           <NavToolbarSeparator />
-          <ThemeToggleButton />
           {config.featureToggles.extensionSidebar && !isSmallScreen && <ExtensionToolbarItem />}
           {!showToolbarLevel && actions}
           {!contextSrv.user.isSignedIn && <SignInLink />}
